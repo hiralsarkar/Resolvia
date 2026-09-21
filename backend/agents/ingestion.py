@@ -82,17 +82,38 @@ def ingest_structured_row(row):
     }
 
 
+def _parse_trades(message):
+    """Pull the trade list out of a chat reply (tool call, or JSON in plain text)."""
+    calls = message.get("tool_calls")
+    try:
+        if calls:
+            return json.loads(calls[0]["function"]["arguments"]).get("trades", [])
+        content = message.get("content") or ""
+        parsed = json.loads(content[content.find("{"):content.rfind("}") + 1])
+        return parsed.get("trades", []) if isinstance(parsed, dict) else parsed
+    except (ValueError, AttributeError):
+        return []
+
+
 def ingest_text(text, doc_id=None):
     """LLM extraction for any text-based document (email, terse note,
     chat-style, or already-OCR'd scanned document). Returns a list of
     trade dicts (usually length 1, more for a batch email)."""
-    message = llm.chat(
-        [{"role": "user", "content": text}],
-        system=EXTRACTION_SYSTEM_PROMPT,
-        tools=[EXTRACTION_TOOL],
-        tool_choice={"type": "function", "function": {"name": "record_trades"}},
-    )
-    trades = json.loads(message["tool_calls"][0]["function"]["arguments"])["trades"]
+    trades = []
+    for model in llm.model_list():  # free models are flaky; move on if one returns nothing
+        try:
+            message = llm.chat(
+                [{"role": "user", "content": text}],
+                system=EXTRACTION_SYSTEM_PROMPT,
+                tools=[EXTRACTION_TOOL],
+                tool_choice={"type": "function", "function": {"name": "record_trades"}},
+                model=model,
+            )
+        except RuntimeError:
+            continue
+        trades = _parse_trades(message)
+        if trades:
+            break
     for t in trades:
         t["source"] = f"unstructured_text:{doc_id}" if doc_id else "unstructured_text"
         t["extraction_method"] = "llm_text"
