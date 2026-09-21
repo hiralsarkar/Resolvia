@@ -1,0 +1,28 @@
+fastapi
+uvicorn[standard]
+requests
+python-dotenv
+supabase
+scikit-learn
+xgboost
+lightgbm
+joblib
+# torch/torchvision pinned - some Windows Application Control policies
+# blocks torch 2.14.0's compiled DLLs outright; 2.6.0/0.21.0 is the combo
+# that both passes the policy and satisfies numpy>=2 (needed by opencv/
+# scikit-image, EasyOCR's own deps). Don't `pip install -U torch` blind.
+torch==2.6.0
+torchvision==0.21.0
+transformers==4.44.2
+huggingface-hub==0.24.6
+tokenizers==0.19.1
+regex==2023.12.25
+sentence-transformers==3.0.1
+easyocr
+pandas
+nbformat
+nbclient
+ipykernel
+matplotlib
+streamlit
+plotly
