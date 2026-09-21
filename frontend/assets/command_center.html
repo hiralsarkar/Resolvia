@@ -1,0 +1,830 @@
+<title>Resolvia Command Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ---------------------------------------------------------------
+     Resolvia Command Center v3 - bigger, slower, human-readable.
+     6 real pipeline stations on a hub ring, Orchestrator pulsing at
+     the center on every transition. Typography is all humanist sans
+     now (Bricolage Grotesque display + Manrope body) - no monospace
+     "code font" anywhere, so it reads as a product, not a terminal.
+     ------------------------------------------------------------- */
+  :root {
+    --void: #08090d;
+    --void-2: #0d0f16;
+    --hairline: rgba(255,255,255,0.09);
+    --hairline-bright: rgba(255,255,255,0.2);
+    --mist: #9ba0b3;
+    --mist-dim: #63687c;
+    --paper: #f2f3f8;
+
+    --cyan: #4ce0ff;
+    --violet: #a78bfa;
+    --magenta: #ff7ac6;
+    --amber: #ffb454;
+    --emerald: #34e5a6;
+    --hub: #eef0ff;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--void);
+    color: var(--paper);
+    font-family: 'Manrope', -apple-system, sans-serif;
+    padding-inline: 20px;
+    padding-block: 36px 12px;
+    min-height: 100%;
+  }
+  ::selection { background: rgba(76,224,255,0.25); color: var(--paper); }
+  .wrap { max-width: 1640px; margin: 0 auto; }
+
+  /* ---------------- hero copy ---------------- */
+  .hero-head { text-align: center; margin-bottom: 30px; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: 'Manrope', sans-serif; font-size: 0.82rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--mist);
+    padding: 6px 16px; border: 1px solid var(--hairline); border-radius: 999px;
+    background: rgba(255,255,255,0.02);
+  }
+  .hero-eyebrow .live-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--emerald);
+    box-shadow: 0 0 8px var(--emerald); animation: dot-pulse 2s ease-in-out infinite;
+  }
+  @keyframes dot-pulse { 0%,100%{opacity:1;} 50%{opacity:.35;} }
+
+  h1.brand {
+    font-family: 'Bricolage Grotesque', 'Manrope', sans-serif;
+    font-weight: 800; font-size: clamp(2.6rem, 6.4vw, 4.2rem);
+    letter-spacing: -0.03em; line-height: 1; margin: 18px 0 12px; text-wrap: balance;
+    background: linear-gradient(180deg, #ffffff 0%, #c7cbe0 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero-sub { font-size: clamp(1rem, 2vw, 1.2rem); color: var(--mist); font-weight: 500; max-width: 52ch; margin: 0 auto; }
+  .hero-principle { margin-top: 18px; font-family: 'Manrope', sans-serif; font-size: 0.9rem; color: var(--mist-dim); font-weight: 500; }
+  .hero-principle b { color: var(--mist); font-weight: 700; }
+
+  .hero-controls { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 22px; }
+  .hero-btn {
+    font-family: 'Manrope', sans-serif; font-size: 0.85rem; font-weight: 700; color: var(--mist);
+    background: rgba(255,255,255,0.03); border: 1px solid var(--hairline); border-radius: 999px;
+    padding: 9px 18px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s ease;
+  }
+  .hero-btn:hover { border-color: var(--hairline-bright); color: var(--paper); background: rgba(255,255,255,0.06); }
+  .hero-btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+  .hero-btn .ico { transition: transform 0.4s ease; }
+  .hero-btn.spin .ico { transform: rotate(360deg); }
+
+  /* ---------------- stage ---------------- */
+  .stage-shell {
+    position: relative; margin-top: 30px; border-radius: 24px; border: 1px solid var(--hairline);
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 50%, rgba(238,240,255,0.05), transparent 62%),
+      radial-gradient(ellipse 70% 55% at 8% 8%, rgba(76,224,255,0.07), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 92% 92%, rgba(52,229,166,0.06), transparent 60%),
+      linear-gradient(180deg, var(--void-2), var(--void));
+    overflow: hidden; padding: clamp(28px, 4vw, 56px);
+  }
+  .stage-grid-bg {
+    position: absolute; inset: 0; opacity: 0.32; pointer-events: none;
+    background-image: linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse 78% 78% at 50% 48%, black 35%, transparent 85%);
+  }
+  .spark { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #fff; opacity: 0; animation: twinkle 5s ease-in-out infinite; pointer-events: none; }
+  @keyframes twinkle { 0%,100%{opacity:0;} 50%{opacity:.5;} }
+
+  .stage { position: relative; width: 100%; aspect-ratio: 1200 / 1000; z-index: 1; }
+  .stage svg.spatial { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+
+  .spoke { fill: none; stroke: var(--hub); stroke-width: 1.2; opacity: 0.05; transition: opacity 0.5s ease, stroke-width 0.5s ease; }
+  .spoke.lit { opacity: 0.9; stroke-width: 2.6; filter: drop-shadow(0 0 7px currentColor); }
+
+  .packet-group { opacity: 0; transition: opacity 0.2s ease; }
+  .packet-group.visible { opacity: 1; }
+  .packet-core { fill: var(--cyan); filter: drop-shadow(0 0 12px var(--cyan)) drop-shadow(0 0 3px #fff); }
+  .packet-ring { fill: none; stroke: var(--cyan); stroke-width: 1.4; opacity: 0.55; }
+  .packet-label { font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 700; fill: var(--paper); }
+
+  /* ---------------- orchestrator hub ---------------- */
+  .hub {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    width: min(240px, 22vw); aspect-ratio: 1; border-radius: 50%; z-index: 3;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+    background: radial-gradient(circle at 50% 40%, rgba(238,240,255,0.10), rgba(238,240,255,0.02)), #0b0d14;
+    border: 1px solid var(--hairline-bright);
+    box-shadow: 0 0 0 1px rgba(238,240,255,0.06), 0 0 44px -8px rgba(238,240,255,0.18);
+  }
+  .hub.active { box-shadow: 0 0 0 1px rgba(238,240,255,0.35), 0 0 76px -6px rgba(238,240,255,0.55); animation: hub-pulse 0.9s ease-out; }
+  @keyframes hub-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(238,240,255,0.5), 0 0 44px -8px rgba(238,240,255,0.3); }
+    60% { box-shadow: 0 0 0 26px rgba(238,240,255,0), 0 0 76px -6px rgba(238,240,255,0.55); }
+    100% { box-shadow: 0 0 0 1px rgba(238,240,255,0.35), 0 0 76px -6px rgba(238,240,255,0.55); }
+  }
+  .hub-label { font-family: 'Manrope', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mist-dim); }
+  .hub-name { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.28rem; color: var(--paper); margin: 3px 0 7px; }
+  .hub-line { font-family: 'Manrope', sans-serif; font-size: 0.82rem; font-weight: 500; color: var(--mist); padding: 0 12px; line-height: 1.35; min-height: 2.6em; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s ease; }
+
+  /* ---------------- desk panels ---------------- */
+  .desk {
+    position: absolute; transform: translate(-50%,-50%);
+    width: min(316px, 25vw); min-width: 210px;
+    border-radius: 20px; border: 1px solid var(--hairline);
+    background: linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+    backdrop-filter: blur(14px);
+    padding: 20px 22px 20px; z-index: 2;
+    transition: border-color 0.5s ease, box-shadow 0.5s ease, transform 0.5s ease, background 0.5s ease;
+  }
+  .desk.gate { border-style: dashed; }
+  .desk.active {
+    border-color: var(--desk-accent, var(--cyan)); border-style: solid;
+    background: linear-gradient(160deg, color-mix(in srgb, var(--desk-accent, var(--cyan)) 15%, transparent), rgba(255,255,255,0.02));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--desk-accent, var(--cyan)) 38%, transparent),
+                0 20px 50px -18px color-mix(in srgb, var(--desk-accent, var(--cyan)) 60%, transparent);
+    transform: translate(-50%,-50%) translateY(-2px);
+  }
+  .desk.done { border-color: var(--hairline-bright); }
+
+  .desk-head > div:not(.desk-icon) { min-width: 0; }
+  .desk-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; position: relative; }
+  .desk-icon {
+    width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--hairline); color: var(--mist-dim); background: rgba(255,255,255,0.02);
+    transition: color 0.5s ease, border-color 0.5s ease, background 0.5s ease;
+  }
+  .desk.active .desk-icon { color: var(--desk-accent, var(--cyan)); border-color: var(--desk-accent, var(--cyan)); background: color-mix(in srgb, var(--desk-accent, var(--cyan)) 18%, transparent); box-shadow: 0 0 18px -4px var(--desk-accent, var(--cyan)); }
+  .desk-icon svg { width: 28px; height: 28px; }
+  .desk.active .icon-spin { animation: icon-spin 3s linear infinite; transform-origin: 12px 12px; }
+  @keyframes icon-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+
+  /* every active desk: colored ripple rings radiate from the icon */
+  .desk-icon::before, .desk-icon::after { content: ""; position: absolute; inset: -1px; border-radius: 14px; border: 1.5px solid var(--desk-accent, var(--cyan)); opacity: 0; pointer-events: none; }
+  .desk.active .desk-icon::before { animation: ripple 2.4s ease-out infinite; }
+  .desk.active .desk-icon::after { animation: ripple 2.4s ease-out 1.2s infinite; }
+  @keyframes ripple { 0% { opacity: .7; transform: scale(1); } 100% { opacity: 0; transform: scale(1.9); } }
+
+  /* Triage: a sweeping radar beam */
+  .desk[data-agent="triage"].active .desk-icon { background: conic-gradient(from 0deg, color-mix(in srgb, var(--desk-accent) 45%, transparent), transparent 35%, transparent); animation: icon-spin 2.2s linear infinite; }
+  .desk[data-agent="triage"].active .desk-icon svg { animation: icon-spin 2.2s linear infinite reverse; }
+  /* RCA: magnifier orbits while hunting for the cause */
+  .desk.active .rca-scan { animation: rca-orbit 2.4s ease-in-out infinite; transform-origin: 10px 10px; }
+  @keyframes rca-orbit { 0% { transform: translate(0,-4px) scale(1); } 25% { transform: translate(4px,0) scale(1.12); } 50% { transform: translate(0,4px) scale(1); } 75% { transform: translate(-4px,0) scale(1.12); } 100% { transform: translate(0,-4px) scale(1); } }
+  /* Resolution: the document writes its lines, then the tick lands */
+  .res-line { stroke-dasharray: 10; stroke-dashoffset: 10; }
+  .desk.active .res-line { animation: res-write 0.9s ease-out forwards; }
+  .desk.active .res-line.l2 { animation-delay: 0.5s; }
+  @keyframes res-write { to { stroke-dashoffset: 0; } }
+  /* Gate: amber pulse while waiting, green when authorized */
+  .desk.gate.active .desk-icon { animation: gate-wait 1.2s ease-in-out infinite; }
+  @keyframes gate-wait { 0%,100% { box-shadow: 0 0 10px -4px var(--amber); } 50% { box-shadow: 0 0 26px 0 var(--amber); } }
+  .desk.gate.unlocked .desk-icon { animation: none; border-color: var(--emerald); color: var(--emerald); box-shadow: 0 0 24px -2px var(--emerald); }
+  /* Validation: emerald burst */
+  .desk[data-agent="validation"].active .desk-icon { animation: val-burst 1.6s ease-out infinite; }
+  @keyframes val-burst { 0% { box-shadow: 0 0 0 0 rgba(52,229,166,.55); } 70%,100% { box-shadow: 0 0 0 16px rgba(52,229,166,0); } }
+
+
+  /* bold motion for every agent: a sweeping beam spins behind the icon */
+  .spin-ring { position: absolute; inset: 0; border-radius: 14px; opacity: 0; pointer-events: none;
+    background: conic-gradient(from 0deg, color-mix(in srgb, var(--desk-accent, var(--cyan)) 70%, transparent), transparent 42%, transparent); }
+  .desk.active .spin-ring { opacity: 1; animation: icon-spin 1.8s linear infinite; }
+  .desk-icon svg { position: relative; z-index: 1; }
+
+  /* big, obvious tick badge that pops onto the icon when an agent finishes */
+  .desk-icon .badge { position: absolute; right: -10px; bottom: -10px; width: 28px; height: 28px; border-radius: 50%; z-index: 4;
+    background: var(--emerald); display: flex; align-items: center; justify-content: center; transform: scale(0);
+    box-shadow: 0 0 0 3px #0d0f16, 0 0 20px var(--emerald); }
+  .desk-icon .badge svg { width: 16px; height: 16px; stroke: #04150F; stroke-width: 2.6; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .desk-icon .badge.pop { animation: badge-pop 0.7s cubic-bezier(.3,1.9,.5,1) forwards; }
+  @keyframes badge-pop { 0% { transform: scale(0) rotate(-50deg); } 100% { transform: scale(1) rotate(0); } }
+
+  /* Investigation: papers keep flying in, again and again while it works */
+  .desk.active .doc-fly.fly:nth-child(1) { animation: doc-loop-1 2.8s cubic-bezier(.2,.8,.3,1) infinite; }
+  .desk.active .doc-fly.fly:nth-child(2) { animation: doc-loop-2 2.8s cubic-bezier(.2,.8,.3,1) 0.3s infinite; }
+  .desk.active .doc-fly.fly:nth-child(3) { animation: doc-loop-3 2.8s cubic-bezier(.2,.8,.3,1) 0.6s infinite; }
+  @keyframes doc-loop-1 { 0% { opacity: 0; transform: translate(-60px,-44px) rotate(-40deg) scale(.6); } 25%,80% { opacity: 1; transform: rotate(-9deg); } 100% { opacity: 0; transform: translate(6px,4px) rotate(-9deg); } }
+  @keyframes doc-loop-2 { 0% { opacity: 0; transform: translate(6px,-58px) rotate(10deg) scale(.6); } 25%,80% { opacity: 1; transform: rotate(1deg); } 100% { opacity: 0; transform: translate(0,4px); } }
+  @keyframes doc-loop-3 { 0% { opacity: 0; transform: translate(60px,-44px) rotate(40deg) scale(.6); } 25%,80% { opacity: 1; transform: rotate(11deg); } 100% { opacity: 0; transform: translate(-6px,4px) rotate(11deg); } }
+  .doc-fly { width: 26px; height: 33px; }
+
+  /* RCA: a much wider, faster hunt with the magnifier */
+  .desk.active .rca-scan { animation: rca-hunt 2s ease-in-out infinite; }
+  @keyframes rca-hunt { 0% { transform: translate(-7px,-6px) scale(1.1) rotate(-12deg); } 25% { transform: translate(7px,-4px) scale(1.3) rotate(8deg); } 50% { transform: translate(6px,7px) scale(1.1) rotate(14deg); } 75% { transform: translate(-7px,6px) scale(1.3) rotate(-8deg); } 100% { transform: translate(-7px,-6px) scale(1.1) rotate(-12deg); } }
+
+  /* Resolution: lines are written over and over while it drafts the fix */
+  .desk.active .res-line { animation: res-type 1.8s ease-in-out infinite; }
+  .desk.active .res-line.l2 { animation-delay: 0.4s; }
+  @keyframes res-type { 0% { stroke-dashoffset: 10; } 45%,85% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 10; } }
+
+  /* Gate: the padlock rattles while it waits for a person, until authorized */
+  .desk.gate.active:not(.unlocked) .lock-shackle { animation: rattle 0.7s ease-in-out infinite; }
+  @keyframes rattle { 0%,100% { transform: rotate(-9deg); } 50% { transform: rotate(9deg); } }
+  .desk.gate.active:not(.unlocked) .desk-icon svg { animation: rattle-box 0.7s ease-in-out infinite; }
+  @keyframes rattle-box { 0%,100% { transform: translateX(-2px); } 50% { transform: translateX(2px); } }
+
+  /* Validation: the shield bounces while it re-checks everything */
+  .desk[data-agent="validation"].active .desk-icon svg { animation: val-bounce 1s ease-in-out infinite; }
+  @keyframes val-bounce { 0%,100% { transform: scale(1); } 50% { transform: scale(1.22); } }
+
+
+  /* tick badge sits on every agent's icon corner */
+  .desk > .badge { position: absolute; left: 62px; top: 60px; width: 30px; height: 30px; border-radius: 50%; z-index: 6;
+    background: var(--emerald); display: flex; align-items: center; justify-content: center; transform: scale(0);
+    box-shadow: 0 0 0 3px #0d0f16, 0 0 22px var(--emerald); }
+  .desk > .badge svg { width: 17px; height: 17px; stroke: #04150F; stroke-width: 2.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .desk > .badge.pop { animation: badge-pop 0.7s cubic-bezier(.3,1.9,.5,1) forwards; }
+  /* much stronger glow on the working agent */
+  .desk.active { box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--desk-accent) 65%, transparent), 0 0 44px -2px color-mix(in srgb, var(--desk-accent) 80%, transparent), 0 0 120px -10px color-mix(in srgb, var(--desk-accent) 70%, transparent); }
+  .desk.active .desk-icon { box-shadow: 0 0 36px 2px color-mix(in srgb, var(--desk-accent) 85%, transparent); }
+  .desk.active .desk-name { text-shadow: 0 0 20px color-mix(in srgb, var(--desk-accent) 80%, transparent); }
+
+  /* RCA Agent - magnifying glass sweeping/scanning search */
+  .desk.active .rca-scan { animation: rca-scan 1.6s ease-in-out infinite; transform-origin: 10px 10px; }
+  @keyframes rca-scan {
+    0%, 100% { transform: translate(0,0) rotate(-6deg) scale(1); }
+    25% { transform: translate(3px,-2px) rotate(2deg) scale(1.08); }
+    50% { transform: translate(-2px,2px) rotate(-3deg) scale(1); }
+    75% { transform: translate(2px,3px) rotate(5deg) scale(1.05); }
+  }
+
+  /* Resolution Proposal Agent - checkmark draws itself onto the document */
+  .res-check { stroke-dasharray: 14; stroke-dashoffset: 14; }
+  .desk.active .res-check.drawn { animation: res-draw 0.5s ease-out forwards; }
+  @keyframes res-draw { to { stroke-dashoffset: 0; } }
+
+  /* Control Gate - padlock shackle swings open once authorized */
+  .lock-shackle { transition: transform 0.5s cubic-bezier(.34,1.56,.64,1); }
+  .lock-shackle.open { transform: translateY(-3px) rotate(-32deg); }
+
+  /* Validation Agent - checkmark stamps down like a rubber stamp */
+  .val-check { stroke-dasharray: 10; stroke-dashoffset: 10; transform-origin: 12px 12px; }
+  .desk.active .val-check.drawn { animation: val-stamp 0.45s cubic-bezier(.3,1.8,.5,1) forwards; }
+  @keyframes val-stamp { 0% { stroke-dashoffset: 10; transform: scale(1.8); opacity: 0.3; } 60% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 0; transform: scale(1); opacity: 1; } }
+
+  .desk-role { font-family: 'Manrope', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--mist-dim); }
+  .desk-name { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.08rem; color: var(--paper); line-height: 1.2; white-space: normal; overflow-wrap: anywhere; }
+
+  /* document-gathering animation (Investigation Agent) */
+  .doc-stack { position: absolute; top: -20px; left: -12px; width: 40px; height: 40px; pointer-events: none; }
+  .doc-fly {
+    position: absolute; width: 22px; height: 28px; border-radius: 3px; opacity: 0;
+    background: #EDEFF7; box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+    background-image: linear-gradient(#B9BFD1 2px, transparent 2px), linear-gradient(#B9BFD1 2px, transparent 2px), linear-gradient(#B9BFD1 2px, transparent 2px);
+    background-size: 14px 2px; background-repeat: no-repeat;
+    background-position: 4px 8px, 4px 13px, 4px 18px;
+  }
+  .doc-fly:nth-child(1) { top: 8px; left: 0px; }
+  .doc-fly:nth-child(2) { top: 2px; left: 9px; }
+  .doc-fly:nth-child(3) { top: 8px; left: 18px; }
+  .doc-fly.fly:nth-child(1) { animation: doc-in-1 0.75s cubic-bezier(.2,.8,.3,1) forwards; }
+  .doc-fly.fly:nth-child(2) { animation: doc-in-2 0.75s cubic-bezier(.2,.8,.3,1) 0.18s forwards; }
+  .doc-fly.fly:nth-child(3) { animation: doc-in-3 0.75s cubic-bezier(.2,.8,.3,1) 0.36s forwards; }
+  @keyframes doc-in-1 { from { opacity: 0; transform: translate(-46px,-36px) rotate(-30deg) scale(0.7); } to { opacity: 1; transform: translate(0,0) rotate(-9deg) scale(1); } }
+  @keyframes doc-in-2 { from { opacity: 0; transform: translate(4px,-46px) rotate(8deg) scale(0.7); } to { opacity: 1; transform: translate(0,0) rotate(1deg) scale(1); } }
+  @keyframes doc-in-3 { from { opacity: 0; transform: translate(46px,-36px) rotate(30deg) scale(0.7); } to { opacity: 1; transform: translate(0,0) rotate(11deg) scale(1); } }
+
+  .desk-console { min-height: 92px; }
+  .console-line {
+    font-family: 'Manrope', sans-serif; font-size: 0.9rem; font-weight: 500; line-height: 1.6; color: var(--mist);
+    opacity: 0; transform: translateY(4px); transition: opacity 0.4s ease, transform 0.4s ease, color 0.5s ease;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .console-line.shown { opacity: 1; transform: translateY(0); }
+  .console-line.fresh { color: var(--paper); font-weight: 600; }
+
+  .desk-stat {
+    margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--hairline);
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    opacity: 0; transform: translateY(4px); transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .desk-stat.shown { opacity: 1; transform: translateY(0); }
+  .desk-stat-label { font-size: 0.72rem; color: var(--mist-dim); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+  .desk-stat-value { font-family: 'Manrope', sans-serif; font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 800; color: var(--desk-accent, var(--cyan)); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* resolved center banner */
+  .resolved-banner {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%) scale(0.9);
+    text-align: center; z-index: 4; opacity: 0; pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    background: rgba(8,9,13,0.88); backdrop-filter: blur(12px);
+    border: 1px solid var(--hairline-bright); border-radius: 20px; padding: 20px 28px;
+    box-shadow: 0 0 80px -10px rgba(52,229,166,0.4); width: min(280px, 42vw);
+  }
+  .resolved-banner.show { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  .resolved-banner .rb-status { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1.3rem; color: var(--emerald); letter-spacing: -0.01em; }
+  .resolved-banner .rb-id { font-family: 'Manrope', sans-serif; font-weight: 700; color: var(--mist); font-size: 0.85rem; margin-top: 6px; }
+  .resolved-banner .rb-meta { font-family: 'Manrope', sans-serif; color: var(--mist-dim); font-size: 0.76rem; margin-top: 8px; line-height: 1.6; }
+
+  /* ---------------- inspector ---------------- */
+  .inspector-toggle {
+    font-family: 'Manrope', sans-serif; font-size: 0.8rem; font-weight: 700; color: var(--mist);
+    background: rgba(255,255,255,0.03); border: 1px solid var(--hairline); border-radius: 999px;
+    padding: 9px 18px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s ease;
+  }
+  .inspector-toggle:hover { border-color: var(--hairline-bright); color: var(--paper); }
+  .inspector-toggle:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+  .inspector-anchor { position: absolute; top: 18px; right: 18px; z-index: 5; }
+  .inspector {
+    position: absolute; top: 52px; right: 0; z-index: 5; width: 260px;
+    background: rgba(13,15,22,0.95); backdrop-filter: blur(16px); border: 1px solid var(--hairline-bright);
+    border-radius: 16px; padding: 18px 20px; opacity: 0; transform: translateY(-6px); pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease; box-shadow: 0 20px 50px -20px rgba(0,0,0,0.6);
+  }
+  .inspector.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .inspector-row { display: flex; justify-content: space-between; gap: 10px; font-size: 0.82rem; margin-bottom: 8px; }
+  .inspector-row span:first-child { color: var(--mist-dim); font-weight: 500; }
+  .inspector-row span:last-child { font-family: 'Manrope', sans-serif; color: var(--paper); font-weight: 700; text-align: right; }
+  .inspector-checklist { margin-top: 11px; padding-top: 11px; border-top: 1px dashed var(--hairline); display: flex; flex-direction: column; gap: 7px; }
+  .ic-item { display: flex; align-items: center; gap: 9px; font-size: 0.78rem; font-weight: 500; color: var(--mist-dim); transition: color 0.3s ease; }
+  .ic-item.done { color: var(--paper); font-weight: 600; }
+  .ic-dot { width: 15px; height: 15px; border-radius: 50%; border: 1.5px solid var(--hairline-bright); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.3s ease; }
+  .ic-item.done .ic-dot { background: var(--emerald); border-color: var(--emerald); }
+  .ic-dot svg { width: 8px; height: 8px; opacity: 0; transition: opacity 0.2s ease; }
+  .ic-item.done .ic-dot svg { opacity: 1; }
+
+  /* ---------------- legend ---------------- */
+  .legend { display: flex; flex-wrap: wrap; gap: 18px; justify-content: center; margin-top: 22px; }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-family: 'Manrope', sans-serif; font-size: 0.78rem; font-weight: 600; color: var(--mist-dim); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 6px currentColor; }
+
+  /* ---------------- mobile: vertical journey ---------------- */
+  .mobile-orch { display: none; }
+  @media (max-width: 780px) {
+    .stage { aspect-ratio: auto; display: flex; flex-direction: column; gap: 0; position: static; }
+    .stage svg.spatial, .hub { display: none; }
+    .desk { position: static; transform: none; width: 100%; min-width: 0; margin-bottom: 0; }
+    .desk.active { transform: none; }
+    .mobile-orch {
+      display: flex; align-items: center; gap: 9px; margin: 8px 0; padding: 8px 6px 8px 16px;
+      font-family: 'Manrope', sans-serif; font-size: 0.78rem; font-weight: 500; color: var(--mist-dim);
+      border-left: 2px solid var(--hairline); transition: border-color 0.4s ease, color 0.4s ease;
+    }
+    .mobile-orch.lit { border-color: var(--hub); color: var(--paper); }
+    .mobile-orch .mo-tag { color: var(--hub); font-weight: 700; flex-shrink: 0; }
+    .resolved-banner { position: static; transform: none; margin: 12px 0 0; opacity: 1; pointer-events: none; width: 100%; }
+    .resolved-banner:not(.show) { display: none; }
+    .inspector-anchor { position: static; margin: 16px auto 0; width: fit-content; }
+    .inspector { position: static; width: 100%; margin-top: 12px; }
+    .inspector:not(.open) { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+
+  footer.hero-foot { text-align: center; margin-top: 22px; font-size: 0.8rem; font-weight: 500; color: var(--mist-dim); }
+</style>
+
+<div class="wrap">
+  <div class="hero-head">
+    <span class="hero-eyebrow"><span class="live-dot"></span> Live exception journey</span>
+    <h1 class="brand">Resolvia</h1>
+    <p class="hero-sub">AI-powered exception intelligence for investment banking &mdash; from break to verified resolution.</p>
+    <p class="hero-principle"><b>AI investigates.</b> <b>Humans authorize.</b> <b>Systems execute.</b> <b>AI validates.</b></p>
+    <div class="hero-controls">
+      <button class="hero-btn" id="restartBtn"><span class="ico">&#8635;</span> Restart from the beginning</button>
+    </div>
+  </div>
+
+  <div class="stage-shell">
+    <div class="stage-grid-bg"></div>
+    <div class="inspector-anchor">
+      <button class="inspector-toggle" id="inspectorToggle" aria-expanded="false">
+        <span id="inspectorToggleLabel">Inspect exception</span>&nbsp;&rarr;
+      </button>
+      <div class="inspector" id="inspector">
+        <div class="inspector-row"><span>Break ID</span><span id="insId">&mdash;</span></div>
+        <div class="inspector-row"><span>Type</span><span id="insType">&mdash;</span></div>
+        <div class="inspector-row"><span>Stage</span><span id="insStage">&mdash;</span></div>
+        <div class="inspector-row"><span>Authority</span><span id="insAuth">&mdash;</span></div>
+        <div class="inspector-checklist" id="insChecklist">
+          <div class="ic-item" data-step="triage"><span class="ic-dot"><svg viewBox="0 0 10 10"><path d="M1.5 5.2L4 7.7L8.5 2.5" stroke="#08090d" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span>Triaged</div>
+          <div class="ic-item" data-step="investigate"><span class="ic-dot"><svg viewBox="0 0 10 10"><path d="M1.5 5.2L4 7.7L8.5 2.5" stroke="#08090d" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span>Investigated</div>
+          <div class="ic-item" data-step="rca"><span class="ic-dot"><svg viewBox="0 0 10 10"><path d="M1.5 5.2L4 7.7L8.5 2.5" stroke="#08090d" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span>Diagnosed</div>
+          <div class="ic-item" data-step="resolution"><span class="ic-dot"><svg viewBox="0 0 10 10"><path d="M1.5 5.2L4 7.7L8.5 2.5" stroke="#08090d" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span>Proposed</div>
+          <div class="ic-item" data-step="gate"><span class="ic-dot"><svg viewBox="0 0 10 10"><path d="M1.5 5.2L4 7.7L8.5 2.5" stroke="#08090d" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span>Authorized</div>
+          <div class="ic-item" data-step="validation"><span class="ic-dot"><svg viewBox="0 0 10 10"><path d="M1.5 5.2L4 7.7L8.5 2.5" stroke="#08090d" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span>Verified</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage" id="stage">
+      <svg class="spatial" viewBox="0 0 1200 1000" preserveAspectRatio="none" aria-hidden="true">
+        <path class="spoke" id="spokeTriage" style="color:#4ce0ff" d="M 600,500 L 600,140" />
+        <path class="spoke" id="spokeInvestigate" style="color:#a78bfa" d="M 600,500 L 1008,300" />
+        <path class="spoke" id="spokeRca" style="color:#c4f24a" d="M 600,500 L 1008,700" />
+        <path class="spoke" id="spokeResolution" style="color:#ff7ac6" d="M 600,500 L 600,860" />
+        <path class="spoke" id="spokeGate" style="color:#ffb454" d="M 600,500 L 192,700" />
+        <path class="spoke" id="spokeValidation" style="color:#34e5a6" d="M 600,500 L 192,300" />
+        <g class="packet-group" id="packet">
+          <circle class="packet-ring" r="11"><animate attributeName="r" values="9;13;9" dur="1.6s" repeatCount="indefinite"/></circle>
+          <circle class="packet-core" r="4.5" />
+          <text class="packet-label" id="packetLabel" x="0" y="-17" text-anchor="middle">BRK00754</text>
+        </g>
+      </svg>
+
+      <div class="hub" id="hub">
+        <div class="hub-label">Control Plane</div>
+        <div class="hub-name">Orchestrator</div>
+        <div class="hub-line" id="hubLine">Idle</div>
+      </div>
+
+      <div class="desk" data-pos="triage" data-agent="triage" style="--desk-accent:#4ce0ff; left:50%; top:14%;">
+        <span class="badge"><svg viewBox="0 0 16 16"><path d="M3.5 8.4l3 3 6-6.6"/></svg></span>
+        <div class="desk-head">
+          <span class="desk-icon"><svg class="icon-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="2.6"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="8" stroke-dasharray="2 4"/></svg></span>
+          <div><div class="desk-role">Agent 1 &middot; Triage</div><div class="desk-name">Triage Agent</div></div>
+        </div>
+        <div class="desk-console" data-console="triage"></div>
+        <div class="desk-stat" data-stat="triage"><span class="desk-stat-label">Route</span><span class="desk-stat-value" data-stat-value="triage">&mdash;</span></div>
+      </div>
+      <div class="mobile-orch" data-after="triage"><span class="mo-tag">Orchestrator</span><span class="mo-text">Routing&hellip;</span></div>
+
+      <div class="desk" data-pos="investigate" data-agent="investigate" style="--desk-accent:#a78bfa; left:84%; top:30%;">
+        <span class="badge"><svg viewBox="0 0 16 16"><path d="M3.5 8.4l3 3 6-6.6"/></svg></span>
+        <div class="desk-head">
+          <span class="desk-icon"><i class="spin-ring"></i>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10.5" cy="10.5" r="6"/><path d="M20 20l-5-5M8 10.5h5M10.5 8v5" stroke-linecap="round"/></svg>
+            <span class="doc-stack"><span class="doc-fly"></span><span class="doc-fly"></span><span class="doc-fly"></span></span>
+          </span>
+          <div><div class="desk-role">Agent 2 &middot; Investigate</div><div class="desk-name">Investigation Agent</div></div>
+        </div>
+        <div class="desk-console" data-console="investigate"></div>
+        <div class="desk-stat" data-stat="investigate"><span class="desk-stat-label">Evidence</span><span class="desk-stat-value" data-stat-value="investigate">&mdash;</span></div>
+      </div>
+      <div class="mobile-orch" data-after="investigate"><span class="mo-tag">Orchestrator</span><span class="mo-text">Routing&hellip;</span></div>
+
+      <div class="desk" data-pos="rca" data-agent="rca" style="--desk-accent:#c4f24a; left:84%; top:70%;">
+        <span class="badge"><svg viewBox="0 0 16 16"><path d="M3.5 8.4l3 3 6-6.6"/></svg></span>
+        <div class="desk-head">
+          <span class="desk-icon rca-icon-wrap"><i class="spin-ring"></i><svg class="rca-scan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="10.2" cy="10.2" r="6.2"/><path d="M20 20l-4.8-4.8" stroke-linecap="round"/></svg></span>
+          <div><div class="desk-role">Agent 3 &middot; Diagnose</div><div class="desk-name">Root Cause Agent</div></div>
+        </div>
+        <div class="desk-console" data-console="rca"></div>
+        <div class="desk-stat" data-stat="rca"><span class="desk-stat-label">Certainty</span><span class="desk-stat-value" data-stat-value="rca">&mdash;</span></div>
+      </div>
+      <div class="mobile-orch" data-after="rca"><span class="mo-tag">Orchestrator</span><span class="mo-text">Routing&hellip;</span></div>
+
+      <div class="desk" data-pos="resolution" data-agent="resolution" style="--desk-accent:#ff7ac6; left:50%; top:86%;">
+        <span class="badge"><svg viewBox="0 0 16 16"><path d="M3.5 8.4l3 3 6-6.6"/></svg></span>
+        <div class="desk-head">
+          <span class="desk-icon"><i class="spin-ring"></i>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="3"/><path class="res-line" d="M8 8.5h8" stroke-linecap="round"/><path class="res-line l2" d="M8 11.5h5" stroke-linecap="round"/><path class="res-check" d="M7.5 13.2l2.6 2.6L16.5 9.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <div><div class="desk-role">Agent 4 &middot; Propose</div><div class="desk-name">Resolution Proposal Agent</div></div>
+        </div>
+        <div class="desk-console" data-console="resolution"></div>
+        <div class="desk-stat" data-stat="resolution"><span class="desk-stat-label">Authority</span><span class="desk-stat-value" data-stat-value="resolution">&mdash;</span></div>
+      </div>
+      <div class="mobile-orch" data-after="resolution"><span class="mo-tag">Orchestrator</span><span class="mo-text">Checking control gate&hellip;</span></div>
+
+      <div class="desk gate" data-pos="gate" data-agent="gate" style="--desk-accent:#ffb454; left:16%; top:70%;">
+        <span class="badge"><svg viewBox="0 0 16 16"><path d="M3.5 8.4l3 3 6-6.6"/></svg></span>
+        <div class="desk-head">
+          <span class="desk-icon"><i class="spin-ring"></i>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+              <g class="lock-shackle" style="transform-origin: 7px 10px;"><path d="M7 10V7a5 5 0 0 1 10 0v3"/></g>
+              <rect x="5" y="10" width="14" height="10" rx="2.2"/>
+            </svg>
+          </span>
+          <div><div class="desk-role">Safety check &middot; Not AI</div><div class="desk-name">Control Gate</div></div>
+        </div>
+        <div class="desk-console" data-console="gate"></div>
+        <div class="desk-stat" data-stat="gate"><span class="desk-stat-label">Decision</span><span class="desk-stat-value" data-stat-value="gate">&mdash;</span></div>
+      </div>
+      <div class="mobile-orch" data-after="gate"><span class="mo-tag">Orchestrator</span><span class="mo-text">Executing&hellip;</span></div>
+
+      <div class="desk" data-pos="validation" data-agent="validation" style="--desk-accent:#34e5a6; left:16%; top:30%;">
+        <span class="badge"><svg viewBox="0 0 16 16"><path d="M3.5 8.4l3 3 6-6.6"/></svg></span>
+        <div class="desk-head">
+          <span class="desk-icon"><i class="spin-ring"></i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path class="val-check" d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <div><div class="desk-role">Agent 5 &middot; Verify</div><div class="desk-name">Validation Agent</div></div>
+        </div>
+        <div class="desk-console" data-console="validation"></div>
+        <div class="desk-stat" data-stat="validation"><span class="desk-stat-label">Status</span><span class="desk-stat-value" data-stat-value="validation">&mdash;</span></div>
+      </div>
+
+      <div class="resolved-banner" id="resolvedBanner">
+        <div class="rb-status">BREAK RESOLVED</div>
+        <div class="rb-id" id="rbId">BRK00754</div>
+        <div class="rb-meta" id="rbMeta">Resolved in 18.4s &middot; Evidence captured &middot; Audit trail created</div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot" style="background:#4ce0ff;color:#4ce0ff"></span>Triage</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#a78bfa;color:#a78bfa"></span>Investigation</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#c4f24a;color:#c4f24a"></span>Root cause</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#ff7ac6;color:#ff7ac6"></span>Recommendation</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#ffb454;color:#ffb454"></span>Human decision</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#34e5a6;color:#34e5a6"></span>Verification</span>
+    </div>
+  </div>
+
+  <footer class="hero-foot">Six real pipeline stages, one Orchestrator routing every transition &mdash; the same state machine that runs Resolvia's production cases, not a simplified demo.</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var NAMES = {triage:'Triage Agent',investigate:'Investigation Agent',rca:'Root Cause Agent',resolution:'Resolution Agent',gate:'Control Gate',validation:'Validation Agent'};
+  var AGENTS = ["triage", "investigate", "rca", "resolution", "gate", "validation"];
+
+  var CASES = [
+    {
+      id: "BRK00754", type: "Wrong Settlement Instruction (SSI)", authority: "CONTROLLED_ACTION", elapsed: "18.4s",
+      triage: { stat: "Settlements Desk", lines: ["Checking the exception…", "Type: Settlement · Critical priority", "Routing to Settlements Desk"] },
+      investigate: { stat: "3 related cases", lines: ["Collecting the trade records…", "Reading the settlement message…", "Searching similar past cases…", "3 related cases found"] },
+      rca: { stat: "100%", lines: ["Working out the cause…", "Cause found: Wrong Settlement Instruction", "Certainty: 100%", "No competing explanation"] },
+      resolution: { stat: "Needs approval", lines: ["Checking how much is at risk…", "At risk: ₹2.6 Cr · Critical", "Fix: correct payment details, resend", "Approval: needs a person"] },
+      gate: { stat: "Approved", lines: ["Needs a person: Review · Approve · Escalate", "Waiting for a person to decide…", "Approved by the Operations Head", "Carried out: Controlled Action (system)"] },
+      validation: { stat: "CLOSED", lines: ["Re-checking the records…", "Payment details match", "Settlement status matches", "Case closed"] },
+    },
+    {
+      id: "BRK00001", type: "Wrong Cash Amount", authority: "CONTROLLED_ACTION", elapsed: "14.1s",
+      triage: { stat: "Cash Mgmt Desk", lines: ["Checking the exception…", "Type: Cash · High priority", "Routing to Cash Management Desk"] },
+      investigate: { stat: "No FX mismatch", lines: ["Collecting the trade records…", "Reading the trade confirmation…", "Searching similar past cases…", "No currency mismatch detected"] },
+      rca: { stat: "100%", lines: ["Working out the cause…", "Cause found: Wrong Cash Amount", "Certainty: 100%", "No competing explanation"] },
+      resolution: { stat: "Needs approval", lines: ["Checking how much is at risk…", "At risk: ₹41.2 L · High", "Fix: correct the posted amount", "Approval: needs a person"] },
+      gate: { stat: "Approved", lines: ["Needs a person: Review · Approve · Escalate", "Waiting for a person to decide…", "Approved by the Operations Head", "Carried out: Manually by Analyst"] },
+      validation: { stat: "CLOSED", lines: ["Re-checking the records…", "Cash amount matches", "Ledger balance matches", "Case closed"] },
+    },
+    {
+      id: "BRK00399", type: "Corporate Action — Mandatory", authority: "CONTROLLED_ACTION", elapsed: "22.6s",
+      triage: { stat: "CA Specialist Queue", lines: ["Checking the exception…", "Type: Position · High priority", "Routing to Corporate Actions queue"] },
+      investigate: { stat: "Notice found", lines: ["Collecting the trade records…", "Reading the corporate action notice…", "Mandatory event · 2-for-1", "Checking corporate action rules"] },
+      rca: { stat: "50.3%", lines: ["Working out the cause…", "Cause found: CA – Mandatory Not Reflected", "Certainty: 50.3% — unsure if optional", "Sent to a person to double-check"] },
+      resolution: { stat: "Needs approval", lines: ["Checking how much is at risk…", "At risk: ₹2.6 Cr · High", "Fix: apply the share entitlement", "Approval: needs a person"] },
+      gate: { stat: "Approved", lines: ["Needs a person: Review · Approve · Escalate", "Waiting for a person to decide…", "Approved by the Operations Head", "Carried out: Controlled Action (system)"] },
+      validation: { stat: "CLOSED", lines: ["Re-checking the records…", "Share entitlement applied", "Share count matches", "Case closed"] },
+    },
+    {
+      id: "BRK00512", type: "Confirmation Missing", authority: "PROPOSAL", elapsed: "9.8s",
+      triage: { stat: "Trade Support Desk", lines: ["Checking the exception…", "Type: Trade · Critical priority", "Routing to Trade Support Desk"] },
+      investigate: { stat: "2 related cases", lines: ["Collecting the trade records…", "No confirmation on file…", "Searching similar past cases…", "2 related cases found"] },
+      rca: { stat: "100%", lines: ["Working out the cause…", "Cause found: Confirmation Missing", "Certainty: 100%", "No competing explanation"] },
+      resolution: { stat: "None needed", lines: ["Checking how much is at risk…", "Paperwork only — no money changes", "Fix: chase the other party", "Approval: none needed"] },
+      gate: { stat: "Allowed", lines: ["Proposal — no signature needed", "Allowed by policy"] },
+      validation: { stat: "CLOSED", lines: ["Re-checking the records…", "Confirmation received", "Case closed"] },
+    }
+  ];
+
+  var PHASES = [];
+  AGENTS.forEach(function (a, i) { PHASES.push(a); if (i < AGENTS.length - 1) PHASES.push('travel-' + a); });
+  PHASES.push('hold');
+
+  var DUR = { triage: 3600, investigate: 4400, rca: 4000, resolution: 4600, gate: 4800, validation: 3900, hold: 3400 };
+  var LINE_DELAY = 850, TRAVEL_LEG = 850, HUB_HOLD = 700;
+
+  var caseIdx = 0, phaseIdx = 0, timer = null, lineTimers = [];
+  var desks = {};
+  AGENTS.forEach(function (k) { desks[k] = document.querySelector('.desk[data-agent="' + k + '"]'); });
+  var hub = document.getElementById('hub');
+  var hubLine = document.getElementById('hubLine');
+  var packet = document.getElementById('packet');
+  var packetLabel = document.getElementById('packetLabel');
+  var banner = document.getElementById('resolvedBanner');
+  var rbId = document.getElementById('rbId');
+  var rbMeta = document.getElementById('rbMeta');
+  var spokeEl = {
+    triage: document.getElementById('spokeTriage'), investigate: document.getElementById('spokeInvestigate'),
+    rca: document.getElementById('spokeRca'), resolution: document.getElementById('spokeResolution'),
+    gate: document.getElementById('spokeGate'), validation: document.getElementById('spokeValidation'),
+  };
+
+  function clearLineTimers() { lineTimers.forEach(clearTimeout); lineTimers = []; }
+
+  function idleConsole(agent) {
+    var el = desks[agent].querySelector('[data-console]');
+    el.innerHTML = '<div class="console-line shown" style="opacity:.5;">Awaiting next exception…</div>';
+    var statEl = desks[agent].querySelector('[data-stat]');
+    desks[agent].querySelector('[data-stat-value]').textContent = '—';
+    statEl.classList.remove('shown');
+    if (agent === 'investigate') {
+      desks.investigate.querySelectorAll('.doc-fly').forEach(function (d) { d.classList.remove('fly'); });
+    }
+    var rb = desks[agent].querySelector('.badge'); if (rb) rb.classList.remove('pop');
+    if (agent === 'resolution') {
+      var rc = desks.resolution.querySelector('.res-check'); if (rc) rc.classList.remove('drawn');
+    }
+    if (agent === 'gate') {
+      var ls = desks.gate.querySelector('.lock-shackle'); if (ls) ls.classList.remove('open'); desks.gate.classList.remove('unlocked');
+    }
+    if (agent === 'validation') {
+      var vc = desks.validation.querySelector('.val-check'); if (vc) vc.classList.remove('drawn');
+    }
+  }
+
+  function fillConsole(agent, data) {
+    var el = desks[agent].querySelector('[data-console]');
+    el.innerHTML = "";
+    data.lines.forEach(function (text, i) {
+      var row = document.createElement('div');
+      row.className = 'console-line'; row.textContent = text;
+      el.appendChild(row);
+      var delay = reduced ? 0 : i * LINE_DELAY;
+      lineTimers.push(setTimeout(function () {
+        el.querySelectorAll('.console-line.fresh').forEach(function (l) { l.classList.remove('fresh'); });
+        row.classList.add('shown', 'fresh');
+      }, delay));
+    });
+    if (agent === 'investigate') {
+      var docs = desks.investigate.querySelectorAll('.doc-fly');
+      docs.forEach(function (d) { d.classList.remove('fly'); });
+      lineTimers.push(setTimeout(function () {
+        void desks.investigate.offsetWidth;
+        docs.forEach(function (d) { d.classList.add('fly'); });
+      }, reduced ? 0 : 120));
+    }
+    var statEl = desks[agent].querySelector('[data-stat]');
+    var statValEl = desks[agent].querySelector('[data-stat-value]');
+    statEl.classList.remove('shown');
+    lineTimers.push(setTimeout(function () {
+      statValEl.textContent = data.stat; statEl.classList.add('shown');
+      var bdg = desks[agent].querySelector('.badge');
+      if (bdg && (agent !== 'gate' || /^(Approved|Allowed)/.test(data.stat))) { bdg.classList.remove('pop'); void bdg.offsetWidth; bdg.classList.add('pop'); }
+      // per-agent "landing" animation, timed to when its result actually appears
+      if (agent === 'resolution') {
+        var rc = desks.resolution.querySelector('.res-check');
+        if (rc) { rc.classList.remove('drawn'); void rc.getBBox && desks.resolution.offsetWidth; rc.classList.add('drawn'); }
+      } else if (agent === 'gate' && /^(Approved|Allowed)/.test(data.stat)) {
+        var ls = desks.gate.querySelector('.lock-shackle');
+        if (ls) ls.classList.add('open'); desks.gate.classList.add('unlocked');
+      } else if (agent === 'validation') {
+        var vc = desks.validation.querySelector('.val-check');
+        if (vc) { vc.classList.remove('drawn'); void desks.validation.offsetWidth; vc.classList.add('drawn'); }
+      }
+    }, reduced ? 0 : data.lines.length * LINE_DELAY + 200));
+  }
+
+  function setActive(agent) {
+    AGENTS.forEach(function (k) {
+      desks[k].classList.toggle('active', k === agent);
+      if (k !== agent) desks[k].classList.add('done');
+    });
+  }
+
+  function litSpoke(agent, on) { spokeEl[agent].classList.toggle('lit', on); }
+  function resetSpokes() { AGENTS.forEach(function (a) { litSpoke(a, false); }); }
+
+  function pulseHub(text) {
+    hubLine.style.opacity = 0;
+    setTimeout(function () {
+      hubLine.textContent = text; hubLine.style.opacity = 1;
+      hub.classList.remove('active'); void hub.offsetWidth; hub.classList.add('active');
+    }, 100);
+  }
+
+  function updateInspector(agent, c) {
+    document.getElementById('insId').textContent = c.id;
+    document.getElementById('insType').textContent = c.type;
+    var phase = PHASES[phaseIdx];
+    document.getElementById('insStage').textContent = phase === 'hold' ? 'Resolved' : (agent ? NAMES[agent] : 'Routing…');
+    document.getElementById('insAuth').textContent = c.authority === 'PROPOSAL' ? 'No approval needed' : 'Needs approval';
+    var order = AGENTS;
+    var doneUpTo = agent ? order.indexOf(agent) : -1;
+    if (phase === 'hold') doneUpTo = order.length - 1;
+    document.querySelectorAll('.ic-item').forEach(function (item) {
+      var step = item.getAttribute('data-step');
+      item.classList.toggle('done', order.indexOf(step) <= doneUpTo && doneUpTo >= 0);
+    });
+  }
+
+  function mobileOrch(fromAgent, text) {
+    var el = document.querySelector('.mobile-orch[data-after="' + fromAgent + '"]');
+    if (el) { el.classList.add('lit'); el.querySelector('.mo-text').textContent = text; }
+  }
+  function resetMobileOrch() { document.querySelectorAll('.mobile-orch').forEach(function (e) { e.classList.remove('lit'); }); }
+
+  function runPhase() {
+    clearLineTimers();
+    var phase = PHASES[phaseIdx];
+    var c = CASES[caseIdx];
+
+    if (AGENTS.indexOf(phase) !== -1) {
+      var agent = phase;
+      setActive(agent);
+      fillConsole(agent, c[agent]);
+      packetLabel.textContent = c.id;
+      updateInspector(agent, c);
+      hubLine.textContent = agent === 'gate' ? 'Waiting for the safety check…' : ('Working: ' + NAMES[agent]);
+      if (agent === 'triage') {
+        resetSpokes(); banner.classList.remove('show'); packet.classList.remove('visible'); resetMobileOrch();
+        AGENTS.filter(function (a) { return a !== 'triage'; }).forEach(idleConsole);
+      }
+    } else if (phase === 'hold') {
+      packet.classList.remove('visible');
+      setActive(null);
+      AGENTS.forEach(function (k) { desks[k].classList.add('done'); });
+      rbId.textContent = c.id;
+      rbMeta.textContent = "Resolved in " + c.elapsed + " · Evidence captured · Audit trail created";
+      banner.classList.add('show');
+      pulseHub('Case ' + c.validation.stat);
+      updateInspector('validation', c);
+    } else {
+      var fromAgent = phase.replace('travel-', '');
+      var idx = AGENTS.indexOf(fromAgent);
+      var toAgent = AGENTS[idx + 1];
+      updateInspector(null, c);
+      litSpoke(fromAgent, true);
+
+      var msg = fromAgent === 'triage' ? 'Routing to Investigation Agent'
+        : fromAgent === 'investigate' ? 'Routing to Root Cause Agent'
+        : fromAgent === 'rca' ? 'Routing to Resolution Proposal Agent'
+        : fromAgent === 'resolution' ? 'Checking control gate…'
+        : (c.authority === 'PROPOSAL' ? 'Allowed by policy — executing…' : 'Authorized — executing repair…');
+
+      if (reduced) {
+        litSpoke(toAgent, true); pulseHub(msg); mobileOrch(fromAgent, msg);
+      } else {
+        packet.classList.add('visible');
+        animateAlongSpoke(spokeEl[fromAgent], 1, 0, TRAVEL_LEG, function () {
+          litSpoke(fromAgent, false);
+          pulseHub(msg);
+          mobileOrch(fromAgent, msg);
+          setTimeout(function () {
+            litSpoke(toAgent, true);
+            animateAlongSpoke(spokeEl[toAgent], 0, 1, TRAVEL_LEG, function () { packet.classList.remove('visible'); });
+          }, HUB_HOLD);
+        });
+      }
+    }
+
+    var dur = phase === 'hold' ? DUR.hold : (AGENTS.indexOf(phase) !== -1 ? DUR[phase] : TRAVEL_LEG * 2 + HUB_HOLD + 350);
+    timer = setTimeout(advance, reduced ? Math.min(dur, 700) : dur);
+  }
+
+  function animateAlongSpoke(pathEl, fromT, toT, duration, onDone) {
+    var len = pathEl.getTotalLength();
+    var start = performance.now();
+    function frame(now) {
+      var t = Math.min(1, (now - start) / duration);
+      var d = fromT + (toT - fromT) * t;
+      var pt = pathEl.getPointAtLength(len * d);
+      packet.setAttribute('transform', 'translate(' + pt.x + ',' + pt.y + ')');
+      if (t < 1) requestAnimationFrame(frame); else if (onDone) onDone();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function advance() {
+    phaseIdx++;
+    if (phaseIdx >= PHASES.length) {
+      phaseIdx = 0;
+      caseIdx = (caseIdx + 1) % CASES.length;
+      AGENTS.forEach(function (k) { desks[k].classList.remove('done', 'active'); });
+    }
+    runPhase();
+  }
+
+  function restart() {
+    clearTimeout(timer); clearLineTimers();
+    phaseIdx = 0; caseIdx = 0;
+    AGENTS.forEach(function (k) { desks[k].classList.remove('done', 'active'); });
+    runPhase();
+  }
+
+  runPhase();
+
+  var toggle = document.getElementById('inspectorToggle');
+  var panel = document.getElementById('inspector');
+  var toggleLabel = document.getElementById('inspectorToggleLabel');
+  toggle.addEventListener('click', function () {
+    var open = panel.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggleLabel.textContent = open ? 'Hide inspector' : 'Inspect exception';
+  });
+
+  var restartBtn = document.getElementById('restartBtn');
+  restartBtn.addEventListener('click', function () {
+    restartBtn.classList.remove('spin'); void restartBtn.offsetWidth; restartBtn.classList.add('spin');
+    restart();
+  });
+
+  // When embedded in the Streamlit app, size the iframe to the content so there is no
+  // dead space (or clipping) at any window width. Silently does nothing standalone.
+  function fitFrame() {
+    try {
+      if (window.frameElement) {
+        var h = (Math.ceil(document.querySelector('.wrap').getBoundingClientRect().height) + 56) + 'px';
+        window.frameElement.style.height = h;
+      }
+    } catch (e) {}
+  }
+  fitFrame();
+  window.addEventListener('resize', fitFrame);
+  setInterval(fitFrame, 700);
+  if (window.ResizeObserver) new ResizeObserver(fitFrame).observe(document.querySelector('.wrap'));
+
+  var shell = document.querySelector('.stage-shell');
+  for (var i = 0; i < 22; i++) {
+    var s = document.createElement('div'); s.className = 'spark';
+    s.style.left = (Math.random() * 100) + '%'; s.style.top = (Math.random() * 100) + '%';
+    s.style.animationDelay = (Math.random() * 5) + 's'; s.style.animationDuration = (4 + Math.random() * 3) + 's';
+    shell.appendChild(s);
+  }
+})();
+</script>
