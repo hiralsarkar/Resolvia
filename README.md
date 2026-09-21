@@ -52,7 +52,8 @@ setup you can probably loosen it.
 
 The narrative layers (document extraction and the written root-cause summary)
 use OpenRouter and run only if `OPENROUTER_API_KEY` is set. Copy `.env.example` to
-`.env` and fill it in (optionally set `OPENROUTER_MODEL` too). Everything else
+`.env` and fill it in (optionally set `OPENROUTER_MODEL` too; it defaults to a list of free models that are
+tried in order, since free tiers rate-limit). Everything else
 runs offline.
 
 ## The app
