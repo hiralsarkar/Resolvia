@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: KOTAK-CUST  SEBI Reg No: INZ000200137
+Compliance Officer: R. Menon | compliance@kotak.com
+Investor Complaints: complaints@kotak.com
+
+Contract Note No : CN202608081091
+Trade Date       : 08/08/2026
+Settlement No     : SETT-20260809
+Unique Client Code: UCC101091
+Trading Code      : TRD101091
+
+Security    : ICICIBANK  ISIN: INE101091
+Buy/Sell    : BUY
+Quantity    : 425
+Rate        : INR 1260.07
+Trade Value : INR 535529.75
+
+Brokerage                    : INR 160.66
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 15.91
+SEBI Turnover Fees           : INR 0.54
+Stamp Duty                   : INR 80.33
+GST (18%)                    : INR 31.78
+-------------------------------------------
+Net Amount Payable : INR 535818.97
+
+This contract note is issued subject to the rules, byelaws of NSE.

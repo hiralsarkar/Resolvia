@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608010887
+Trade Date       : 2026-08-01
+Settlement No     : SETT-20260802
+Unique Client Code: UCC100887
+Trading Code      : TRD100887
+
+Security    : TATASTEEL  ISIN: INE100887
+Buy/Sell    : SELL
+Quantity    : 1000
+Rate        : INR 172.51
+Trade Value : INR 172510.0
+
+Brokerage                    : INR 51.75
+Securities Transaction Tax   : INR 172.51
+Exchange Transaction Charges : INR 5.12
+SEBI Turnover Fees           : INR 0.17
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 10.24
+-------------------------------------------
+Net Amount Receivable : INR 172270.21
+
+This contract note is issued subject to the rules, byelaws of NSE.

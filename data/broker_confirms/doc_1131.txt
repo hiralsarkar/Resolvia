@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: KOTAK-CUST  SEBI Reg No: INZ000200137
+Compliance Officer: R. Menon | compliance@kotak.com
+Investor Complaints: complaints@kotak.com
+
+Contract Note No : CN202608150526
+Trade Date       : 15/08/2026
+Settlement No     : SETT-20260816
+Unique Client Code: UCC100526
+Trading Code      : TRD100526
+
+Security    : INFY  ISIN: INE100526
+Buy/Sell    : SELL
+Quantity    : 825
+Rate        : INR 1918.53
+Trade Value : INR 1582787.25
+
+Brokerage                    : INR 474.84
+Securities Transaction Tax   : INR 1582.79
+Exchange Transaction Charges : INR 47.01
+SEBI Turnover Fees           : INR 1.58
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 93.93
+-------------------------------------------
+Net Amount Receivable : INR 1580587.1
+
+This contract note is issued subject to the rules, byelaws of NSE.

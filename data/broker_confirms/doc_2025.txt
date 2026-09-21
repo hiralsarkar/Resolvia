@@ -1,0 +1,15 @@
+TRADE  CONFIRMATION   ADVICE
+
+Trade Ref No     TRD102384
+Security          HDFC Bank
+Buy/Sell            BUY
+Quantity            250
+Rate                 Rs 1670.01
+Value  Date         22-08-2026
+Counterparty       DEUTSCHE-BROKER
+
+This is a system generated advice   Please verify and revert
+in case of any discrepancy within 24 hours of receipt
+
+Authorized  Signatory
+S. Kapoor

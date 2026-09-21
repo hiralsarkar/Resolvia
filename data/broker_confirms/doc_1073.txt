@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: MORGANSTANLEY-BROKER  SEBI Reg No: INZ000209137
+Compliance Officer: R. Menon | compliance@morganstanley.com
+Investor Complaints: complaints@morganstanley.com
+
+Contract Note No : CN202608210130
+Trade Date       : 22/08/2026
+Settlement No     : SETT-20260822
+Unique Client Code: UCC100130
+Trading Code      : TRD100130
+
+Security    : TATASTEEL  ISIN: INE100130
+Buy/Sell    : BUY
+Quantity    : 2000
+Rate        : INR 171.8
+Trade Value : INR 343600.0
+
+Brokerage                    : INR 103.08
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 10.2
+SEBI Turnover Fees           : INR 0.34
+Stamp Duty                   : INR 51.54
+GST (18%)                    : INR 20.39
+-------------------------------------------
+Net Amount Payable : INR 343785.55
+
+This contract note is issued subject to the rules, byelaws of NSE.

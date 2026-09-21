@@ -1,0 +1,20 @@
+From: S. Kapoor <s@nomura.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD100622
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 03-08-2026:
+
+  Security     : HDFCBANK
+  Txn Type     : BUY
+  Qty          : 1500
+  Price        : INR 1677.66
+  Settlement   : 2026-08-04
+  Our Ref      : TRD100622
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+S. Kapoor
+NOMURA-BROKER

@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608210251
+Trade Date       : 2026-08-21
+Settlement No     : SETT-20260822
+Unique Client Code: UCC100251
+Trading Code      : TRD100251
+
+Security    : ICICIBANK  ISIN: INE100251
+Buy/Sell    : BUY
+Quantity    : 100
+Rate        : INR 1269.48
+Trade Value : INR 126948.0
+
+Brokerage                    : INR 38.08
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 3.77
+SEBI Turnover Fees           : INR 0.13
+Stamp Duty                   : INR 19.04
+GST (18%)                    : INR 7.53
+-------------------------------------------
+Net Amount Payable : INR 127016.55
+
+This contract note is issued subject to the rules, byelaws of NSE.

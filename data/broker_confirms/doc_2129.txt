@@ -1,0 +1,20 @@
+From: N. Rao <n@hdfc.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD105253
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 12/08/2026:
+
+  Security     : HINDUNILVR
+  Txn Type     : BUY
+  Qty          : 250
+  Price        : INR 2758.55
+  Settlement   : 2026-08-13
+  Our Ref      : TRD105253
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+N. Rao
+HDFC-CUST

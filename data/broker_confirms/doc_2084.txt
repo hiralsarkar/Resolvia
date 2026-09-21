@@ -1,0 +1,20 @@
+From: A. Fernandes <a@nomura.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD102660
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 03/08/2026:
+
+  Security     : MARUTI
+  Txn Type     : BUY
+  Qty          : 100
+  Price        : INR 12948.76
+  Settlement   : 2026-08-04
+  Our Ref      : TRD102660
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+A. Fernandes
+NOMURA-BROKER

@@ -1,0 +1,20 @@
+From: S. Kapoor <s@hdfc.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD105245
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 02-08-2026:
+
+  Security     : Airtel
+  Txn Type     : BUY
+  Qty          : 1500
+  Price        : INR 1687.89
+  Settlement   : 2026-08-03
+  Our Ref      : TRD105245
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+S. Kapoor
+HDFC-CUST

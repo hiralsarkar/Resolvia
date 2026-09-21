@@ -1,0 +1,15 @@
+From: N. Rao <n@nomura.com>
+To: ops-recon@ourfirm.com
+Subject: EOD Trade Confirmations - 2 trades - 2026-08-09
+
+Dear Team,
+
+Please find below confirmation for the following trades executed today:
+
+  TRD100255  Airtel       BUY    1000 @ 1692.93    SD:09-08-2026
+  TRD100763  LT           SELL   1000 @ 3692.84    SD:2026-08-15
+
+Kindly confirm receipt and advise of any discrepancies at your end.
+
+Regards,
+N. Rao

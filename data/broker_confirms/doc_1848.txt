@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: MORGANSTANLEY-BROKER  SEBI Reg No: INZ000209137
+Compliance Officer: R. Menon | compliance@morganstanley.com
+Investor Complaints: complaints@morganstanley.com
+
+Contract Note No : CN202608165276
+Trade Date       : 17/08/2026
+Settlement No     : SETT-20260817
+Unique Client Code: UCC105276
+Trading Code      : TRD105276
+
+Security    : BHARTIARTL  ISIN: INE105276
+Buy/Sell    : SELL
+Quantity    : 250
+Rate        : INR 1696.64
+Trade Value : INR 424160.0
+
+Brokerage                    : INR 127.25
+Securities Transaction Tax   : INR 424.16
+Exchange Transaction Charges : INR 12.6
+SEBI Turnover Fees           : INR 0.42
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 25.17
+-------------------------------------------
+Net Amount Receivable : INR 423570.4
+
+This contract note is issued subject to the rules, byelaws of NSE.

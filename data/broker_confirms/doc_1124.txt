@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: ICICI-CUST  SEBI Reg No: INZ000183631
+Compliance Officer: R. Menon | compliance@icici.com
+Investor Complaints: complaints@icici.com
+
+Contract Note No : CN202608050473
+Trade Date       : 05/08/2026
+Settlement No     : SETT-20260806
+Unique Client Code: UCC100473
+Trading Code      : TRD100473
+
+Security    : ITC  ISIN: INE100473
+Buy/Sell    : BUY
+Quantity    : 200
+Rate        : INR 470.32
+Trade Value : INR 94064.0
+
+Brokerage                    : INR 28.22
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 2.79
+SEBI Turnover Fees           : INR 0.09
+Stamp Duty                   : INR 14.11
+GST (18%)                    : INR 5.58
+-------------------------------------------
+Net Amount Payable : INR 94114.79
+
+This contract note is issued subject to the rules, byelaws of NSE.

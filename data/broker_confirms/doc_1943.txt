@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: MORGANSTANLEY-BROKER  SEBI Reg No: INZ000209137
+Compliance Officer: R. Menon | compliance@morganstanley.com
+Investor Complaints: complaints@morganstanley.com
+
+Contract Note No : CN202608025953
+Trade Date       : 02-08-2026
+Settlement No     : SETT-20260803
+Unique Client Code: UCC105953
+Trading Code      : TRD105953
+
+Security    : MARUTI  ISIN: INE105953
+Buy/Sell    : BUY
+Quantity    : 175
+Rate        : INR 13212.9
+Trade Value : INR 2312257.5
+
+Brokerage                    : INR 693.68
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 68.67
+SEBI Turnover Fees           : INR 2.31
+Stamp Duty                   : INR 346.84
+GST (18%)                    : INR 137.22
+-------------------------------------------
+Net Amount Payable : INR 2313506.22
+
+This contract note is issued subject to the rules, byelaws of NSE.

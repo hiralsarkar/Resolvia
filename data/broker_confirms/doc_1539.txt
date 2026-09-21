@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: MORGANSTANLEY-BROKER  SEBI Reg No: INZ000209137
+Compliance Officer: R. Menon | compliance@morganstanley.com
+Investor Complaints: complaints@morganstanley.com
+
+Contract Note No : CN202608033291
+Trade Date       : 03-08-2026
+Settlement No     : SETT-20260804
+Unique Client Code: UCC103291
+Trading Code      : TRD103291
+
+Security    : HINDUNILVR  ISIN: INE103291
+Buy/Sell    : SELL
+Quantity    : 500
+Rate        : INR 2746.88
+Trade Value : INR 1373440.0
+
+Brokerage                    : INR 412.03
+Securities Transaction Tax   : INR 1373.44
+Exchange Transaction Charges : INR 40.79
+SEBI Turnover Fees           : INR 1.37
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 81.51
+-------------------------------------------
+Net Amount Receivable : INR 1371530.86
+
+This contract note is issued subject to the rules, byelaws of NSE.

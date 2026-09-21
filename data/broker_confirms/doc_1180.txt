@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: HDFC-CUST  SEBI Reg No: INZ000186937
+Compliance Officer: R. Menon | compliance@hdfc.com
+Investor Complaints: complaints@hdfc.com
+
+Contract Note No : CN202608190931
+Trade Date       : 19/08/2026
+Settlement No     : SETT-20260820
+Unique Client Code: UCC100931
+Trading Code      : TRD100931
+
+Security    : MARUTI  ISIN: INE100931
+Buy/Sell    : BUY
+Quantity    : 425
+Rate        : INR 13255.98
+Trade Value : INR 5633791.5
+
+Brokerage                    : INR 1690.14
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 167.32
+SEBI Turnover Fees           : INR 5.63
+Stamp Duty                   : INR 845.07
+GST (18%)                    : INR 334.34
+-------------------------------------------
+Net Amount Payable : INR 5636834.0
+
+This contract note is issued subject to the rules, byelaws of NSE.

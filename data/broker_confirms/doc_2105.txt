@@ -1,0 +1,15 @@
+TRADE  CONFIRMATION   ADVICE
+
+Trade Ref No     TRD103285
+Security          SBIN
+Buy/Sell            SELL
+Quantity            100
+Rate                 Rs 841.68
+Value  Date         2026-08-05
+Counterparty       MORGANSTANLEY-BROKER
+
+This is a system generated advice   Please verify and revert
+in case of any discrepancy within 24 hours of receipt
+
+Authorized  Signatory
+N. Rao

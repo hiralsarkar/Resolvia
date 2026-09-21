@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608182602
+Trade Date       : 2026-08-18
+Settlement No     : SETT-20260819
+Unique Client Code: UCC102602
+Trading Code      : TRD102602
+
+Security    : INFY  ISIN: INE102602
+Buy/Sell    : BUY
+Quantity    : 250
+Rate        : INR 1898.53
+Trade Value : INR 474632.5
+
+Brokerage                    : INR 142.39
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 14.1
+SEBI Turnover Fees           : INR 0.47
+Stamp Duty                   : INR 71.19
+GST (18%)                    : INR 28.17
+-------------------------------------------
+Net Amount Payable : INR 474888.82
+
+This contract note is issued subject to the rules, byelaws of NSE.

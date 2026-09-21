@@ -1,0 +1,19 @@
+From: R. Menon <r@deutsche.com>
+To: ops-recon@ourfirm.com
+Subject: EOD Trade Confirmations - 6 trades - 2026-08-15
+
+Dear Team,
+
+Please find below confirmation for the following trades executed today:
+
+  TRD105631  Kotak Mahindra Bank BUY     750 @ 1963.04    SD:15-08-2026
+  TRD101598  SBI          SELL    500 @ 848.26     SD:2026-08-18
+  TRD101713  TCS          BUY     100 @ 4107.74    SD:18-08-2026
+  TRD102132  RIL          BUY     250 @ 2859.23    SD:05-08-2026
+  TRD103406  Tata Steel   SELL    500 @ 172.89     SD:20-08-2026
+  TRD104506  LT           BUY     100 @ 3695.46    SD:22/08/2026
+
+Kindly confirm receipt and advise of any discrepancies at your end.
+
+Regards,
+R. Menon

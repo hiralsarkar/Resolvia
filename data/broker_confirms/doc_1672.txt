@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: NOMURA-BROKER  SEBI Reg No: INZ000220236
+Compliance Officer: R. Menon | compliance@nomura.com
+Investor Complaints: complaints@nomura.com
+
+Contract Note No : CN202608184070
+Trade Date       : 18-08-2026
+Settlement No     : SETT-20260819
+Unique Client Code: UCC104070
+Trading Code      : TRD104070
+
+Security    : RELIANCE  ISIN: INE104070
+Buy/Sell    : SELL
+Quantity    : 300
+Rate        : INR 2861.58
+Trade Value : INR 858474.0
+
+Brokerage                    : INR 257.54
+Securities Transaction Tax   : INR 858.47
+Exchange Transaction Charges : INR 25.5
+SEBI Turnover Fees           : INR 0.86
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 50.95
+-------------------------------------------
+Net Amount Receivable : INR 857280.68
+
+This contract note is issued subject to the rules, byelaws of NSE.

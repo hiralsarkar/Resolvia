@@ -1,0 +1,19 @@
+From: A. Fernandes <a@deutsche.com>
+To: ops-recon@ourfirm.com
+Subject: EOD Trade Confirmations - 6 trades - 2026-08-13
+
+Dear Team,
+
+Please find below confirmation for the following trades executed today:
+
+  TRD101940  KOTAKBANK    SELL    750 @ 1951.69    SD:13/08/2026
+  TRD100454  Infosys      SELL    100 @ 1891.3     SD:22-08-2026
+  TRD103529  LT           SELL   2000 @ 3668.87    SD:2026-08-16
+  TRD103080  HDFCBANK     BUY    1500 @ 1669.98    SD:2026-08-05
+  TRD104968  Airtel       BUY     100 @ 1695.25    SD:21/08/2026
+  TRD105091  Maruti Suzuki SELL    750 @ 12926.69   SD:2026-08-10
+
+Kindly confirm receipt and advise of any discrepancies at your end.
+
+Regards,
+A. Fernandes

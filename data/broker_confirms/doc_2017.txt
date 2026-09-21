@@ -1,0 +1,15 @@
+TRADE  CONFIRMATION   ADVICE
+
+Trade Ref No     TRD103917
+Security          ICICIBANK
+Buy/Sell            SELL
+Quantity            1000
+Rate                 Rs 1244.07
+Value  Date         04-08-2026
+Counterparty       MORGANSTANLEY-BROKER
+
+This is a system generated advice   Please verify and revert
+in case of any discrepancy within 24 hours of receipt
+
+Authorized  Signatory
+S. Kapoor

@@ -1,0 +1,20 @@
+From: P. Iyer <p@kotak.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD101065
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 2026-08-14:
+
+  Security     : MARUTI
+  Txn Type     : SELL
+  Qty          : 200
+  Price        : INR 13031.99
+  Settlement   : 2026-08-15
+  Our Ref      : TRD101065
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+P. Iyer
+KOTAK-CUST

@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608082314
+Trade Date       : 09-08-2026
+Settlement No     : SETT-20260809
+Unique Client Code: UCC102314
+Trading Code      : TRD102314
+
+Security    : BHARTIARTL  ISIN: INE102314
+Buy/Sell    : SELL
+Quantity    : 500
+Rate        : INR 1684.35
+Trade Value : INR 842175.0
+
+Brokerage                    : INR 252.65
+Securities Transaction Tax   : INR 842.18
+Exchange Transaction Charges : INR 25.01
+SEBI Turnover Fees           : INR 0.84
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 49.98
+-------------------------------------------
+Net Amount Receivable : INR 841004.34
+
+This contract note is issued subject to the rules, byelaws of NSE.

@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: ICICI-CUST  SEBI Reg No: INZ000183631
+Compliance Officer: R. Menon | compliance@icici.com
+Investor Complaints: complaints@icici.com
+
+Contract Note No : CN202608192439
+Trade Date       : 2026-08-20
+Settlement No     : SETT-20260820
+Unique Client Code: UCC102439
+Trading Code      : TRD102439
+
+Security    : WIPRO  ISIN: INE102439
+Buy/Sell    : BUY
+Quantity    : 200
+Rate        : INR 613.28
+Trade Value : INR 122656.0
+
+Brokerage                    : INR 36.8
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 3.64
+SEBI Turnover Fees           : INR 0.12
+Stamp Duty                   : INR 18.4
+GST (18%)                    : INR 7.28
+-------------------------------------------
+Net Amount Payable : INR 122722.24
+
+This contract note is issued subject to the rules, byelaws of NSE.

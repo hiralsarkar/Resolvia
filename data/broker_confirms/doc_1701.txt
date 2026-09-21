@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608064210
+Trade Date       : 06/08/2026
+Settlement No     : SETT-20260807
+Unique Client Code: UCC104210
+Trading Code      : TRD104210
+
+Security    : RELIANCE  ISIN: INE104210
+Buy/Sell    : SELL
+Quantity    : 325
+Rate        : INR 2886.01
+Trade Value : INR 937953.25
+
+Brokerage                    : INR 281.39
+Securities Transaction Tax   : INR 937.95
+Exchange Transaction Charges : INR 27.86
+SEBI Turnover Fees           : INR 0.94
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 55.66
+-------------------------------------------
+Net Amount Receivable : INR 936649.45
+
+This contract note is issued subject to the rules, byelaws of NSE.

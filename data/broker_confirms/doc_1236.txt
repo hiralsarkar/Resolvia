@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: HDFC-CUST  SEBI Reg No: INZ000186937
+Compliance Officer: R. Menon | compliance@hdfc.com
+Investor Complaints: complaints@hdfc.com
+
+Contract Note No : CN202608071326
+Trade Date       : 07-08-2026
+Settlement No     : SETT-20260808
+Unique Client Code: UCC101326
+Trading Code      : TRD101326
+
+Security    : SBIN  ISIN: INE101326
+Buy/Sell    : BUY
+Quantity    : 250
+Rate        : INR 847.42
+Trade Value : INR 211855.0
+
+Brokerage                    : INR 63.56
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 6.29
+SEBI Turnover Fees           : INR 0.21
+Stamp Duty                   : INR 31.78
+GST (18%)                    : INR 12.57
+-------------------------------------------
+Net Amount Payable : INR 211969.41
+
+This contract note is issued subject to the rules, byelaws of NSE.

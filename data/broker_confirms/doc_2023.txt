@@ -1,0 +1,20 @@
+From: K. Sharma <k@nomura.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD102665
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 06-08-2026:
+
+  Security     : State Bank of India
+  Txn Type     : BUY
+  Qty          : 750
+  Price        : INR 849.43
+  Settlement   : 07-08-2026
+  Our Ref      : TRD102665
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+K. Sharma
+NOMURA-BROKER

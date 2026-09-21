@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: HDFC-CUST  SEBI Reg No: INZ000186937
+Compliance Officer: R. Menon | compliance@hdfc.com
+Investor Complaints: complaints@hdfc.com
+
+Contract Note No : CN202608090910
+Trade Date       : 2026-08-09
+Settlement No     : SETT-20260810
+Unique Client Code: UCC100910
+Trading Code      : TRD100910
+
+Security    : RELIANCE  ISIN: INE100910
+Buy/Sell    : BUY
+Quantity    : 750
+Rate        : INR 2921.86
+Trade Value : INR 2191395.0
+
+Brokerage                    : INR 657.42
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 65.08
+SEBI Turnover Fees           : INR 2.19
+Stamp Duty                   : INR 328.71
+GST (18%)                    : INR 130.05
+-------------------------------------------
+Net Amount Payable : INR 2192578.45
+
+This contract note is issued subject to the rules, byelaws of NSE.

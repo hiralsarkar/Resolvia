@@ -1,0 +1,20 @@
+From: A. Fernandes <a@deutsche.com>
+To: ops-recon@ourfirm.com
+Subject: EOD Trade Confirmations - 7 trades - 2026-08-16
+
+Dear Team,
+
+Please find below confirmation for the following trades executed today:
+
+  TRD103999  SBIN         SELL    200 @ 845.89     SD:16/08/2026
+  TRD103012  Tata Consultancy BUY     500 @ 4138.66    SD:19/08/2026
+  TRD102773  LT           SELL    200 @ 3692.76    SD:2026-08-13
+  TRD104345  Maruti Suzuki SELL   1000 @ 13020.24   SD:11/08/2026
+  TRD103445  State Bank of India SELL    100 @ 848.43     SD:03-08-2026
+  TRD105473  RIL          BUY     750 @ 2857.01    SD:2026-08-14
+  TRD102395  Tata Steel   SELL    200 @ 172.21     SD:05-08-2026
+
+Kindly confirm receipt and advise of any discrepancies at your end.
+
+Regards,
+A. Fernandes

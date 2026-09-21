@@ -1,0 +1,20 @@
+From: V. Desai <v@icici.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD105213
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 09-08-2026:
+
+  Security     : ICICI Bank
+  Txn Type     : SELL
+  Qty          : 250
+  Price        : INR 1237.03
+  Settlement   : 10/08/2026
+  Our Ref      : TRD105213
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+V. Desai
+ICICI-CUST

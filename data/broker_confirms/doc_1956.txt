@@ -1,0 +1,20 @@
+From: A. Fernandes <a@icici.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD102617
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 01-08-2026:
+
+  Security     : Axis Bank
+  Txn Type     : SELL
+  Qty          : 200
+  Price        : INR 1175.04
+  Settlement   : 2026-08-02
+  Our Ref      : TRD102617
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+A. Fernandes
+ICICI-CUST

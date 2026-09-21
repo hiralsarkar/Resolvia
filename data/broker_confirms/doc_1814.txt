@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: ICICI-CUST  SEBI Reg No: INZ000183631
+Compliance Officer: R. Menon | compliance@icici.com
+Investor Complaints: complaints@icici.com
+
+Contract Note No : CN202608085080
+Trade Date       : 09-08-2026
+Settlement No     : SETT-20260809
+Unique Client Code: UCC105080
+Trading Code      : TRD105080
+
+Security    : RELIANCE  ISIN: INE105080
+Buy/Sell    : BUY
+Quantity    : 750
+Rate        : INR 2851.73
+Trade Value : INR 2138797.5
+
+Brokerage                    : INR 641.64
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 63.52
+SEBI Turnover Fees           : INR 2.14
+Stamp Duty                   : INR 320.82
+GST (18%)                    : INR 126.93
+-------------------------------------------
+Net Amount Payable : INR 2139952.55
+
+This contract note is issued subject to the rules, byelaws of NSE.

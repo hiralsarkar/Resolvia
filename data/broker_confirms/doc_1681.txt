@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: MORGANSTANLEY-BROKER  SEBI Reg No: INZ000209137
+Compliance Officer: R. Menon | compliance@morganstanley.com
+Investor Complaints: complaints@morganstanley.com
+
+Contract Note No : CN202608104093
+Trade Date       : 10/08/2026
+Settlement No     : SETT-20260811
+Unique Client Code: UCC104093
+Trading Code      : TRD104093
+
+Security    : INFY  ISIN: INE104093
+Buy/Sell    : BUY
+Quantity    : 125
+Rate        : INR 1921.83
+Trade Value : INR 240228.75
+
+Brokerage                    : INR 72.07
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 7.13
+SEBI Turnover Fees           : INR 0.24
+Stamp Duty                   : INR 36.03
+GST (18%)                    : INR 14.26
+-------------------------------------------
+Net Amount Payable : INR 240358.48
+
+This contract note is issued subject to the rules, byelaws of NSE.

@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: ICICI-CUST  SEBI Reg No: INZ000183631
+Compliance Officer: R. Menon | compliance@icici.com
+Investor Complaints: complaints@icici.com
+
+Contract Note No : CN202608143645
+Trade Date       : 15-08-2026
+Settlement No     : SETT-20260815
+Unique Client Code: UCC103645
+Trading Code      : TRD103645
+
+Security    : TATASTEEL  ISIN: INE103645
+Buy/Sell    : BUY
+Quantity    : 500
+Rate        : INR 172.47
+Trade Value : INR 86235.0
+
+Brokerage                    : INR 25.87
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 2.56
+SEBI Turnover Fees           : INR 0.09
+Stamp Duty                   : INR 12.94
+GST (18%)                    : INR 5.12
+-------------------------------------------
+Net Amount Payable : INR 86281.58
+
+This contract note is issued subject to the rules, byelaws of NSE.

@@ -1,0 +1,20 @@
+From: P. Iyer <p@hdfc.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD101068
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 07/08/2026:
+
+  Security     : HINDUNILVR
+  Txn Type     : BUY
+  Qty          : 500
+  Price        : INR 2757.56
+  Settlement   : 2026-08-08
+  Our Ref      : TRD101068
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+P. Iyer
+HDFC-CUST

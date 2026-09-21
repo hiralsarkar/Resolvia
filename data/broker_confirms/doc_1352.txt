@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608032094
+Trade Date       : 03-08-2026
+Settlement No     : SETT-20260804
+Unique Client Code: UCC102094
+Trading Code      : TRD102094
+
+Security    : LT  ISIN: INE102094
+Buy/Sell    : BUY
+Quantity    : 1000
+Rate        : INR 3663.84
+Trade Value : INR 3663840.0
+
+Brokerage                    : INR 1099.15
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 108.82
+SEBI Turnover Fees           : INR 3.66
+Stamp Duty                   : INR 549.58
+GST (18%)                    : INR 217.43
+-------------------------------------------
+Net Amount Payable : INR 3665818.64
+
+This contract note is issued subject to the rules, byelaws of NSE.

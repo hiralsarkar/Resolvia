@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: NOMURA-BROKER  SEBI Reg No: INZ000220236
+Compliance Officer: R. Menon | compliance@nomura.com
+Investor Complaints: complaints@nomura.com
+
+Contract Note No : CN202608035982
+Trade Date       : 03/08/2026
+Settlement No     : SETT-20260804
+Unique Client Code: UCC105982
+Trading Code      : TRD105982
+
+Security    : TATASTEEL  ISIN: INE105982
+Buy/Sell    : BUY
+Quantity    : 2075
+Rate        : INR 175.14
+Trade Value : INR 363415.5
+
+Brokerage                    : INR 109.02
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 10.79
+SEBI Turnover Fees           : INR 0.36
+Stamp Duty                   : INR 54.51
+GST (18%)                    : INR 21.57
+-------------------------------------------
+Net Amount Payable : INR 363611.75
+
+This contract note is issued subject to the rules, byelaws of NSE.

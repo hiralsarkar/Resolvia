@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: NOMURA-BROKER  SEBI Reg No: INZ000220236
+Compliance Officer: R. Menon | compliance@nomura.com
+Investor Complaints: complaints@nomura.com
+
+Contract Note No : CN202608212191
+Trade Date       : 21-08-2026
+Settlement No     : SETT-20260822
+Unique Client Code: UCC102191
+Trading Code      : TRD102191
+
+Security    : HDFCBANK  ISIN: INE102191
+Buy/Sell    : SELL
+Quantity    : 250
+Rate        : INR 1707.27
+Trade Value : INR 426817.5
+
+Brokerage                    : INR 128.05
+Securities Transaction Tax   : INR 426.82
+Exchange Transaction Charges : INR 12.68
+SEBI Turnover Fees           : INR 0.43
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 25.33
+-------------------------------------------
+Net Amount Receivable : INR 426224.19
+
+This contract note is issued subject to the rules, byelaws of NSE.

@@ -1,0 +1,21 @@
+From: S. Kapoor <s@deutsche.com>
+To: ops-recon@ourfirm.com
+Subject: EOD Trade Confirmations - 8 trades - 2026-08-05
+
+Dear Team,
+
+Please find below confirmation for the following trades executed today:
+
+  TRD102547  AXISBANK     BUY     250 @ 1174.35    SD:2026-08-05
+  TRD102485  Reliance Industries BUY     750 @ 2855.83    SD:03/08/2026
+  TRD101323  Maruti Suzuki SELL   2000 @ 12917.67   SD:2026-08-14
+  TRD102723  HDFC Bank    BUY     500 @ 1674.78    SD:15/08/2026
+  TRD103458  Wipro Ltd    BUY     250 @ 609.87     SD:2026-08-17
+  TRD101932  Hindustan Unilever SELL    500 @ 2737.73    SD:2026-08-18
+  TRD104959  Tata Consultancy BUY    2000 @ 4102.54    SD:17/08/2026
+  TRD100918  BHARTIARTL   SELL    100 @ 1692.64    SD:22-08-2026
+
+Kindly confirm receipt and advise of any discrepancies at your end.
+
+Regards,
+S. Kapoor

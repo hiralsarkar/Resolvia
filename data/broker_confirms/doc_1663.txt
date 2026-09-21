@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: NOMURA-BROKER  SEBI Reg No: INZ000220236
+Compliance Officer: R. Menon | compliance@nomura.com
+Investor Complaints: complaints@nomura.com
+
+Contract Note No : CN202608164009
+Trade Date       : 16-08-2026
+Settlement No     : SETT-20260817
+Unique Client Code: UCC104009
+Trading Code      : TRD104009
+
+Security    : ICICIBANK  ISIN: INE104009
+Buy/Sell    : BUY
+Quantity    : 2000
+Rate        : INR 1239.11
+Trade Value : INR 2478220.0
+
+Brokerage                    : INR 743.47
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 73.6
+SEBI Turnover Fees           : INR 2.48
+Stamp Duty                   : INR 371.73
+GST (18%)                    : INR 147.07
+-------------------------------------------
+Net Amount Payable : INR 2479558.35
+
+This contract note is issued subject to the rules, byelaws of NSE.

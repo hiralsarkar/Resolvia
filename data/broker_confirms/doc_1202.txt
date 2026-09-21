@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: MORGANSTANLEY-BROKER  SEBI Reg No: INZ000209137
+Compliance Officer: R. Menon | compliance@morganstanley.com
+Investor Complaints: complaints@morganstanley.com
+
+Contract Note No : CN202608091069
+Trade Date       : 09-08-2026
+Settlement No     : SETT-20260810
+Unique Client Code: UCC101069
+Trading Code      : TRD101069
+
+Security    : HDFCBANK  ISIN: INE101069
+Buy/Sell    : SELL
+Quantity    : 650
+Rate        : INR 1674.19
+Trade Value : INR 1088223.5
+
+Brokerage                    : INR 326.47
+Securities Transaction Tax   : INR 1088.22
+Exchange Transaction Charges : INR 32.32
+SEBI Turnover Fees           : INR 1.09
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 64.58
+-------------------------------------------
+Net Amount Receivable : INR 1086710.82
+
+This contract note is issued subject to the rules, byelaws of NSE.

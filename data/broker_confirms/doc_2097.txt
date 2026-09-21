@@ -1,0 +1,20 @@
+From: A. Fernandes <a@icici.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD105365
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 08-08-2026:
+
+  Security     : State Bank of India
+  Txn Type     : BUY
+  Qty          : 2000
+  Price        : INR 847.91
+  Settlement   : 09-08-2026
+  Our Ref      : TRD105365
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+A. Fernandes
+ICICI-CUST

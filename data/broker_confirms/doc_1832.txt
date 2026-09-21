@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: MORGANSTANLEY-BROKER  SEBI Reg No: INZ000209137
+Compliance Officer: R. Menon | compliance@morganstanley.com
+Investor Complaints: complaints@morganstanley.com
+
+Contract Note No : CN202608165180
+Trade Date       : 2026-08-16
+Settlement No     : SETT-20260817
+Unique Client Code: UCC105180
+Trading Code      : TRD105180
+
+Security    : WIPRO  ISIN: INE105180
+Buy/Sell    : BUY
+Quantity    : 500
+Rate        : INR 610.24
+Trade Value : INR 305120.0
+
+Brokerage                    : INR 91.54
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 9.06
+SEBI Turnover Fees           : INR 0.31
+Stamp Duty                   : INR 45.77
+GST (18%)                    : INR 18.11
+-------------------------------------------
+Net Amount Payable : INR 305284.79
+
+This contract note is issued subject to the rules, byelaws of NSE.

@@ -1,0 +1,15 @@
+TRADE  CONFIRMATION   ADVICE
+
+Trade Ref No     TRD105042
+Security          Wipro Ltd
+Buy/Sell            SELL
+Quantity            750
+Rate                 Rs 607.57
+Value  Date         06-08-2026
+Counterparty       ICICI-CUST
+
+This is a system generated advice   Please verify and revert
+in case of any discrepancy within 24 hours of receipt
+
+Authorized  Signatory
+N. Rao

@@ -1,0 +1,15 @@
+TRADE  CONFIRMATION   ADVICE
+
+Trade Ref No     TRD102713
+Security          Axis Bank
+Buy/Sell            SELL
+Quantity            1500
+Rate                 Rs 1176.49
+Value  Date         22/08/2026
+Counterparty       ICICI-CUST
+
+This is a system generated advice   Please verify and revert
+in case of any discrepancy within 24 hours of receipt
+
+Authorized  Signatory
+A. Fernandes

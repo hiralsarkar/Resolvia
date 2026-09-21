@@ -1,0 +1,20 @@
+From: N. Rao <n@icici.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD100152
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 10/08/2026:
+
+  Security     : Bharti Airtel
+  Txn Type     : SELL
+  Qty          : 1000
+  Price        : INR 1691.66
+  Settlement   : 11-08-2026
+  Our Ref      : TRD100152
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+N. Rao
+ICICI-CUST

@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: NOMURA-BROKER  SEBI Reg No: INZ000220236
+Compliance Officer: R. Menon | compliance@nomura.com
+Investor Complaints: complaints@nomura.com
+
+Contract Note No : CN202608102569
+Trade Date       : 10/08/2026
+Settlement No     : SETT-20260811
+Unique Client Code: UCC102569
+Trading Code      : TRD102569
+
+Security    : WIPRO  ISIN: INE102569
+Buy/Sell    : SELL
+Quantity    : 750
+Rate        : INR 610.39
+Trade Value : INR 457792.5
+
+Brokerage                    : INR 137.34
+Securities Transaction Tax   : INR 457.79
+Exchange Transaction Charges : INR 13.6
+SEBI Turnover Fees           : INR 0.46
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 27.17
+-------------------------------------------
+Net Amount Receivable : INR 457156.14
+
+This contract note is issued subject to the rules, byelaws of NSE.

@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: ICICI-CUST  SEBI Reg No: INZ000183631
+Compliance Officer: R. Menon | compliance@icici.com
+Investor Complaints: complaints@icici.com
+
+Contract Note No : CN202608145005
+Trade Date       : 14/08/2026
+Settlement No     : SETT-20260815
+Unique Client Code: UCC105005
+Trading Code      : TRD105005
+
+Security    : INFY  ISIN: INE105005
+Buy/Sell    : BUY
+Quantity    : 200
+Rate        : INR 1926.3
+Trade Value : INR 385260.0
+
+Brokerage                    : INR 115.58
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 11.44
+SEBI Turnover Fees           : INR 0.39
+Stamp Duty                   : INR 57.79
+GST (18%)                    : INR 22.86
+-------------------------------------------
+Net Amount Payable : INR 385468.06
+
+This contract note is issued subject to the rules, byelaws of NSE.

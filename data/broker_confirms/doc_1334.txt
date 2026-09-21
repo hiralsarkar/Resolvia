@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: MORGANSTANLEY-BROKER  SEBI Reg No: INZ000209137
+Compliance Officer: R. Menon | compliance@morganstanley.com
+Investor Complaints: complaints@morganstanley.com
+
+Contract Note No : CN202608111961
+Trade Date       : 11-08-2026
+Settlement No     : SETT-20260812
+Unique Client Code: UCC101961
+Trading Code      : TRD101961
+
+Security    : ICICIBANK  ISIN: INE101961
+Buy/Sell    : BUY
+Quantity    : 500
+Rate        : INR 1207.87
+Trade Value : INR 603935.0
+
+Brokerage                    : INR 181.18
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 17.94
+SEBI Turnover Fees           : INR 0.6
+Stamp Duty                   : INR 90.59
+GST (18%)                    : INR 35.84
+-------------------------------------------
+Net Amount Payable : INR 604261.15
+
+This contract note is issued subject to the rules, byelaws of NSE.

@@ -1,0 +1,20 @@
+From: P. Iyer <p@nomura.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD104196
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 2026-08-21:
+
+  Security     : Reliance Industries
+  Txn Type     : SELL
+  Qty          : 100
+  Price        : INR 2858.73
+  Settlement   : 2026-08-22
+  Our Ref      : TRD104196
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+P. Iyer
+NOMURA-BROKER

@@ -1,0 +1,20 @@
+From: V. Desai <v@icici.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD103202
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 2026-08-20:
+
+  Security     : TCS
+  Txn Type     : SELL
+  Qty          : 500
+  Price        : INR 4129.71
+  Settlement   : 2026-08-21
+  Our Ref      : TRD103202
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+V. Desai
+ICICI-CUST

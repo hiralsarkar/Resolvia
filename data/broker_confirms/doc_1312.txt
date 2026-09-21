@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: ICICI-CUST  SEBI Reg No: INZ000183631
+Compliance Officer: R. Menon | compliance@icici.com
+Investor Complaints: complaints@icici.com
+
+Contract Note No : CN202608131813
+Trade Date       : 2026-08-13
+Settlement No     : SETT-20260814
+Unique Client Code: UCC101813
+Trading Code      : TRD101813
+
+Security    : KOTAKBANK  ISIN: INE101813
+Buy/Sell    : SELL
+Quantity    : 750
+Rate        : INR 1958.47
+Trade Value : INR 1468852.5
+
+Brokerage                    : INR 440.66
+Securities Transaction Tax   : INR 1468.85
+Exchange Transaction Charges : INR 43.62
+SEBI Turnover Fees           : INR 1.47
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 87.17
+-------------------------------------------
+Net Amount Receivable : INR 1466810.73
+
+This contract note is issued subject to the rules, byelaws of NSE.

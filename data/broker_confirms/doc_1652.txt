@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: ICICI-CUST  SEBI Reg No: INZ000183631
+Compliance Officer: R. Menon | compliance@icici.com
+Investor Complaints: complaints@icici.com
+
+Contract Note No : CN202608013952
+Trade Date       : 2026-08-02
+Settlement No     : SETT-20260802
+Unique Client Code: UCC103952
+Trading Code      : TRD103952
+
+Security    : HDFCBANK  ISIN: INE103952
+Buy/Sell    : BUY
+Quantity    : 750
+Rate        : INR 1679.87
+Trade Value : INR 1259902.5
+
+Brokerage                    : INR 377.97
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 37.42
+SEBI Turnover Fees           : INR 1.26
+Stamp Duty                   : INR 188.99
+GST (18%)                    : INR 74.77
+-------------------------------------------
+Net Amount Payable : INR 1260582.91
+
+This contract note is issued subject to the rules, byelaws of NSE.

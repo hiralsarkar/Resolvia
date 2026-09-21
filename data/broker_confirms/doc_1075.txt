@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: NOMURA-BROKER  SEBI Reg No: INZ000220236
+Compliance Officer: R. Menon | compliance@nomura.com
+Investor Complaints: complaints@nomura.com
+
+Contract Note No : CN202608160138
+Trade Date       : 16-08-2026
+Settlement No     : SETT-20260817
+Unique Client Code: UCC100138
+Trading Code      : TRD100138
+
+Security    : MARUTI  ISIN: INE100138
+Buy/Sell    : SELL
+Quantity    : 1575
+Rate        : INR 13140.25
+Trade Value : INR 20695893.75
+
+Brokerage                    : INR 6208.77
+Securities Transaction Tax   : INR 20695.89
+Exchange Transaction Charges : INR 614.67
+SEBI Turnover Fees           : INR 20.7
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 1228.22
+-------------------------------------------
+Net Amount Receivable : INR 20667125.5
+
+This contract note is issued subject to the rules, byelaws of NSE.

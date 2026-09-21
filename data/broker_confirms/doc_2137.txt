@@ -1,0 +1,20 @@
+From: S. Kapoor <s@morganstanley.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD103482
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 2026-08-06:
+
+  Security     : Infosys Ltd
+  Txn Type     : BUY
+  Qty          : 1500
+  Price        : INR 1883.69
+  Settlement   : 2026-08-07
+  Our Ref      : TRD103482
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+S. Kapoor
+MORGANSTANLEY-BROKER

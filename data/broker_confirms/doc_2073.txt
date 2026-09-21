@@ -1,0 +1,15 @@
+TRADE  CONFIRMATION   ADVICE
+
+Trade Ref No     TRD103484
+Security          ITC
+Buy/Sell            SELL
+Quantity            250
+Rate                 Rs 468.98
+Value  Date         20-08-2026
+Counterparty       KOTAK-CUST
+
+This is a system generated advice   Please verify and revert
+in case of any discrepancy within 24 hours of receipt
+
+Authorized  Signatory
+R. Menon

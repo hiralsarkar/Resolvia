@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608111769
+Trade Date       : 2026-08-11
+Settlement No     : SETT-20260812
+Unique Client Code: UCC101769
+Trading Code      : TRD101769
+
+Security    : HINDUNILVR  ISIN: INE101769
+Buy/Sell    : BUY
+Quantity    : 175
+Rate        : INR 2805.41
+Trade Value : INR 490946.75
+
+Brokerage                    : INR 147.28
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 14.58
+SEBI Turnover Fees           : INR 0.49
+Stamp Duty                   : INR 73.64
+GST (18%)                    : INR 29.13
+-------------------------------------------
+Net Amount Payable : INR 491211.87
+
+This contract note is issued subject to the rules, byelaws of NSE.

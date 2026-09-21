@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608022795
+Trade Date       : 03/08/2026
+Settlement No     : SETT-20260803
+Unique Client Code: UCC102795
+Trading Code      : TRD102795
+
+Security    : MARUTI  ISIN: INE102795
+Buy/Sell    : SELL
+Quantity    : 200
+Rate        : INR 12958.12
+Trade Value : INR 2591624.0
+
+Brokerage                    : INR 777.49
+Securities Transaction Tax   : INR 2591.62
+Exchange Transaction Charges : INR 76.97
+SEBI Turnover Fees           : INR 2.59
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 153.8
+-------------------------------------------
+Net Amount Receivable : INR 2588021.53
+
+This contract note is issued subject to the rules, byelaws of NSE.

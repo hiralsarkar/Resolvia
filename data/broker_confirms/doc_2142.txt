@@ -1,0 +1,15 @@
+TRADE  CONFIRMATION   ADVICE
+
+Trade Ref No     TRD102066
+Security          State Bank of India
+Buy/Sell            BUY
+Quantity            100
+Rate                 Rs 849.12
+Value  Date         17/08/2026
+Counterparty       NOMURA-BROKER
+
+This is a system generated advice   Please verify and revert
+in case of any discrepancy within 24 hours of receipt
+
+Authorized  Signatory
+A. Fernandes

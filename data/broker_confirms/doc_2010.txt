@@ -1,0 +1,20 @@
+From: P. Iyer <p@nomura.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD102740
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 2026-08-21:
+
+  Security     : RELIANCE
+  Txn Type     : BUY
+  Qty          : 100
+  Price        : INR 2836.95
+  Settlement   : 22-08-2026
+  Our Ref      : TRD102740
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+P. Iyer
+NOMURA-BROKER

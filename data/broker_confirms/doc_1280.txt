@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: HDFC-CUST  SEBI Reg No: INZ000186937
+Compliance Officer: R. Menon | compliance@hdfc.com
+Investor Complaints: complaints@hdfc.com
+
+Contract Note No : CN202608131597
+Trade Date       : 2026-08-14
+Settlement No     : SETT-20260814
+Unique Client Code: UCC101597
+Trading Code      : TRD101597
+
+Security    : KOTAKBANK  ISIN: INE101597
+Buy/Sell    : BUY
+Quantity    : 500
+Rate        : INR 1955.08
+Trade Value : INR 977540.0
+
+Brokerage                    : INR 293.26
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 29.03
+SEBI Turnover Fees           : INR 0.98
+Stamp Duty                   : INR 146.63
+GST (18%)                    : INR 58.01
+-------------------------------------------
+Net Amount Payable : INR 978067.91
+
+This contract note is issued subject to the rules, byelaws of NSE.

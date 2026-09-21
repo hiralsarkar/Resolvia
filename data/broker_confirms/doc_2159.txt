@@ -1,0 +1,19 @@
+From: N. Rao <n@deutsche.com>
+To: ops-recon@ourfirm.com
+Subject: EOD Trade Confirmations - 6 trades - 2026-08-12
+
+Dear Team,
+
+Please find below confirmation for the following trades executed today:
+
+  TRD105510  Kotak Bank   SELL   2000 @ 1956.44    SD:12-08-2026
+  TRD102086  Infosys Ltd  BUY     100 @ 1889.71    SD:2026-08-05
+  TRD105886  L&T          SELL   2000 @ 3665.83    SD:22/08/2026
+  TRD103709  Infosys Ltd  SELL    250 @ 1882.3     SD:05/08/2026
+  TRD104602  LT           BUY     200 @ 3693.84    SD:2026-08-05
+  TRD100977  ITC          BUY     250 @ 469.46     SD:2026-08-07
+
+Kindly confirm receipt and advise of any discrepancies at your end.
+
+Regards,
+N. Rao

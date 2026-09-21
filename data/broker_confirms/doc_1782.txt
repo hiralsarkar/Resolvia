@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: ICICI-CUST  SEBI Reg No: INZ000183631
+Compliance Officer: R. Menon | compliance@icici.com
+Investor Complaints: complaints@icici.com
+
+Contract Note No : CN202608194840
+Trade Date       : 19/08/2026
+Settlement No     : SETT-20260820
+Unique Client Code: UCC104840
+Trading Code      : TRD104840
+
+Security    : MARUTI  ISIN: INE104840
+Buy/Sell    : BUY
+Quantity    : 200
+Rate        : INR 13002.86
+Trade Value : INR 2600572.0
+
+Brokerage                    : INR 780.17
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 77.24
+SEBI Turnover Fees           : INR 2.6
+Stamp Duty                   : INR 390.09
+GST (18%)                    : INR 154.33
+-------------------------------------------
+Net Amount Payable : INR 2601976.43
+
+This contract note is issued subject to the rules, byelaws of NSE.

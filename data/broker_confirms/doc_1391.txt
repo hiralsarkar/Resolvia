@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: MORGANSTANLEY-BROKER  SEBI Reg No: INZ000209137
+Compliance Officer: R. Menon | compliance@morganstanley.com
+Investor Complaints: complaints@morganstanley.com
+
+Contract Note No : CN202608012369
+Trade Date       : 01/08/2026
+Settlement No     : SETT-20260802
+Unique Client Code: UCC102369
+Trading Code      : TRD102369
+
+Security    : KOTAKBANK  ISIN: INE102369
+Buy/Sell    : BUY
+Quantity    : 750
+Rate        : INR 1953.64
+Trade Value : INR 1465230.0
+
+Brokerage                    : INR 439.57
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 43.52
+SEBI Turnover Fees           : INR 1.47
+Stamp Duty                   : INR 219.78
+GST (18%)                    : INR 86.96
+-------------------------------------------
+Net Amount Payable : INR 1466021.3
+
+This contract note is issued subject to the rules, byelaws of NSE.

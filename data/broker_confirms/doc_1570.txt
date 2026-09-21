@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: NOMURA-BROKER  SEBI Reg No: INZ000220236
+Compliance Officer: R. Menon | compliance@nomura.com
+Investor Complaints: complaints@nomura.com
+
+Contract Note No : CN202608153453
+Trade Date       : 2026-08-16
+Settlement No     : SETT-20260816
+Unique Client Code: UCC103453
+Trading Code      : TRD103453
+
+Security    : HINDUNILVR  ISIN: INE103453
+Buy/Sell    : BUY
+Quantity    : 750
+Rate        : INR 2741.06
+Trade Value : INR 2055795.0
+
+Brokerage                    : INR 616.74
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 61.06
+SEBI Turnover Fees           : INR 2.06
+Stamp Duty                   : INR 308.37
+GST (18%)                    : INR 122.0
+-------------------------------------------
+Net Amount Payable : INR 2056905.23
+
+This contract note is issued subject to the rules, byelaws of NSE.

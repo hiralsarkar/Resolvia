@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: NOMURA-BROKER  SEBI Reg No: INZ000220236
+Compliance Officer: R. Menon | compliance@nomura.com
+Investor Complaints: complaints@nomura.com
+
+Contract Note No : CN202608174104
+Trade Date       : 2026-08-17
+Settlement No     : SETT-20260818
+Unique Client Code: UCC104104
+Trading Code      : TRD104104
+
+Security    : SBIN  ISIN: INE104104
+Buy/Sell    : SELL
+Quantity    : 2000
+Rate        : INR 845.82
+Trade Value : INR 1691640.0
+
+Brokerage                    : INR 507.49
+Securities Transaction Tax   : INR 1691.64
+Exchange Transaction Charges : INR 50.24
+SEBI Turnover Fees           : INR 1.69
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 100.39
+-------------------------------------------
+Net Amount Receivable : INR 1689288.55
+
+This contract note is issued subject to the rules, byelaws of NSE.

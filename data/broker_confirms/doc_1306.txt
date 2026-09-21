@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: HDFC-CUST  SEBI Reg No: INZ000186937
+Compliance Officer: R. Menon | compliance@hdfc.com
+Investor Complaints: complaints@hdfc.com
+
+Contract Note No : CN202608011787
+Trade Date       : 2026-08-01
+Settlement No     : SETT-20260802
+Unique Client Code: UCC101787
+Trading Code      : TRD101787
+
+Security    : BHARTIARTL  ISIN: INE101787
+Buy/Sell    : BUY
+Quantity    : 200
+Rate        : INR 1655.8
+Trade Value : INR 331160.0
+
+Brokerage                    : INR 99.35
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 9.84
+SEBI Turnover Fees           : INR 0.33
+Stamp Duty                   : INR 49.67
+GST (18%)                    : INR 19.65
+-------------------------------------------
+Net Amount Payable : INR 331338.84
+
+This contract note is issued subject to the rules, byelaws of NSE.

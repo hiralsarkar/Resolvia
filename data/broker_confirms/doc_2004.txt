@@ -1,0 +1,20 @@
+From: V. Desai <v@morganstanley.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD101232
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 11-08-2026:
+
+  Security     : Kotak Bank
+  Txn Type     : BUY
+  Qty          : 100
+  Price        : INR 1954.8
+  Settlement   : 12-08-2026
+  Our Ref      : TRD101232
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+V. Desai
+MORGANSTANLEY-BROKER

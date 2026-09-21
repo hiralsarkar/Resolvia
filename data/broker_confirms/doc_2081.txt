@@ -1,0 +1,15 @@
+TRADE  CONFIRMATION   ADVICE
+
+Trade Ref No     TRD104678
+Security          RIL
+Buy/Sell            BUY
+Quantity            500
+Rate                 Rs 2862.02
+Value  Date         2026-08-15
+Counterparty       MORGANSTANLEY-BROKER
+
+This is a system generated advice   Please verify and revert
+in case of any discrepancy within 24 hours of receipt
+
+Authorized  Signatory
+P. Iyer

@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: KOTAK-CUST  SEBI Reg No: INZ000200137
+Compliance Officer: R. Menon | compliance@kotak.com
+Investor Complaints: complaints@kotak.com
+
+Contract Note No : CN202608052831
+Trade Date       : 05/08/2026
+Settlement No     : SETT-20260806
+Unique Client Code: UCC102831
+Trading Code      : TRD102831
+
+Security    : RELIANCE  ISIN: INE102831
+Buy/Sell    : BUY
+Quantity    : 750
+Rate        : INR 2845.72
+Trade Value : INR 2134290.0
+
+Brokerage                    : INR 640.29
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 63.39
+SEBI Turnover Fees           : INR 2.13
+Stamp Duty                   : INR 320.14
+GST (18%)                    : INR 126.66
+-------------------------------------------
+Net Amount Payable : INR 2135442.61
+
+This contract note is issued subject to the rules, byelaws of NSE.

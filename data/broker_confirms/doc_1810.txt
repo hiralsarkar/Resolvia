@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608215041
+Trade Date       : 21-08-2026
+Settlement No     : SETT-20260822
+Unique Client Code: UCC105041
+Trading Code      : TRD105041
+
+Security    : WIPRO  ISIN: INE105041
+Buy/Sell    : BUY
+Quantity    : 500
+Rate        : INR 611.45
+Trade Value : INR 305725.0
+
+Brokerage                    : INR 91.72
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 9.08
+SEBI Turnover Fees           : INR 0.31
+Stamp Duty                   : INR 45.86
+GST (18%)                    : INR 18.14
+-------------------------------------------
+Net Amount Payable : INR 305890.11
+
+This contract note is issued subject to the rules, byelaws of NSE.

@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: NOMURA-BROKER  SEBI Reg No: INZ000220236
+Compliance Officer: R. Menon | compliance@nomura.com
+Investor Complaints: complaints@nomura.com
+
+Contract Note No : CN202608092531
+Trade Date       : 10-08-2026
+Settlement No     : SETT-20260810
+Unique Client Code: UCC102531
+Trading Code      : TRD102531
+
+Security    : AXISBANK  ISIN: INE102531
+Buy/Sell    : BUY
+Quantity    : 750
+Rate        : INR 1184.38
+Trade Value : INR 888285.0
+
+Brokerage                    : INR 266.49
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 26.38
+SEBI Turnover Fees           : INR 0.89
+Stamp Duty                   : INR 133.24
+GST (18%)                    : INR 52.72
+-------------------------------------------
+Net Amount Payable : INR 888764.72
+
+This contract note is issued subject to the rules, byelaws of NSE.

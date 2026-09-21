@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: NOMURA-BROKER  SEBI Reg No: INZ000220236
+Compliance Officer: R. Menon | compliance@nomura.com
+Investor Complaints: complaints@nomura.com
+
+Contract Note No : CN202608151377
+Trade Date       : 15/08/2026
+Settlement No     : SETT-20260816
+Unique Client Code: UCC101377
+Trading Code      : TRD101377
+
+Security    : KOTAKBANK  ISIN: INE101377
+Buy/Sell    : SELL
+Quantity    : 175
+Rate        : INR 1985.72
+Trade Value : INR 347501.0
+
+Brokerage                    : INR 104.25
+Securities Transaction Tax   : INR 347.5
+Exchange Transaction Charges : INR 10.32
+SEBI Turnover Fees           : INR 0.35
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 20.62
+-------------------------------------------
+Net Amount Receivable : INR 347017.96
+
+This contract note is issued subject to the rules, byelaws of NSE.

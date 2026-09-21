@@ -1,0 +1,15 @@
+TRADE  CONFIRMATION   ADVICE
+
+Trade Ref No     TRD104349
+Security          INFY
+Buy/Sell            BUY
+Quantity            100
+Rate                 Rs 1884.74
+Value  Date         2026-08-22
+Counterparty       NOMURA-BROKER
+
+This is a system generated advice   Please verify and revert
+in case of any discrepancy within 24 hours of receipt
+
+Authorized  Signatory
+N. Rao

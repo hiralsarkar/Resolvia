@@ -1,0 +1,18 @@
+From: K. Sharma <k@kotak.com>
+To: ops-recon@ourfirm.com
+Subject: EOD Trade Confirmations - 5 trades - 2026-08-02
+
+Dear Team,
+
+Please find below confirmation for the following trades executed today:
+
+  TRD102505  Tata Consultancy Services BUY     250 @ 4117.72    SD:02-08-2026
+  TRD103023  HDFC Bank    BUY     250 @ 1675.54    SD:2026-08-06
+  TRD102707  Larsen & Toubro SELL   2000 @ 3686.57    SD:20-08-2026
+  TRD104816  ITC          SELL    750 @ 468.21     SD:17-08-2026
+  TRD103732  ICICIBANK    SELL   1500 @ 1243.67    SD:04/08/2026
+
+Kindly confirm receipt and advise of any discrepancies at your end.
+
+Regards,
+K. Sharma

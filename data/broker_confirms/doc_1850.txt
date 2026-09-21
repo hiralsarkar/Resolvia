@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608125287
+Trade Date       : 2026-08-12
+Settlement No     : SETT-20260813
+Unique Client Code: UCC105287
+Trading Code      : TRD105287
+
+Security    : KOTAKBANK  ISIN: INE105287
+Buy/Sell    : BUY
+Quantity    : 1000
+Rate        : INR 1964.73
+Trade Value : INR 1964730.0
+
+Brokerage                    : INR 589.42
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 58.35
+SEBI Turnover Fees           : INR 1.96
+Stamp Duty                   : INR 294.71
+GST (18%)                    : INR 116.6
+-------------------------------------------
+Net Amount Payable : INR 1965791.04
+
+This contract note is issued subject to the rules, byelaws of NSE.

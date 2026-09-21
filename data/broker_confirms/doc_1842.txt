@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: HDFC-CUST  SEBI Reg No: INZ000186937
+Compliance Officer: R. Menon | compliance@hdfc.com
+Investor Complaints: complaints@hdfc.com
+
+Contract Note No : CN202608075232
+Trade Date       : 2026-08-07
+Settlement No     : SETT-20260808
+Unique Client Code: UCC105232
+Trading Code      : TRD105232
+
+Security    : TATASTEEL  ISIN: INE105232
+Buy/Sell    : BUY
+Quantity    : 1500
+Rate        : INR 174.89
+Trade Value : INR 262335.0
+
+Brokerage                    : INR 78.7
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 7.79
+SEBI Turnover Fees           : INR 0.26
+Stamp Duty                   : INR 39.35
+GST (18%)                    : INR 15.57
+-------------------------------------------
+Net Amount Payable : INR 262476.67
+
+This contract note is issued subject to the rules, byelaws of NSE.

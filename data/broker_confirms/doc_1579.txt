@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608203538
+Trade Date       : 20/08/2026
+Settlement No     : SETT-20260821
+Unique Client Code: UCC103538
+Trading Code      : TRD103538
+
+Security    : SBIN  ISIN: INE103538
+Buy/Sell    : BUY
+Quantity    : 1925
+Rate        : INR 853.64
+Trade Value : INR 1643257.0
+
+Brokerage                    : INR 492.98
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 48.8
+SEBI Turnover Fees           : INR 1.64
+Stamp Duty                   : INR 246.49
+GST (18%)                    : INR 97.52
+-------------------------------------------
+Net Amount Payable : INR 1644144.43
+
+This contract note is issued subject to the rules, byelaws of NSE.

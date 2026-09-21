@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: NOMURA-BROKER  SEBI Reg No: INZ000220236
+Compliance Officer: R. Menon | compliance@nomura.com
+Investor Complaints: complaints@nomura.com
+
+Contract Note No : CN202608193657
+Trade Date       : 19-08-2026
+Settlement No     : SETT-20260820
+Unique Client Code: UCC103657
+Trading Code      : TRD103657
+
+Security    : INFY  ISIN: INE103657
+Buy/Sell    : SELL
+Quantity    : 100
+Rate        : INR 1885.15
+Trade Value : INR 188515.0
+
+Brokerage                    : INR 56.55
+Securities Transaction Tax   : INR 188.52
+Exchange Transaction Charges : INR 5.6
+SEBI Turnover Fees           : INR 0.19
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 11.19
+-------------------------------------------
+Net Amount Receivable : INR 188252.95
+
+This contract note is issued subject to the rules, byelaws of NSE.

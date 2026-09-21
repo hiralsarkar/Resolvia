@@ -1,0 +1,20 @@
+From: K. Sharma <k@morganstanley.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD101177
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 2026-08-06:
+
+  Security     : ITC Ltd
+  Txn Type     : BUY
+  Qty          : 2000
+  Price        : INR 466.71
+  Settlement   : 2026-08-07
+  Our Ref      : TRD101177
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+K. Sharma
+MORGANSTANLEY-BROKER

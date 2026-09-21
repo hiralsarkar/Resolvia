@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: KOTAK-CUST  SEBI Reg No: INZ000200137
+Compliance Officer: R. Menon | compliance@kotak.com
+Investor Complaints: complaints@kotak.com
+
+Contract Note No : CN202608155547
+Trade Date       : 16/08/2026
+Settlement No     : SETT-20260816
+Unique Client Code: UCC105547
+Trading Code      : TRD105547
+
+Security    : AXISBANK  ISIN: INE105547
+Buy/Sell    : SELL
+Quantity    : 2000
+Rate        : INR 1186.1
+Trade Value : INR 2372200.0
+
+Brokerage                    : INR 711.66
+Securities Transaction Tax   : INR 2372.2
+Exchange Transaction Charges : INR 70.45
+SEBI Turnover Fees           : INR 2.37
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 140.78
+-------------------------------------------
+Net Amount Receivable : INR 2368902.54
+
+This contract note is issued subject to the rules, byelaws of NSE.

@@ -1,0 +1,20 @@
+From: P. Iyer <p@deutsche.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD104598
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 21-08-2026:
+
+  Security     : INFY
+  Txn Type     : BUY
+  Qty          : 250
+  Price        : INR 1897.59
+  Settlement   : 22-08-2026
+  Our Ref      : TRD104598
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+P. Iyer
+DEUTSCHE-BROKER

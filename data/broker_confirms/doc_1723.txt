@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: MORGANSTANLEY-BROKER  SEBI Reg No: INZ000209137
+Compliance Officer: R. Menon | compliance@morganstanley.com
+Investor Complaints: complaints@morganstanley.com
+
+Contract Note No : CN202608084362
+Trade Date       : 08-08-2026
+Settlement No     : SETT-20260809
+Unique Client Code: UCC104362
+Trading Code      : TRD104362
+
+Security    : RELIANCE  ISIN: INE104362
+Buy/Sell    : SELL
+Quantity    : 1000
+Rate        : INR 2911.79
+Trade Value : INR 2911790.0
+
+Brokerage                    : INR 873.54
+Securities Transaction Tax   : INR 2911.79
+Exchange Transaction Charges : INR 86.48
+SEBI Turnover Fees           : INR 2.91
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 172.8
+-------------------------------------------
+Net Amount Receivable : INR 2907742.48
+
+This contract note is issued subject to the rules, byelaws of NSE.

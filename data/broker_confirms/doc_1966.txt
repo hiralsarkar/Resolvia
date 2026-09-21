@@ -1,0 +1,15 @@
+TRADE  CONFIRMATION   ADVICE
+
+Trade Ref No     TRD103303
+Security          Tata Steel
+Buy/Sell            SELL
+Quantity            1500
+Rate                 Rs 173.11
+Value  Date         2026-08-06
+Counterparty       KOTAK-CUST
+
+This is a system generated advice   Please verify and revert
+in case of any discrepancy within 24 hours of receipt
+
+Authorized  Signatory
+R. Menon

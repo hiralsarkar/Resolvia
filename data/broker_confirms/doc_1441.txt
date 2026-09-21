@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: KOTAK-CUST  SEBI Reg No: INZ000200137
+Compliance Officer: R. Menon | compliance@kotak.com
+Investor Complaints: complaints@kotak.com
+
+Contract Note No : CN202608212687
+Trade Date       : 21-08-2026
+Settlement No     : SETT-20260822
+Unique Client Code: UCC102687
+Trading Code      : TRD102687
+
+Security    : TATASTEEL  ISIN: INE102687
+Buy/Sell    : BUY
+Quantity    : 675
+Rate        : INR 173.52
+Trade Value : INR 117126.0
+
+Brokerage                    : INR 35.14
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 3.48
+SEBI Turnover Fees           : INR 0.12
+Stamp Duty                   : INR 17.57
+GST (18%)                    : INR 6.95
+-------------------------------------------
+Net Amount Payable : INR 117189.26
+
+This contract note is issued subject to the rules, byelaws of NSE.

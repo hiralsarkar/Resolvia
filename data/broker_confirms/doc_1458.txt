@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608112815
+Trade Date       : 2026-08-11
+Settlement No     : SETT-20260812
+Unique Client Code: UCC102815
+Trading Code      : TRD102815
+
+Security    : TCS  ISIN: INE102815
+Buy/Sell    : BUY
+Quantity    : 1500
+Rate        : INR 4013.53
+Trade Value : INR 6020295.0
+
+Brokerage                    : INR 1806.09
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 178.8
+SEBI Turnover Fees           : INR 6.02
+Stamp Duty                   : INR 903.04
+GST (18%)                    : INR 357.28
+-------------------------------------------
+Net Amount Payable : INR 6023546.23
+
+This contract note is issued subject to the rules, byelaws of NSE.

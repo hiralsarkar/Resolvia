@@ -1,0 +1,20 @@
+From: N. Rao <n@nomura.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD100499
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 15/08/2026:
+
+  Security     : Wipro Ltd
+  Txn Type     : BUY
+  Qty          : 100
+  Price        : INR 607.59
+  Settlement   : 2026-08-16
+  Our Ref      : TRD100499
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+N. Rao
+NOMURA-BROKER

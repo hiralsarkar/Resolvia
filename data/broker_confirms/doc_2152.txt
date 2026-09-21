@@ -1,0 +1,23 @@
+From: V. Desai <v@deutsche.com>
+To: ops-recon@ourfirm.com
+Subject: EOD Trade Confirmations - 10 trades - 2026-08-08
+
+Dear Team,
+
+Please find below confirmation for the following trades executed today:
+
+  TRD100114  AXISBANK     SELL    200 @ 1185.53    SD:08/08/2026
+  TRD104285  Tata Steel   SELL    750 @ 171.84     SD:2026-08-18
+  TRD105639  AXISBANK     BUY     500 @ 1177.51    SD:15/08/2026
+  TRD105104  Kotak Bank   BUY    1000 @ 1953.0     SD:16-08-2026
+  TRD103496  SBIN         SELL   1000 @ 843.25     SD:2026-08-15
+  TRD104952  Tata Consultancy BUY     750 @ 4134.3     SD:20-08-2026
+  TRD105270  HINDUNILVR   BUY     200 @ 2758.81    SD:13-08-2026
+  TRD104192  Tata Steel   SELL    100 @ 173.25     SD:2026-08-09
+  TRD103869  BHARTIARTL   SELL    750 @ 1693.78    SD:2026-08-04
+  TRD105802  Bharti Airtel SELL    500 @ 1688.51    SD:15-08-2026
+
+Kindly confirm receipt and advise of any discrepancies at your end.
+
+Regards,
+V. Desai

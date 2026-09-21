@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608124890
+Trade Date       : 12-08-2026
+Settlement No     : SETT-20260813
+Unique Client Code: UCC104890
+Trading Code      : TRD104890
+
+Security    : WIPRO  ISIN: INE104890
+Buy/Sell    : SELL
+Quantity    : 2000
+Rate        : INR 612.44
+Trade Value : INR 1224880.0
+
+Brokerage                    : INR 367.46
+Securities Transaction Tax   : INR 1224.88
+Exchange Transaction Charges : INR 36.38
+SEBI Turnover Fees           : INR 1.22
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 72.69
+-------------------------------------------
+Net Amount Receivable : INR 1223177.37
+
+This contract note is issued subject to the rules, byelaws of NSE.

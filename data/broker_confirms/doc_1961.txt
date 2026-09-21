@@ -1,0 +1,20 @@
+From: A. Fernandes <a@deutsche.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD103401
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 15-08-2026:
+
+  Security     : HDFCBANK
+  Txn Type     : BUY
+  Qty          : 100
+  Price        : INR 1675.49
+  Settlement   : 16-08-2026
+  Our Ref      : TRD103401
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+A. Fernandes
+DEUTSCHE-BROKER

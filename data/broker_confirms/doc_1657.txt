@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608163985
+Trade Date       : 17-08-2026
+Settlement No     : SETT-20260817
+Unique Client Code: UCC103985
+Trading Code      : TRD103985
+
+Security    : KOTAKBANK  ISIN: INE103985
+Buy/Sell    : BUY
+Quantity    : 1500
+Rate        : INR 1957.78
+Trade Value : INR 2936670.0
+
+Brokerage                    : INR 881.0
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 87.22
+SEBI Turnover Fees           : INR 2.94
+Stamp Duty                   : INR 440.5
+GST (18%)                    : INR 174.28
+-------------------------------------------
+Net Amount Payable : INR 2938255.94
+
+This contract note is issued subject to the rules, byelaws of NSE.

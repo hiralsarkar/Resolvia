@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: HDFC-CUST  SEBI Reg No: INZ000186937
+Compliance Officer: R. Menon | compliance@hdfc.com
+Investor Complaints: complaints@hdfc.com
+
+Contract Note No : CN202608123876
+Trade Date       : 13-08-2026
+Settlement No     : SETT-20260813
+Unique Client Code: UCC103876
+Trading Code      : TRD103876
+
+Security    : WIPRO  ISIN: INE103876
+Buy/Sell    : SELL
+Quantity    : 1500
+Rate        : INR 609.37
+Trade Value : INR 914055.0
+
+Brokerage                    : INR 274.22
+Securities Transaction Tax   : INR 914.06
+Exchange Transaction Charges : INR 27.15
+SEBI Turnover Fees           : INR 0.91
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 54.25
+-------------------------------------------
+Net Amount Receivable : INR 912784.41
+
+This contract note is issued subject to the rules, byelaws of NSE.

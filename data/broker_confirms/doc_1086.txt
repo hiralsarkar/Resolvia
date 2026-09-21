@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608200235
+Trade Date       : 20/08/2026
+Settlement No     : SETT-20260821
+Unique Client Code: UCC100235
+Trading Code      : TRD100235
+
+Security    : RELIANCE  ISIN: INE100235
+Buy/Sell    : BUY
+Quantity    : 500
+Rate        : INR 2848.21
+Trade Value : INR 1424105.0
+
+Brokerage                    : INR 427.23
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 42.3
+SEBI Turnover Fees           : INR 1.42
+Stamp Duty                   : INR 213.62
+GST (18%)                    : INR 84.52
+-------------------------------------------
+Net Amount Payable : INR 1424874.09
+
+This contract note is issued subject to the rules, byelaws of NSE.

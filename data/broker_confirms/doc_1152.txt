@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608010716
+Trade Date       : 2026-08-01
+Settlement No     : SETT-20260802
+Unique Client Code: UCC100716
+Trading Code      : TRD100716
+
+Security    : TATASTEEL  ISIN: INE100716
+Buy/Sell    : BUY
+Quantity    : 2100
+Rate        : INR 172.53
+Trade Value : INR 362313.0
+
+Brokerage                    : INR 108.69
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 10.76
+SEBI Turnover Fees           : INR 0.36
+Stamp Duty                   : INR 54.35
+GST (18%)                    : INR 21.5
+-------------------------------------------
+Net Amount Payable : INR 362508.66
+
+This contract note is issued subject to the rules, byelaws of NSE.

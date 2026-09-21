@@ -1,0 +1,20 @@
+From: R. Menon <r@kotak.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD101281
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 19/08/2026:
+
+  Security     : Airtel
+  Txn Type     : SELL
+  Qty          : 2000
+  Price        : INR 1684.63
+  Settlement   : 20/08/2026
+  Our Ref      : TRD101281
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+R. Menon
+KOTAK-CUST

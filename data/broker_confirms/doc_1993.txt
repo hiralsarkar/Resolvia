@@ -1,0 +1,20 @@
+From: V. Desai <v@icici.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD100313
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 19/08/2026:
+
+  Security     : State Bank of India
+  Txn Type     : SELL
+  Qty          : 750
+  Price        : INR 846.3
+  Settlement   : 20/08/2026
+  Our Ref      : TRD100313
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+V. Desai
+ICICI-CUST

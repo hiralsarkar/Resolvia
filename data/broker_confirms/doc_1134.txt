@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608130553
+Trade Date       : 13-08-2026
+Settlement No     : SETT-20260814
+Unique Client Code: UCC100553
+Trading Code      : TRD100553
+
+Security    : AXISBANK  ISIN: INE100553
+Buy/Sell    : SELL
+Quantity    : 1550
+Rate        : INR 1181.83
+Trade Value : INR 1831836.5
+
+Brokerage                    : INR 549.55
+Securities Transaction Tax   : INR 1831.84
+Exchange Transaction Charges : INR 54.41
+SEBI Turnover Fees           : INR 1.83
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 108.71
+-------------------------------------------
+Net Amount Receivable : INR 1829290.16
+
+This contract note is issued subject to the rules, byelaws of NSE.

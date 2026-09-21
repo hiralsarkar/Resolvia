@@ -1,0 +1,20 @@
+From: N. Rao <n@hdfc.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD101279
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 2026-08-04:
+
+  Security     : SBI
+  Txn Type     : SELL
+  Qty          : 1500
+  Price        : INR 844.68
+  Settlement   : 05/08/2026
+  Our Ref      : TRD101279
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+N. Rao
+HDFC-CUST

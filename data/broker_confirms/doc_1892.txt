@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: HDFC-CUST  SEBI Reg No: INZ000186937
+Compliance Officer: R. Menon | compliance@hdfc.com
+Investor Complaints: complaints@hdfc.com
+
+Contract Note No : CN202608205634
+Trade Date       : 2026-08-20
+Settlement No     : SETT-20260821
+Unique Client Code: UCC105634
+Trading Code      : TRD105634
+
+Security    : HINDUNILVR  ISIN: INE105634
+Buy/Sell    : SELL
+Quantity    : 2000
+Rate        : INR 2757.75
+Trade Value : INR 5515500.0
+
+Brokerage                    : INR 1654.65
+Securities Transaction Tax   : INR 5515.5
+Exchange Transaction Charges : INR 163.81
+SEBI Turnover Fees           : INR 5.52
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 327.32
+-------------------------------------------
+Net Amount Receivable : INR 5507833.2
+
+This contract note is issued subject to the rules, byelaws of NSE.

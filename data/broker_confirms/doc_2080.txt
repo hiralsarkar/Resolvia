@@ -1,0 +1,20 @@
+From: R. Menon <r@deutsche.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD100367
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 15/08/2026:
+
+  Security     : RELIANCE
+  Txn Type     : SELL
+  Qty          : 750
+  Price        : INR 2858.58
+  Settlement   : 16-08-2026
+  Our Ref      : TRD100367
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+R. Menon
+DEUTSCHE-BROKER

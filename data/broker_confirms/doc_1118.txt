@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: KOTAK-CUST  SEBI Reg No: INZ000200137
+Compliance Officer: R. Menon | compliance@kotak.com
+Investor Complaints: complaints@kotak.com
+
+Contract Note No : CN202608080436
+Trade Date       : 2026-08-08
+Settlement No     : SETT-20260809
+Unique Client Code: UCC100436
+Trading Code      : TRD100436
+
+Security    : BHARTIARTL  ISIN: INE100436
+Buy/Sell    : BUY
+Quantity    : 900
+Rate        : INR 1695.32
+Trade Value : INR 1525788.0
+
+Brokerage                    : INR 457.74
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 45.32
+SEBI Turnover Fees           : INR 1.53
+Stamp Duty                   : INR 228.87
+GST (18%)                    : INR 90.55
+-------------------------------------------
+Net Amount Payable : INR 1526612.01
+
+This contract note is issued subject to the rules, byelaws of NSE.

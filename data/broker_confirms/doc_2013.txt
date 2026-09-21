@@ -1,0 +1,15 @@
+TRADE  CONFIRMATION   ADVICE
+
+Trade Ref No     TRD104592
+Security          RELIANCE
+Buy/Sell            SELL
+Quantity            1500
+Rate                 Rs 2842.33
+Value  Date         2026-08-04
+Counterparty       MORGANSTANLEY-BROKER
+
+This is a system generated advice   Please verify and revert
+in case of any discrepancy within 24 hours of receipt
+
+Authorized  Signatory
+K. Sharma

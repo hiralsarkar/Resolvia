@@ -1,0 +1,20 @@
+From: A. Fernandes <a@morganstanley.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD102308
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 13/08/2026:
+
+  Security     : ITC Ltd
+  Txn Type     : SELL
+  Qty          : 2000
+  Price        : INR 469.73
+  Settlement   : 2026-08-14
+  Our Ref      : TRD102308
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+A. Fernandes
+MORGANSTANLEY-BROKER

@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: ICICI-CUST  SEBI Reg No: INZ000183631
+Compliance Officer: R. Menon | compliance@icici.com
+Investor Complaints: complaints@icici.com
+
+Contract Note No : CN202608061240
+Trade Date       : 06-08-2026
+Settlement No     : SETT-20260807
+Unique Client Code: UCC101240
+Trading Code      : TRD101240
+
+Security    : AXISBANK  ISIN: INE101240
+Buy/Sell    : BUY
+Quantity    : 950
+Rate        : INR 1179.29
+Trade Value : INR 1120325.5
+
+Brokerage                    : INR 336.1
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 33.27
+SEBI Turnover Fees           : INR 1.12
+Stamp Duty                   : INR 168.05
+GST (18%)                    : INR 66.49
+-------------------------------------------
+Net Amount Payable : INR 1120930.53
+
+This contract note is issued subject to the rules, byelaws of NSE.

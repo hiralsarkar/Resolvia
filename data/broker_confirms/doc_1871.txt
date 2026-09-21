@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: ICICI-CUST  SEBI Reg No: INZ000183631
+Compliance Officer: R. Menon | compliance@icici.com
+Investor Complaints: complaints@icici.com
+
+Contract Note No : CN202608045484
+Trade Date       : 04-08-2026
+Settlement No     : SETT-20260805
+Unique Client Code: UCC105484
+Trading Code      : TRD105484
+
+Security    : SBIN  ISIN: INE105484
+Buy/Sell    : BUY
+Quantity    : 1200
+Rate        : INR 845.4
+Trade Value : INR 1014480.0
+
+Brokerage                    : INR 304.34
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 30.13
+SEBI Turnover Fees           : INR 1.01
+Stamp Duty                   : INR 152.17
+GST (18%)                    : INR 60.2
+-------------------------------------------
+Net Amount Payable : INR 1015027.85
+
+This contract note is issued subject to the rules, byelaws of NSE.

@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: NOMURA-BROKER  SEBI Reg No: INZ000220236
+Compliance Officer: R. Menon | compliance@nomura.com
+Investor Complaints: complaints@nomura.com
+
+Contract Note No : CN202608171612
+Trade Date       : 17/08/2026
+Settlement No     : SETT-20260818
+Unique Client Code: UCC101612
+Trading Code      : TRD101612
+
+Security    : WIPRO  ISIN: INE101612
+Buy/Sell    : SELL
+Quantity    : 100
+Rate        : INR 598.17
+Trade Value : INR 59817.0
+
+Brokerage                    : INR 17.95
+Securities Transaction Tax   : INR 59.82
+Exchange Transaction Charges : INR 1.78
+SEBI Turnover Fees           : INR 0.06
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 3.55
+-------------------------------------------
+Net Amount Receivable : INR 59733.84
+
+This contract note is issued subject to the rules, byelaws of NSE.

@@ -1,0 +1,20 @@
+From: V. Desai <v@icici.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD105377
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 2026-08-20:
+
+  Security     : HDFC Bank
+  Txn Type     : BUY
+  Qty          : 1500
+  Price        : INR 1679.49
+  Settlement   : 21/08/2026
+  Our Ref      : TRD105377
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+V. Desai
+ICICI-CUST

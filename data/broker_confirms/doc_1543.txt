@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608213304
+Trade Date       : 2026-08-22
+Settlement No     : SETT-20260822
+Unique Client Code: UCC103304
+Trading Code      : TRD103304
+
+Security    : TCS  ISIN: INE103304
+Buy/Sell    : SELL
+Quantity    : 750
+Rate        : INR 4134.98
+Trade Value : INR 3101235.0
+
+Brokerage                    : INR 930.37
+Securities Transaction Tax   : INR 3101.24
+Exchange Transaction Charges : INR 92.11
+SEBI Turnover Fees           : INR 3.1
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 184.05
+-------------------------------------------
+Net Amount Receivable : INR 3096924.13
+
+This contract note is issued subject to the rules, byelaws of NSE.

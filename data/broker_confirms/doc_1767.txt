@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: NOMURA-BROKER  SEBI Reg No: INZ000220236
+Compliance Officer: R. Menon | compliance@nomura.com
+Investor Complaints: complaints@nomura.com
+
+Contract Note No : CN202608154707
+Trade Date       : 15/08/2026
+Settlement No     : SETT-20260816
+Unique Client Code: UCC104707
+Trading Code      : TRD104707
+
+Security    : LT  ISIN: INE104707
+Buy/Sell    : BUY
+Quantity    : 500
+Rate        : INR 3605.99
+Trade Value : INR 1802995.0
+
+Brokerage                    : INR 540.9
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 53.55
+SEBI Turnover Fees           : INR 1.8
+Stamp Duty                   : INR 270.45
+GST (18%)                    : INR 107.0
+-------------------------------------------
+Net Amount Payable : INR 1803968.7
+
+This contract note is issued subject to the rules, byelaws of NSE.

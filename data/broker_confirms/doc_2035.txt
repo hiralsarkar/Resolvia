@@ -1,0 +1,15 @@
+TRADE  CONFIRMATION   ADVICE
+
+Trade Ref No     TRD103246
+Security          Maruti Suzuki
+Buy/Sell            BUY
+Quantity            100
+Rate                 Rs 12961.73
+Value  Date         12-08-2026
+Counterparty       ICICI-CUST
+
+This is a system generated advice   Please verify and revert
+in case of any discrepancy within 24 hours of receipt
+
+Authorized  Signatory
+V. Desai

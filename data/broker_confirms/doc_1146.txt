@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: HDFC-CUST  SEBI Reg No: INZ000186937
+Compliance Officer: R. Menon | compliance@hdfc.com
+Investor Complaints: complaints@hdfc.com
+
+Contract Note No : CN202608130672
+Trade Date       : 14/08/2026
+Settlement No     : SETT-20260814
+Unique Client Code: UCC100672
+Trading Code      : TRD100672
+
+Security    : AXISBANK  ISIN: INE100672
+Buy/Sell    : SELL
+Quantity    : 750
+Rate        : INR 1186.05
+Trade Value : INR 889537.5
+
+Brokerage                    : INR 266.86
+Securities Transaction Tax   : INR 889.54
+Exchange Transaction Charges : INR 26.42
+SEBI Turnover Fees           : INR 0.89
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 52.79
+-------------------------------------------
+Net Amount Receivable : INR 888301.0
+
+This contract note is issued subject to the rules, byelaws of NSE.

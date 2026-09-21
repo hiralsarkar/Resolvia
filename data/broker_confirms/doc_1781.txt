@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: MORGANSTANLEY-BROKER  SEBI Reg No: INZ000209137
+Compliance Officer: R. Menon | compliance@morganstanley.com
+Investor Complaints: complaints@morganstanley.com
+
+Contract Note No : CN202608214838
+Trade Date       : 2026-08-21
+Settlement No     : SETT-20260822
+Unique Client Code: UCC104838
+Trading Code      : TRD104838
+
+Security    : AXISBANK  ISIN: INE104838
+Buy/Sell    : SELL
+Quantity    : 100
+Rate        : INR 1150.3
+Trade Value : INR 115030.0
+
+Brokerage                    : INR 34.51
+Securities Transaction Tax   : INR 115.03
+Exchange Transaction Charges : INR 3.42
+SEBI Turnover Fees           : INR 0.12
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 6.83
+-------------------------------------------
+Net Amount Receivable : INR 114870.09
+
+This contract note is issued subject to the rules, byelaws of NSE.

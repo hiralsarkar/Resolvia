@@ -1,0 +1,20 @@
+From: S. Kapoor <s@deutsche.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD102273
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 2026-08-09:
+
+  Security     : Tata Consultancy Services
+  Txn Type     : SELL
+  Qty          : 500
+  Price        : INR 4133.61
+  Settlement   : 10-08-2026
+  Our Ref      : TRD102273
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+S. Kapoor
+DEUTSCHE-BROKER

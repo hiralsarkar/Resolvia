@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608183041
+Trade Date       : 2026-08-19
+Settlement No     : SETT-20260819
+Unique Client Code: UCC103041
+Trading Code      : TRD103041
+
+Security    : HDFCBANK  ISIN: INE103041
+Buy/Sell    : BUY
+Quantity    : 1000
+Rate        : INR 1683.28
+Trade Value : INR 1683280.0
+
+Brokerage                    : INR 504.98
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 49.99
+SEBI Turnover Fees           : INR 1.68
+Stamp Duty                   : INR 252.49
+GST (18%)                    : INR 99.89
+-------------------------------------------
+Net Amount Payable : INR 1684189.03
+
+This contract note is issued subject to the rules, byelaws of NSE.

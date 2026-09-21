@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: ICICI-CUST  SEBI Reg No: INZ000183631
+Compliance Officer: R. Menon | compliance@icici.com
+Investor Complaints: complaints@icici.com
+
+Contract Note No : CN202608065102
+Trade Date       : 2026-08-06
+Settlement No     : SETT-20260807
+Unique Client Code: UCC105102
+Trading Code      : TRD105102
+
+Security    : BHARTIARTL  ISIN: INE105102
+Buy/Sell    : SELL
+Quantity    : 750
+Rate        : INR 1685.73
+Trade Value : INR 1264297.5
+
+Brokerage                    : INR 379.29
+Securities Transaction Tax   : INR 1264.3
+Exchange Transaction Charges : INR 37.55
+SEBI Turnover Fees           : INR 1.26
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 75.03
+-------------------------------------------
+Net Amount Receivable : INR 1262540.07
+
+This contract note is issued subject to the rules, byelaws of NSE.

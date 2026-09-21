@@ -1,0 +1,15 @@
+TRADE  CONFIRMATION   ADVICE
+
+Trade Ref No     TRD101311
+Security          Wipro Ltd
+Buy/Sell            BUY
+Quantity            1500
+Rate                 Rs 611.92
+Value  Date         21-08-2026
+Counterparty       ICICI-CUST
+
+This is a system generated advice   Please verify and revert
+in case of any discrepancy within 24 hours of receipt
+
+Authorized  Signatory
+N. Rao

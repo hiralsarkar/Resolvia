@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: KOTAK-CUST  SEBI Reg No: INZ000200137
+Compliance Officer: R. Menon | compliance@kotak.com
+Investor Complaints: complaints@kotak.com
+
+Contract Note No : CN202608093835
+Trade Date       : 2026-08-10
+Settlement No     : SETT-20260810
+Unique Client Code: UCC103835
+Trading Code      : TRD103835
+
+Security    : HINDUNILVR  ISIN: INE103835
+Buy/Sell    : SELL
+Quantity    : 200
+Rate        : INR 2757.4
+Trade Value : INR 551480.0
+
+Brokerage                    : INR 165.44
+Securities Transaction Tax   : INR 551.48
+Exchange Transaction Charges : INR 16.38
+SEBI Turnover Fees           : INR 0.55
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 32.73
+-------------------------------------------
+Net Amount Receivable : INR 550713.42
+
+This contract note is issued subject to the rules, byelaws of NSE.

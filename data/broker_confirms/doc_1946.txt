@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608125977
+Trade Date       : 12-08-2026
+Settlement No     : SETT-20260813
+Unique Client Code: UCC105977
+Trading Code      : TRD105977
+
+Security    : LT  ISIN: INE105977
+Buy/Sell    : SELL
+Quantity    : 125
+Rate        : INR 3736.79
+Trade Value : INR 467098.75
+
+Brokerage                    : INR 140.13
+Securities Transaction Tax   : INR 467.1
+Exchange Transaction Charges : INR 13.87
+SEBI Turnover Fees           : INR 0.47
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 27.72
+-------------------------------------------
+Net Amount Receivable : INR 466449.46
+
+This contract note is issued subject to the rules, byelaws of NSE.

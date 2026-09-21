@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: MORGANSTANLEY-BROKER  SEBI Reg No: INZ000209137
+Compliance Officer: R. Menon | compliance@morganstanley.com
+Investor Complaints: complaints@morganstanley.com
+
+Contract Note No : CN202608093783
+Trade Date       : 09/08/2026
+Settlement No     : SETT-20260810
+Unique Client Code: UCC103783
+Trading Code      : TRD103783
+
+Security    : HDFCBANK  ISIN: INE103783
+Buy/Sell    : BUY
+Quantity    : 1425
+Rate        : INR 1708.72
+Trade Value : INR 2434926.0
+
+Brokerage                    : INR 730.48
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 72.32
+SEBI Turnover Fees           : INR 2.43
+Stamp Duty                   : INR 365.24
+GST (18%)                    : INR 144.5
+-------------------------------------------
+Net Amount Payable : INR 2436240.97
+
+This contract note is issued subject to the rules, byelaws of NSE.

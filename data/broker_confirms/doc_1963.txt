@@ -1,0 +1,15 @@
+TRADE  CONFIRMATION   ADVICE
+
+Trade Ref No     TRD105940
+Security          Kotak Bank
+Buy/Sell            SELL
+Quantity            500
+Rate                 Rs 1961.1
+Value  Date         2026-08-17
+Counterparty       ICICI-CUST
+
+This is a system generated advice   Please verify and revert
+in case of any discrepancy within 24 hours of receipt
+
+Authorized  Signatory
+A. Fernandes

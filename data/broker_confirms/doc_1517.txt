@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: KOTAK-CUST  SEBI Reg No: INZ000200137
+Compliance Officer: R. Menon | compliance@kotak.com
+Investor Complaints: complaints@kotak.com
+
+Contract Note No : CN202608093111
+Trade Date       : 09-08-2026
+Settlement No     : SETT-20260810
+Unique Client Code: UCC103111
+Trading Code      : TRD103111
+
+Security    : MARUTI  ISIN: INE103111
+Buy/Sell    : BUY
+Quantity    : 325
+Rate        : INR 13145.13
+Trade Value : INR 4272167.25
+
+Brokerage                    : INR 1281.65
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 126.88
+SEBI Turnover Fees           : INR 4.27
+Stamp Duty                   : INR 640.83
+GST (18%)                    : INR 253.54
+-------------------------------------------
+Net Amount Payable : INR 4274474.42
+
+This contract note is issued subject to the rules, byelaws of NSE.

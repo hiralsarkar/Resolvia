@@ -1,0 +1,20 @@
+From: V. Desai <v@morganstanley.com>
+To: ops-recon@ourfirm.com
+Subject: Trade Confirmation - TRD100740
+
+Dear Team,
+
+Please find below confirmation for the following trade executed on 09/08/2026:
+
+  Security     : State Bank of India
+  Txn Type     : SELL
+  Qty          : 100
+  Price        : INR 842.79
+  Settlement   : 10-08-2026
+  Our Ref      : TRD100740
+
+Kindly confirm receipt and advise if any discrepancy at your end.
+
+Regards,
+V. Desai
+MORGANSTANLEY-BROKER

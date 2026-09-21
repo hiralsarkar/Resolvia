@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: MORGANSTANLEY-BROKER  SEBI Reg No: INZ000209137
+Compliance Officer: R. Menon | compliance@morganstanley.com
+Investor Complaints: complaints@morganstanley.com
+
+Contract Note No : CN202608064919
+Trade Date       : 07-08-2026
+Settlement No     : SETT-20260807
+Unique Client Code: UCC104919
+Trading Code      : TRD104919
+
+Security    : MARUTI  ISIN: INE104919
+Buy/Sell    : SELL
+Quantity    : 1500
+Rate        : INR 13036.32
+Trade Value : INR 19554480.0
+
+Brokerage                    : INR 5866.34
+Securities Transaction Tax   : INR 19554.48
+Exchange Transaction Charges : INR 580.77
+SEBI Turnover Fees           : INR 19.55
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 1160.48
+-------------------------------------------
+Net Amount Receivable : INR 19527298.38
+
+This contract note is issued subject to the rules, byelaws of NSE.

@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: KOTAK-CUST  SEBI Reg No: INZ000200137
+Compliance Officer: R. Menon | compliance@kotak.com
+Investor Complaints: complaints@kotak.com
+
+Contract Note No : CN202608145110
+Trade Date       : 14/08/2026
+Settlement No     : SETT-20260815
+Unique Client Code: UCC105110
+Trading Code      : TRD105110
+
+Security    : WIPRO  ISIN: INE105110
+Buy/Sell    : SELL
+Quantity    : 575
+Rate        : INR 621.74
+Trade Value : INR 357500.5
+
+Brokerage                    : INR 107.25
+Securities Transaction Tax   : INR 357.5
+Exchange Transaction Charges : INR 10.62
+SEBI Turnover Fees           : INR 0.36
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 21.22
+-------------------------------------------
+Net Amount Receivable : INR 357003.55
+
+This contract note is issued subject to the rules, byelaws of NSE.

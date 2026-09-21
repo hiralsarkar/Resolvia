@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: NOMURA-BROKER  SEBI Reg No: INZ000220236
+Compliance Officer: R. Menon | compliance@nomura.com
+Investor Complaints: complaints@nomura.com
+
+Contract Note No : CN202608185521
+Trade Date       : 2026-08-18
+Settlement No     : SETT-20260819
+Unique Client Code: UCC105521
+Trading Code      : TRD105521
+
+Security    : BHARTIARTL  ISIN: INE105521
+Buy/Sell    : SELL
+Quantity    : 50
+Rate        : INR 1682.06
+Trade Value : INR 84103.0
+
+Brokerage                    : INR 25.23
+Securities Transaction Tax   : INR 84.1
+Exchange Transaction Charges : INR 2.5
+SEBI Turnover Fees           : INR 0.08
+Stamp Duty                   : INR 0.0
+GST (18%)                    : INR 4.99
+-------------------------------------------
+Net Amount Receivable : INR 83986.1
+
+This contract note is issued subject to the rules, byelaws of NSE.

@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: DEUTSCHE-BROKER  SEBI Reg No: INZ000174330
+Compliance Officer: R. Menon | compliance@deutsche.com
+Investor Complaints: complaints@deutsche.com
+
+Contract Note No : CN202608082874
+Trade Date       : 2026-08-09
+Settlement No     : SETT-20260809
+Unique Client Code: UCC102874
+Trading Code      : TRD102874
+
+Security    : INFY  ISIN: INE102874
+Buy/Sell    : BUY
+Quantity    : 1500
+Rate        : INR 1881.73
+Trade Value : INR 2822595.0
+
+Brokerage                    : INR 846.78
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 83.83
+SEBI Turnover Fees           : INR 2.82
+Stamp Duty                   : INR 423.39
+GST (18%)                    : INR 167.51
+-------------------------------------------
+Net Amount Payable : INR 2824119.33
+
+This contract note is issued subject to the rules, byelaws of NSE.

@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: ICICI-CUST  SEBI Reg No: INZ000183631
+Compliance Officer: R. Menon | compliance@icici.com
+Investor Complaints: complaints@icici.com
+
+Contract Note No : CN202608060802
+Trade Date       : 06/08/2026
+Settlement No     : SETT-20260807
+Unique Client Code: UCC100802
+Trading Code      : TRD100802
+
+Security    : HINDUNILVR  ISIN: INE100802
+Buy/Sell    : BUY
+Quantity    : 425
+Rate        : INR 2763.94
+Trade Value : INR 1174674.5
+
+Brokerage                    : INR 352.4
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 34.89
+SEBI Turnover Fees           : INR 1.17
+Stamp Duty                   : INR 176.2
+GST (18%)                    : INR 69.71
+-------------------------------------------
+Net Amount Payable : INR 1175308.87
+
+This contract note is issued subject to the rules, byelaws of NSE.

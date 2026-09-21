@@ -1,0 +1,15 @@
+TRADE  CONFIRMATION   ADVICE
+
+Trade Ref No     TRD105273
+Security          Larsen & Toubro
+Buy/Sell            SELL
+Quantity            750
+Rate                 Rs 3688.35
+Value  Date         03/08/2026
+Counterparty       DEUTSCHE-BROKER
+
+This is a system generated advice   Please verify and revert
+in case of any discrepancy within 24 hours of receipt
+
+Authorized  Signatory
+N. Rao

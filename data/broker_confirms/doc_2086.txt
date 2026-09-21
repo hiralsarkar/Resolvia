@@ -1,0 +1,15 @@
+TRADE  CONFIRMATION   ADVICE
+
+Trade Ref No     TRD105304
+Security          AXISBANK
+Buy/Sell            BUY
+Quantity            250
+Rate                 Rs 1183.8
+Value  Date         2026-08-06
+Counterparty       MORGANSTANLEY-BROKER
+
+This is a system generated advice   Please verify and revert
+in case of any discrepancy within 24 hours of receipt
+
+Authorized  Signatory
+R. Menon

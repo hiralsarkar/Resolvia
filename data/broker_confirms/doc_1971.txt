@@ -1,0 +1,2 @@
+Menon: confirming TRD104231 ICICIBANK SELL 1500 @ 1235.69 sd 09/08/2026 ok?
+Menon: cp ICICI-CUST, let me know if mismatch

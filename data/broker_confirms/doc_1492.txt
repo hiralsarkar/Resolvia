@@ -1,0 +1,28 @@
+CONTRACT NOTE (CUM/DEMO) - NSE CAPITAL MARKET SEGMENT
+
+Member: MORGANSTANLEY-BROKER  SEBI Reg No: INZ000209137
+Compliance Officer: R. Menon | compliance@morganstanley.com
+Investor Complaints: complaints@morganstanley.com
+
+Contract Note No : CN202608212989
+Trade Date       : 2026-08-21
+Settlement No     : SETT-20260822
+Unique Client Code: UCC102989
+Trading Code      : TRD102989
+
+Security    : ITC  ISIN: INE102989
+Buy/Sell    : BUY
+Quantity    : 2000
+Rate        : INR 466.93
+Trade Value : INR 933860.0
+
+Brokerage                    : INR 280.16
+Securities Transaction Tax   : INR 0.0
+Exchange Transaction Charges : INR 27.74
+SEBI Turnover Fees           : INR 0.93
+Stamp Duty                   : INR 140.08
+GST (18%)                    : INR 55.42
+-------------------------------------------
+Net Amount Payable : INR 934364.33
+
+This contract note is issued subject to the rules, byelaws of NSE.

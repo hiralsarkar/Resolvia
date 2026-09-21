@@ -1,0 +1,18 @@
+From: R. Menon <r@kotak.com>
+To: ops-recon@ourfirm.com
+Subject: EOD Trade Confirmations - 5 trades - 2026-08-18
+
+Dear Team,
+
+Please find below confirmation for the following trades executed today:
+
+  TRD104657  TCS          BUY     500 @ 4108.45    SD:18-08-2026
+  TRD101543  Tata Consultancy Services BUY     200 @ 4103.84    SD:2026-08-02
+  TRD102924  Hindustan Unilever BUY    1000 @ 2747.68    SD:14/08/2026
+  TRD104671  Kotak Bank   SELL    100 @ 1954.96    SD:21/08/2026
+  TRD105896  Tata Consultancy BUY     500 @ 4110.83    SD:12-08-2026
+
+Kindly confirm receipt and advise of any discrepancies at your end.
+
+Regards,
+R. Menon
