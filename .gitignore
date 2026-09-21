@@ -1,0 +1,28 @@
+# environments
+.venv/
+venv/
+.env
+.streamlit/secrets.toml
+
+# python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# node
+node_modules/
+.next/
+
+# model weights downloaded at runtime
+*.pt
+*.bin
+
+# editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# local-only material
+archive/
+project_plan_resolvia.md
