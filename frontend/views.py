@@ -6,7 +6,6 @@ hand-authored sample data.
 """
 
 import streamlit as st
-import plotly.graph_objects as go
 import pandas as pd
 
 from theme import COLORS, FAMILY_COLOR, SEVERITY_COLOR, STATUS_COLOR, pill_html, root_cause_label, humanize, humanize_evidence, STATUS_LABEL, SEVERITY_LABEL, TIER_LABEL
@@ -473,6 +472,7 @@ def render_resolution_control():
 # ---------------------------------------------------------------- Analytics
 
 def render_analytics():
+    import plotly.graph_objects as go
     st.markdown('<span class="eyebrow">Portfolio View</span>', unsafe_allow_html=True)
     st.markdown("## Analytics")
 
