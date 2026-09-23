@@ -129,15 +129,14 @@ def assess_risk(rca_result, evidence):
     return {"level": level, "financial_exposure": exposure, "severity": severity}
 
 
-def propose(break_id):
+def propose(break_id, rca_result=None, evidence=None)
     """Resolution Proposal Agent entry point. Chains off RCA - re-uses
     its diagnosis rather than re-deriving it."""
-    rca_result = analyze(break_id)
-    # analyze() already ran investigate() internally; re-run here to get
-    # the evidence bundle back for risk assessment (investigate() is a
-    # cheap dict lookup, not a model call, so this isn't wasteful).
-    from investigation import investigate
-    evidence = investigate(break_id)
+    if rca_result is None:
+        rca_result = analyze(break_id)
+    if evidence is None:
+        from investigation import investigate
+        evidence = investigate(break_id)
 
     root_cause = rca_result["root_cause"]
     if root_cause not in ACTION_CATALOG:
