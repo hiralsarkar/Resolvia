@@ -104,7 +104,7 @@ def _advance(case, on_event=None):
         fire("rca", "RCA Agent", f"{r['root_cause']} at {r['confidence']*100:.1f}% confidence")
 
     if case["proposal"] is None:
-        case["proposal"] = resolution.propose(break_id)
+        case["proposal"] = resolution.propose(break_id, rca_result=case["rca"], evidence=case["investigation"])
         p = case["proposal"]
         _log(case, "RESOLUTION_PROPOSAL_COMPLETE",
              f"action={p['recommended_action'][:70]!r} authority_tier={p['authority_tier']}")
