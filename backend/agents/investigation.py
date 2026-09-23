@@ -83,6 +83,7 @@ def _ca_index():
 
 
 _PRECEDENT_INDEX_LOADED = False
+_OCR_READER = None
 
 
 def _precedent_index():
@@ -116,9 +117,11 @@ def _read_document_text(doc_id):
 
     img_path = os.path.join(DATA_DIR, "scanned_images", f"{doc_id}.jpg")
     if os.path.exists(img_path):
-        import easyocr
-        reader = easyocr.Reader(["en"], gpu=False, verbose=False)
-        lines = reader.readtext(img_path, detail=0)
+        global _OCR_READER
+        if _OCR_READER is None:
+            import easyocr
+            _OCR_READER = easyocr.Reader(["en"], gpu=False, verbose=False)
+        lines = _OCR_READER.readtext(img_path, detail=0)
         return "\n".join(lines), "ocr"
 
     return None, None
