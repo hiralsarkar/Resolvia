@@ -1,4 +1,4 @@
-"""
+""" 
 Resolution Proposal Agent.
 
 "What should the bank do?" Authority: Proposal only (per the proposal's
@@ -129,7 +129,7 @@ def assess_risk(rca_result, evidence):
     return {"level": level, "financial_exposure": exposure, "severity": severity}
 
 
-def propose(break_id, rca_result=None, evidence=None)
+def propose(break_id, rca_result=None, evidence=None):
     """Resolution Proposal Agent entry point. Chains off RCA - re-uses
     its diagnosis rather than re-deriving it."""
     if rca_result is None:
