@@ -1,6 +1,7 @@
 import streamlit as st
 from theme import inject_global_css
 import workbench
+import realistic_case
 import operational_views
 import backend_bridge as bb
 
@@ -59,22 +60,16 @@ with st.sidebar:
     st.markdown("<hr/>", unsafe_allow_html=True)
     st.caption("Human-led operations. Every decision and action is recorded.")
 
-_scroll = ""
-if st.session_state.get("_last_nav") != nav:
-    st.session_state["_last_nav"] = nav
-    _scroll = "<script>var m=window.parent.document.querySelector('[data-testid=\"stMain\"]');if(m){m.scrollTo(0,0);}window.parent.scrollTo(0,0);</script>"
-st.components.v1.html("<!-- -->" + _scroll, height=0)
-
 if nav == "Home":
     workbench.render_home()
 elif nav == "Operations Desk":
     workbench.render_operations()
 elif nav == "Case Investigation":
-    workbench.render_case()
+    realistic_case.render_case()
 elif nav == "Resolution Control":
-    workbench.render_resolution()
+    realistic_case.render_resolution()
 elif nav == "Resolution Playbook":
-    workbench.render_playbook()
+    realistic_case.render_guide()
 elif nav == "Audit Trail":
     workbench.render_audit()
 elif nav == "Manager Dashboard":
