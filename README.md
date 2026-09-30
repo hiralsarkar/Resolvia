@@ -1,7 +1,7 @@
 # RESOLVIA
 
 <p align="center">
-  <strong>Investment Banking Exception Intelligence &amp; Resolution</strong><br/>
+  <strong>Investment Banking Exception Intelligence &amp; Resolution</strong><br>
   <em>From Break to Verified Resolution.</em>
 </p>
 
@@ -30,9 +30,9 @@
 
 Post-trade reconciliation breaks are rarely difficult because the final fix is complicated. They are difficult because an analyst has to **find the evidence, connect the records, determine the root cause, assess the exposure, obtain authorization, execute the controlled fix, and verify the outcome**.
 
-**Resolvia turns that workflow into a coordinated exception-resolution system.**
+**Resolvia turns that workflow into a coordinated exception-resolution workbench.**
 
-> **AI investigates. Humans authorize. Systems execute. AI validates.**
+> **Records first. People decide. Every action is verified and auditable.**
 
 It covers cash-equity exceptions across **trade, settlement, position, cash and corporate-action** workflows using a synthetic but format-realistic dataset.
 
@@ -43,17 +43,19 @@ It covers cash-equity exceptions across **trade, settlement, position, cash and 
 ## How a break moves through Resolvia
 
 ```
-TRIAGE
+INTAKE
    ↓
-INVESTIGATION
+EVIDENCE
    ↓
 ROOT CAUSE
    ↓
-RESOLUTION PROPOSAL
+RESOLUTION PATH
    ↓
-CONTROL GATE  ← Human authorization
+HUMAN CONTROL  ← Review / Approve / Escalate
    ↓
-VALIDATION
+ACTION
+   ↓
+VERIFICATION
    ↓
 VERIFIED RESOLUTION
 ```
@@ -62,28 +64,33 @@ The **Orchestrator coordinates the stages; it does not make the decision itself.
 
 | Stage | What happens |
 |---|---|
-| 🔵 **Triage** | Routes the exception to a break family and assigns severity. |
-| 🟣 **Investigation** | Retrieves trade records, settlement messages, contract notes, OCR evidence and similar precedent cases. |
-| 🟢 **Root Cause** | Classifies the underlying cause across 20 root-cause classes and provides confidence with alternatives. |
-| 🩷 **Resolution Proposal** | Determines the recommended remediation and quantifies exposure. |
-| 🟠 **Control Gate** | Enforces policy. Review, approval or escalation remains a human decision. |
-| 🟢 **Validation** | Re-checks the records after the controlled action and closes or reopens the case. |
+| 🔵 **Intake** | Routes the exception to a break family and assigns priority. |
+| 🟣 **Evidence** | Retrieves trade records, settlement messages, contract notes, OCR evidence and similar precedent cases. |
+| 🟢 **Root Cause** | Classifies the underlying cause across 20 root-cause classes and provides supporting evidence. |
+| 🩷 **Resolution Path** | Determines the recommended remediation and quantifies exposure. |
+| 🟠 **Human Control** | Enforces policy. Review, approval or escalation remains a human decision. |
+| 🟢 **Verification** | Re-checks the records after the action and closes or reopens the case. |
 
 ---
 
-## What makes it an exception-intelligence system?
+## What makes it an exception-resolution workbench?
 
 ### Evidence before explanation
-Investigation retrieves the relevant records and precedent cases before the system proposes a resolution.
+Investigation retrieves the relevant records and precedent cases before a resolution path is presented.
 
-### Model + rules + retrieval
-Resolvia combines machine-learning classification, deterministic policy logic, document/OCR extraction and semantic retrieval rather than relying on a single model.
+### Models + rules + retrieval
+Resolvia combines machine-learning classification, deterministic policy logic, document/OCR extraction and semantic retrieval rather than relying on a single technique.
 
-### Human-in-the-loop by design
+### Human control by design
 The **Control Gate is policy code, not a model**. Exceptions requiring authorization stop until an operator chooses **Review, Approve or Escalate**.
 
 ### Resolution is not the finish line
-A proposed fix is not treated as success. Resolvia performs a separate validation step to verify whether the underlying break actually cleared.
+A proposed fix is not treated as success. Resolvia performs a separate verification step to confirm whether the underlying break actually cleared.
+
+### Built for three people
+**Analyst:** clear next action, manual procedure, owner and evidence checklist.  
+**Manager:** workload, ageing, exposure, categories and items requiring attention.  
+**Auditor:** Operations ID, timestamp, action and case history by break.
 
 ---
 
@@ -100,7 +107,7 @@ A proposed fix is not treated as success. Resolvia performs a separate validatio
 | **Workflow** | Python Orchestrator · deterministic Control Gate |
 | **Data / Evaluation** | Synthetic trade-break generator · model evaluation pipeline |
 
-The LLM layer is optional. The core investigation, classification, policy and validation workflow can operate without an API key.
+The optional narrative layer is not required for the core investigation, classification, policy and verification workflow.
 
 ---
 
@@ -122,11 +129,13 @@ See [`docs/model_comparison.md`](docs/model_comparison.md) for the detailed mode
 
 ## Application flow
 
-1. **Home** — visualizes the six stations working through a case.
-2. **Choose an exception** — select a break from the exception universe.
-3. **Watch the analysis** — observe the live investigation pipeline.
-4. **Make the decision** — review the evidence and authorize, escalate or reject the proposed action.
-5. **Overall results** — inspect portfolio-level outcomes and model performance.
+1. **Home** — see the operational workload and items needing attention.
+2. **Break Queue** — find and prioritize an exception.
+3. **Case Workspace** — review evidence, cause, ownership and current status.
+4. **Resolution** — review the proposed path and record the human decision.
+5. **Manual Guide** — follow the practical resolution procedure when the fix is carried out manually.
+6. **Audit Trail** — trace every recorded action by Operations ID, timestamp and break.
+7. **Manager Overview** — inspect arrivals, open work, ageing, resolution volume, exposure and categories.
 
 ---
 
@@ -176,7 +185,7 @@ python eval/baseline_comparison.py
 ```
 data/       Synthetic data generation, taxonomy, validation, EDA
 backend/    Agents, orchestrator, control gate, models, OCR, retrieval, evaluation
-frontend/   Streamlit application, theme, views and interaction layer
+frontend/   Streamlit application, theme, workbench and interaction layer
 docs/       Proposal, project pitch, EDA, model comparison and workflow visual
 ```
 
