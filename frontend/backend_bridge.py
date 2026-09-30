@@ -49,8 +49,61 @@ def approve(break_id,approver,notes=None,on_event=None,mode="Controlled Action")
     audit("APPROVAL_GRANTED",break_id,f"Approved by {approver}; execution mode: {mode}; notes: {notes or '—'}")
     control_gate.record_decision(break_id,"APPROVE",approver,f"[{mode}] {notes or ''}".strip())
     case=orchestrator.get_case(break_id); case["execution_mode"]=mode; orchestrator._log(case,"EXECUTION_MODE",mode)
-    audit("MANUAL_RESOLUTION_SELECTED" if mode=="Manually by Analyst" else "CONTROLLED_ACTION_SELECTED",break_id,f"Execution mode: {mode}")
+    audit("CONTROLLED_ACTION_SELECTED",break_id,f"Execution mode: {mode}")
     return resume_case(break_id,on_event=on_event)
+
+def begin_manual(break_id,operator,notes=""):
+    """Start a manual resolution without satisfying the execution gate.
+
+    Selecting manual resolution is an execution choice, not an approval and
+    never closes the case. The break remains open while the analyst performs
+    the correction in the appropriate operational system.
+    """
+    case=orchestrator.get_case(break_id)
+    if case is None: raise KeyError(f"no case exists for {break_id}")
+    case["execution_mode"]="Manual"
+    case["status"]="MANUAL_IN_PROGRESS"
+    case["manual_resolution"]={"operator":operator,"started_at":pd.Timestamp.utcnow().isoformat(),"notes":notes,"actions":[],"evidence":[]}
+    orchestrator._log(case,"MANUAL_RESOLUTION_STARTED",f"by {operator}: {notes or 'manual correction started'}")
+    audit("MANUAL_RESOLUTION_STARTED",break_id,f"Manual resolution started by {operator}; {notes or 'no note'}",actor_id=operator)
+    _sync_case_audit(case)
+    return case
+
+def submit_manual(break_id,operator,action_taken,evidence_reference,checklist):
+    """Record the human-performed correction and move to verification.
+
+    This deliberately does not call the automatic execution simulator and
+    does not close the case. Verification remains a separate control step.
+    """
+    case=orchestrator.get_case(break_id)
+    if case is None: raise KeyError(f"no case exists for {break_id}")
+    if case.get("status")!="MANUAL_IN_PROGRESS": raise ValueError("manual resolution has not been started")
+    if not action_taken.strip(): raise ValueError("describe the action performed before submitting")
+    if not evidence_reference.strip(): raise ValueError("provide a confirmation or evidence reference")
+    if not all(checklist): raise ValueError("complete every required evidence check before submitting")
+    case["manual_resolution"].update({"submitted_by":operator,"submitted_at":pd.Timestamp.utcnow().isoformat(),"action_taken":action_taken,"evidence_reference":evidence_reference,"checklist":checklist})
+    case["status"]="AWAITING_VERIFICATION"
+    orchestrator._log(case,"MANUAL_ACTION_SUBMITTED",f"by {operator}; evidence={evidence_reference}")
+    audit("MANUAL_ACTION_SUBMITTED",break_id,f"Manual correction recorded by {operator}; evidence/reference: {evidence_reference}",actor_id=operator)
+    _sync_case_audit(case)
+    return case
+
+def verify_manual(break_id,verifier,verification_notes):
+    """Close a manually resolved case only after a separate verification step."""
+    case=orchestrator.get_case(break_id)
+    if case is None: raise KeyError(f"no case exists for {break_id}")
+    if case.get("status")!="AWAITING_VERIFICATION": raise ValueError("case is not awaiting verification")
+    if not verification_notes.strip(): raise ValueError("verification notes are required")
+    case["manual_resolution"]["verified_by"]=verifier
+    case["manual_resolution"]["verified_at"]=pd.Timestamp.utcnow().isoformat()
+    case["manual_resolution"]["verification_notes"]=verification_notes
+    case["status"]="CLOSED"
+    orchestrator._log(case,"MANUAL_RESOLUTION_VERIFIED",f"verified by {verifier}: {verification_notes}")
+    orchestrator._log(case,"CASE_CLOSED","manual resolution verified")
+    audit("MANUAL_RESOLUTION_VERIFIED",break_id,f"Verified by {verifier}: {verification_notes}",actor_id=verifier)
+    audit("CASE_CLOSED",break_id,"Case closed after independent manual-resolution verification",actor_id=verifier)
+    _sync_case_audit(case)
+    return case
 
 def mark(break_id,status,approver,notes=None):
     audit("CASE_ESCALATED" if status=="ESCALATED" else "CASE_REVIEWED",break_id,f"{status} by {approver}; notes: {notes or '—'}")
