@@ -105,6 +105,93 @@ def render_case():
         if investigation.get("document_evidence", {}).get("has_document"):
             st.write(investigation["document_evidence"].get("text", ""))
 
+    # Supplemental documents are scoped to this selected break and kept in
+    # Streamlit session state; they do not silently overwrite the original RCA.
+    st.markdown("### Additional evidence")
+    st.caption("Upload new documents for this break. RESOLVIA extracts their contents and creates a separate supplemental review; the original analysis and approval controls remain unchanged.")
+    import document_evidence as de
+    evidence_key = f"supplemental_docs::{bid}"
+    reviews_key = f"supplemental_reviews::{bid}"
+    if evidence_key not in st.session_state:
+        st.session_state[evidence_key] = []
+    if reviews_key not in st.session_state:
+        st.session_state[reviews_key] = []
+    uploaded = st.file_uploader(
+        "Upload supporting files for this break",
+        type=["pdf", "docx", "txt", "csv", "xlsx", "png", "jpg", "jpeg"],
+        accept_multiple_files=True,
+        key=f"supplemental_uploader_{bid}",
+        help="Maximum 8 MB per file. Scanned PDFs are not supported yet; use a text PDF or upload the extracted text."
+    )
+    if st.button("Process uploaded documents", key=f"process_supplemental_{bid}", use_container_width=True):
+        existing_hashes = {d["sha256"] for d in st.session_state[evidence_key]}
+        added, errors = 0, []
+        for file in uploaded or []:
+            try:
+                parsed = de.extract_text(file.name, file.getvalue())
+                if parsed["sha256"] in existing_hashes:
+                    continue
+                record = {
+                    "name": file.name, "text": parsed["text"], "method": parsed["method"],
+                    "sha256": parsed["sha256"], "bytes": parsed["bytes"],
+                    "truncated": parsed["truncated"],
+                    "uploaded_by": st.session_state.get("operator_id", "OPS-1047"),
+                    "uploaded_at": pd.Timestamp.utcnow().isoformat(),
+                }
+                st.session_state[evidence_key].append(record)
+                existing_hashes.add(parsed["sha256"])
+                added += 1
+                bb.audit("SUPPLEMENTAL_DOCUMENT_PROCESSED", bid,
+                         f"{file.name}; method={parsed['method']}; sha256={parsed['sha256']}",
+                         actor_id=record["uploaded_by"],
+                         metadata={"filename": file.name, "sha256": parsed["sha256"], "bytes": parsed["bytes"]})
+            except Exception as exc:
+                errors.append(f"{file.name}: {exc}")
+        if added:
+            bb.audit("SUPPLEMENTAL_EVIDENCE_ADDED", bid, f"{added} new document(s) attached to this case")
+            st.success(f"Processed {added} new document(s).")
+        elif not errors:
+            st.info("No new documents were processed. Files may already be attached to this case.")
+        for error in errors:
+            st.error(error)
+        st.rerun()
+
+    documents = st.session_state[evidence_key]
+    if documents:
+        st.markdown(f"**Documents attached to this case: {len(documents)}**")
+        for index, doc in enumerate(documents):
+            with st.expander(f"{doc['name']} · {doc['method']}", expanded=False):
+                st.caption(f"Uploaded by {doc['uploaded_by']} · {doc['uploaded_at']} · {doc['bytes']:,} bytes")
+                st.caption(f"SHA-256: {doc['sha256']}")
+                if doc["truncated"]:
+                    st.warning("Extracted text was truncated to the first 30,000 characters.")
+                st.text_area("Extracted text", value=doc["text"], height=180,
+                             key=f"supplemental_text_{bid}_{index}", disabled=True)
+        if st.button("Analyse with additional evidence →", type="primary",
+                     key=f"analyse_supplemental_{bid}", use_container_width=True):
+            with st.spinner("Reviewing supplemental evidence…"):
+                try:
+                    review = de.review_supplemental_evidence(bid, row, case, documents)
+                    review["version"] = len(st.session_state[reviews_key]) + 1
+                    st.session_state[reviews_key].append(review)
+                    bb.audit("SUPPLEMENTAL_EVIDENCE_REVIEWED", bid,
+                             f"Supplemental review version {review['version']} using {len(documents)} document(s)",
+                             metadata={"version": review["version"], "mode": review["mode"],
+                                       "document_count": len(documents)})
+                    st.rerun()
+                except Exception as exc:
+                    st.error(f"Supplemental review failed: {exc}")
+        for review in st.session_state[reviews_key]:
+            with st.expander(f"Supplemental review v{review['version']} · {review['mode']}", expanded=True):
+                st.caption(f"Created: {review['created_at']}")
+                st.write(review["review"])
+                if review.get("exact_matches"):
+                    st.markdown("**Exact matches against selected case values**")
+                    st.json(review["exact_matches"])
+                st.info("This supplemental review does not overwrite the original root-cause model output, resolution proposal, or approval state. Treat extracted information as unverified until confirmed against an authoritative source.")
+    else:
+        st.caption("No additional documents attached to this case yet.")
+
     if proposal:
         st.markdown(f'<div class="rc-card"><div class="rc-label">Recommended resolution</div><h3>{proposal.get("recommended_action", "")}</h3><div class="rc-muted">{proposal.get("reason", "")}</div><br><b>Owner:</b> {triage.get("route", "Operations")}</div>', unsafe_allow_html=True)
 
