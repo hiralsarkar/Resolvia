@@ -2,7 +2,7 @@ import streamlit as st
 from theme import inject_global_css
 import workbench
 import realistic_case
-import agent_architecture
+import command_center
 import operational_views
 import backend_bridge as bb
 
@@ -63,7 +63,7 @@ with st.sidebar:
     st.caption("Human-led operations. Every decision and action is recorded.")
 
 if nav == "Agent Architecture":
-    agent_architecture.render()
+    command_center.render()
 elif nav == "Home":
     workbench.render_home()
 elif nav == "Operations Desk":
