@@ -22,3 +22,6 @@ ipykernel
 matplotlib
 streamlit
 plotly
+pypdf
+python-docx
+openpyxl
