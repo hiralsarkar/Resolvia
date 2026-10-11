@@ -2,6 +2,7 @@ import streamlit as st
 from theme import inject_global_css
 import workbench
 import realistic_case
+import agent_architecture
 import operational_views
 import backend_bridge as bb
 
@@ -9,7 +10,7 @@ st.set_page_config(page_title="Resolvia", page_icon="◆", layout="wide", initia
 inject_global_css()
 
 if "nav" not in st.session_state:
-    st.session_state["nav"] = "Home"
+    st.session_state["nav"] = "Agent Architecture"
 if "selected_break" not in st.session_state:
     st.session_state["selected_break"] = None
 if "operator_id" not in st.session_state:
@@ -25,8 +26,9 @@ with st.sidebar:
     operational_views.render_operator_context()
     st.markdown("<hr/>", unsafe_allow_html=True)
 
-    pages = ["Home", "Operations Desk", "Case Investigation", "Resolution Control", "Resolution Playbook", "Audit Trail", "Manager Dashboard"]
+    pages = ["Agent Architecture", "Home", "Operations Desk", "Case Investigation", "Resolution Control", "Resolution Playbook", "Audit Trail", "Manager Dashboard"]
     friendly = {
+        "Agent Architecture": "Agent Architecture",
         "Home": "Home",
         "Operations Desk": "Break Queue",
         "Case Investigation": "Case Workspace",
@@ -60,7 +62,9 @@ with st.sidebar:
     st.markdown("<hr/>", unsafe_allow_html=True)
     st.caption("Human-led operations. Every decision and action is recorded.")
 
-if nav == "Home":
+if nav == "Agent Architecture":
+    agent_architecture.render()
+elif nav == "Home":
     workbench.render_home()
 elif nav == "Operations Desk":
     workbench.render_operations()
