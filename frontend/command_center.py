@@ -25,11 +25,15 @@ HTML_PATH = os.path.join(HERE, "assets", "command_center.html")
 
 
 def render():
-    c1, c2, c3 = st.columns([1, 1.3, 1])
-    with c2:
-        if st.button("Start Reviewing Exceptions  →", key="cc_open_ops", type="primary"):
-            st.session_state["nav"] = "Operations Desk"
-            st.rerun()
     with open(HTML_PATH, encoding="utf-8") as f:
         html = f.read()
     st.components.v1.html(html, height=1400, scrolling=False)
+
+    # Keep the real Streamlit navigation button after the full architecture
+    # visual, at the end of the page rather than above the animation.
+    st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+    c1, c2, c3 = st.columns([1, 1.3, 1])
+    with c2:
+        if st.button("Start Reviewing Exceptions  →", key="cc_open_ops", type="primary", use_container_width=True):
+            st.session_state["nav"] = "Operations Desk"
+            st.rerun()
