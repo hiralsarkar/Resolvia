@@ -1,9 +1,10 @@
-# What the Streamlit app needs at runtime (this is the file Streamlit Cloud installs)
+# What the Streamlit app needs at runtime (this is the file Streamlit Cloud installs).
+# scikit-learn is pinned to the version the saved models were trained with.
 streamlit
 plotly
 pandas
 numpy
-scikit-learn==1.9.0
+scikit-learn==1.9.1
 joblib
 requests
 python-dotenv

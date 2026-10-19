@@ -1,0 +1,98 @@
+{
+  "threshold": 0.8,
+  "threshold_table": [
+    {
+      "threshold": 0.0,
+      "reviews": 694,
+      "reopens": 11,
+      "silent_errors": 0,
+      "cost": 749
+    },
+    {
+      "threshold": 0.3,
+      "reviews": 694,
+      "reopens": 11,
+      "silent_errors": 0,
+      "cost": 749
+    },
+    {
+      "threshold": 0.4,
+      "reviews": 695,
+      "reopens": 10,
+      "silent_errors": 0,
+      "cost": 745
+    },
+    {
+      "threshold": 0.5,
+      "reviews": 697,
+      "reopens": 10,
+      "silent_errors": 0,
+      "cost": 747
+    },
+    {
+      "threshold": 0.6,
+      "reviews": 710,
+      "reopens": 4,
+      "silent_errors": 0,
+      "cost": 730
+    },
+    {
+      "threshold": 0.7,
+      "reviews": 717,
+      "reopens": 2,
+      "silent_errors": 0,
+      "cost": 727
+    },
+    {
+      "threshold": 0.8,
+      "reviews": 720,
+      "reopens": 1,
+      "silent_errors": 0,
+      "cost": 725
+    },
+    {
+      "threshold": 0.9,
+      "reviews": 726,
+      "reopens": 1,
+      "silent_errors": 0,
+      "cost": 731
+    },
+    {
+      "threshold": 0.95,
+      "reviews": 738,
+      "reopens": 0,
+      "silent_errors": 0,
+      "cost": 738
+    },
+    {
+      "threshold": 0.99,
+      "reviews": 930,
+      "reopens": 0,
+      "silent_errors": 0,
+      "cost": 930
+    }
+  ],
+  "costs": {
+    "review": 1,
+    "reopen": 5,
+    "silent_error": 50
+  },
+  "augmentation": [
+    [
+      0.001,
+      0.3,
+      101
+    ],
+    [
+      0.0025,
+      0.2,
+      102
+    ],
+    [
+      0.005,
+      0.1,
+      103
+    ]
+  ],
+  "validation_breaks": 930
+}

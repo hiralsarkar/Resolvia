@@ -7,16 +7,21 @@ evidence) for a person, and for the Resolution Proposal agent, to act on.
 
 How it decides:
 
-1. The root-cause model (a Random Forest over 15 engineered features) gives a
-   first diagnosis plus a probability for every class.
+1. The root-cause model gives a first diagnosis plus a probability for every
+   class. It's a random forest over 15 engineered features, trained on clean
+   and purposely messy copies of the data and then calibrated, so its
+   confidence behaves like a probability (see build_production.py).
 2. Document check. For corporate actions the numbers alone can't separate a
    mandatory event from a voluntary one: both show the custodian still
-   holding the pre-event quantity. The MT564 notice can, through its CAMV
-   field (MAND or VOLU). If the notice disagrees with the model, the notice
+   holding the pre-event quantity. The MT564 notice can. I read three signals
+   from it (the CAMV field, the event code and the narrative), each tolerant
+   of a small OCR slip. If they agree and disagree with the model, the notice
    wins and the record says so.
 3. Escalation rules that are written down, not learned. Any corporate action
-   goes to a person no matter how confident we are, and so does anything the
-   model is less than 70% sure about. P0 only changes queue position.
+   goes to a person no matter how confident the model is, and so does any
+   diagnosis below the confidence threshold. The threshold was chosen by
+   replaying the routing rules at different cut-offs and keeping the cheapest.
+   P0 only changes queue position.
 
 An optional LLM step turns the record into a short paragraph for the analyst.
 It needs OPENROUTER_API_KEY and is never used to make the decision.
@@ -30,7 +35,10 @@ import joblib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(HERE, "..", "..", "data")
-MODEL_PATH = os.path.join(HERE, "..", "models", "ml_classifier", "saved", "root_cause_classifier.joblib")
+SAVED_DIR = os.path.join(HERE, "..", "models", "ml_classifier", "saved")
+# the noise-trained, calibrated model if it has been built, else the plain tuned one
+MODEL_PATH = next(p for p in (os.path.join(SAVED_DIR, "root_cause_production.joblib"),
+                              os.path.join(SAVED_DIR, "root_cause_classifier.joblib")) if os.path.exists(p))
 
 sys.path.insert(0, HERE)
 sys.path.insert(0, DATA_DIR)
@@ -41,7 +49,9 @@ from taxonomy import ROOT_CAUSES  # noqa: E402
 sys.path.insert(0, os.path.join(HERE, ".."))
 import llm  # noqa: E402
 
-LOW_CONFIDENCE_THRESHOLD = 0.70
+# Fallback only. The production model carries its own threshold, chosen by
+# cost in build_production.py.
+DEFAULT_THRESHOLD = 0.70
 
 _MODEL_BUNDLE = None
 _FEATURES_DF = None
@@ -52,6 +62,10 @@ def _model_bundle():
     if _MODEL_BUNDLE is None:
         _MODEL_BUNDLE = joblib.load(MODEL_PATH)
     return _MODEL_BUNDLE
+
+
+def confidence_threshold():
+    return _model_bundle().get("threshold", DEFAULT_THRESHOLD)
 
 
 def _features_df():
@@ -82,24 +96,68 @@ def classify_root_cause(break_id, top_k=3):
     }
 
 
+# OCR tends to read letters as look-alike digits. Mapping them back before
+# matching lets a slightly damaged scan still be read.
+_DIGIT_TO_LETTER = str.maketrans({"0": "O", "1": "I", "5": "S", "8": "B", "4": "A"})
+
+MANDATORY_EVENTS = {"BONU", "SPLF", "SPLR", "DVSE", "CAPG"}
+VOLUNTARY_EVENTS = {"TEND", "EXOF", "BIDS", "CONV", "RHTS"}
+FLAGS = ("MAND", "VOLU", "CHOS")
+
+
+def _closest(token, choices, max_distance=1):
+    """The choice within max_distance substitutions of token, if exactly one is."""
+    if not token or len(token) < 4:
+        return None
+    token = token[:4]
+    near = [c for c in choices if sum(a != b for a, b in zip(token, c)) <= max_distance]
+    return near[0] if len(near) == 1 else None
+
+
 def read_ca_notice(text):
-    """Pulls the fields we care about out of an MT564-style notice."""
+    """Reads an MT564-style notice and decides whether it needs an election.
+
+    Three independent signals, from most to least direct:
+      1. the CAMV field (MAND, VOLU or CHOS)
+      2. the event code in CAEV (a bonus is mandatory, a tender voluntary)
+      3. the narrative ("NO ELECTION REQUIRED", "ELECTION REQUIRED", NOAC)
+    Each one tolerates a single OCR slip. If they disagree, or none can be
+    read, it returns None and the break falls back to the model and a person."""
     if not text:
         return None
+    norm = text.upper().translate(_DIGIT_TO_LETTER)
 
-    def field(tag):
+    def raw_field(tag):
         m = re.search(rf":{tag}//([^\s]+)", text)
         return m.group(1) if m else None
 
-    mandatory_flag = field("22F::CAMV")
-    if mandatory_flag not in ("MAND", "VOLU", "CHOS"):
+    signals = []
+    m = re.search(r"::CA[MN]V//(\S{4})", norm)
+    flag = _closest(m.group(1), FLAGS) if m else None
+    if flag:
+        signals.append(("CAMV field", "MAND" if flag == "MAND" else "VOLU"))
+
+    m = re.search(r"::CA[EF]V//(\S{4})", norm)
+    event = _closest(m.group(1), MANDATORY_EVENTS | VOLUNTARY_EVENTS) if m else None
+    if event:
+        signals.append(("event code", "MAND" if event in MANDATORY_EVENTS else "VOLU"))
+
+    if "NO ELECTION" in norm or "MECHANICAL EVENT" in norm:
+        signals.append(("narrative", "MAND"))
+    elif "ELECTION REQUIRED" in norm or "NOAC" in norm:
+        signals.append(("narrative", "VOLU"))
+
+    votes = {v for _, v in signals}
+    if len(votes) != 1:
         return None
+    decided = votes.pop()
     return {
-        "event": field("22F::CAEV"),
-        "mandatory_flag": mandatory_flag,
-        "ratio": field("22F::CAON"),
-        "effective_date": field("98A::EFFD"),
-        "election_required": mandatory_flag != "MAND",
+        "event": event or raw_field("22F::CAEV"),
+        "mandatory_flag": decided,
+        "ratio": raw_field("22F::CAON"),
+        "effective_date": raw_field("98A::EFFD"),
+        "election_required": decided != "MAND",
+        "signals": [s for s, _ in signals],
     }
 
 
@@ -145,8 +203,9 @@ def decide_escalation(evidence, confidence):
     if evidence["corporate_action_context"]["is_corporate_action"]:
         reasons.append("corporate action: a person always confirms the event and the entitlement, "
                        "whatever the model's confidence")
-    if confidence < LOW_CONFIDENCE_THRESHOLD:
-        reasons.append(f"model confidence {confidence:.2f} is below {LOW_CONFIDENCE_THRESHOLD}")
+    threshold = confidence_threshold()
+    if confidence < threshold:
+        reasons.append(f"model confidence {confidence:.2f} is below {threshold:.2f}")
     return {
         "requires_human_decision": bool(reasons),
         "reasons": reasons,

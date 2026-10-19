@@ -6,6 +6,8 @@ Three ways in, all ending in the same trade schema:
   ingest_text()             emails, notes and chat messages, read by an LLM
                             through a record_trades tool call
   ingest_scanned_image()    EasyOCR first, then the same LLM step
+  ingest_text_rules()       regex and alias lookups only, the baseline the
+                            LLM is measured against (eval/extraction_eval.py)
 
 A batch email with several trades comes back as several records, not just
 the first one found.
@@ -14,12 +16,16 @@ Not part of the break pipeline itself (that starts from the reconciliation
 feed), but it's how new evidence would get in.
 """
 
-import os
-import sys
 import json
+import os
+import re
+import sys
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(HERE, ".."))
+sys.path.insert(0, os.path.join(HERE, "..", "..", "data"))
 import llm  # noqa: E402
+from reference_data import COUNTERPARTIES, SYMBOL_ALIASES  # noqa: E402
 
 COMMON_SCHEMA_FIELDS = ["trade_id", "symbol", "quantity", "price",
                           "counterparty", "side", "trade_date", "settlement_date"]
@@ -79,6 +85,67 @@ def ingest_structured_row(row):
         "source": "structured_feed",
         "extraction_method": "deterministic",
     }
+
+
+# A rules-only reader for the same documents, as a baseline for the LLM.
+
+_DATE = r"(\d{4}-\d{2}-\d{2}|\d{2}[-/]\d{2}[-/]\d{4})"
+_NUM = r"(\d[\d,]*\.?\d*)"
+_ALIASES = sorted(((alias.upper(), ticker) for ticker, names in SYMBOL_ALIASES.items() for alias in names),
+                  key=lambda x: -len(x[0]))
+_DOMAIN_TO_CP = {cp.split("-")[0].lower(): cp for cp in COUNTERPARTIES}
+
+
+def _iso(date):
+    if re.fullmatch(r"\d{8}", date):
+        return f"{date[:4]}-{date[4:6]}-{date[6:]}"
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
+        return date
+    d, m, y = re.split(r"[-/]", date)
+    return f"{y}-{m}-{d}"
+
+
+def _first(patterns, text):
+    for pat in patterns:
+        m = re.search(pat, text)
+        if m:
+            return m.group(1)
+    return None
+
+
+def _read_fields(segment, whole):
+    u, w = segment.upper(), whole.upper()
+    qty = _first([r"\bQTY\s*:?\s*" + _NUM, r"\bQUANTITY\s*:?\s*" + _NUM,
+                  r"\b(?:BUY|SELL)\s+" + _NUM + r"\s*@", r"UNIT/" + _NUM], u)
+    price = _first([r"@\s*(?:INR|RS\.?)?\s*" + _NUM, r"\b(?:PRICE|RATE)\s*:?\s*(?:INR|RS\.?)?\s*" + _NUM,
+                    r"\bAROUND\s+" + _NUM], u)
+    date = _first([r"\b(?:SETTLEMENT(?:\s+SHOULD\s+BE)?|SD|VALUE\s+DATE)\s*:?\s*" + _DATE,
+                   r"SETT-(\d{8})", r"SETT//(\d{8})"], u) or _first([r"SETT-(\d{8})"], w)
+    side = _first([r"\b(BUY|SELL)\b"], u)
+    symbol = next((t for alias, t in _ALIASES if re.search(rf"(?<![A-Z]){re.escape(alias)}(?![A-Z])", u)), None)
+    cp = _first([r"\b(" + "|".join(COUNTERPARTIES) + r")\b"], u) or _first([r"\b(" + "|".join(COUNTERPARTIES) + r")\b"], w)
+    if cp is None:
+        m = re.search(r"@([a-z]+)\.com", whole)
+        cp = _DOMAIN_TO_CP.get(m.group(1)) if m else None
+    return {
+        "symbol": symbol, "side": side, "counterparty": cp,
+        "quantity": int(qty.replace(",", "")) if qty else None,
+        "price": float(price.replace(",", "").rstrip(".")) if price else None,
+        "settlement_date": _iso(date) if date else None,
+    }
+
+
+def ingest_text_rules(text, doc_id=None):
+    """Regex and alias lookups only, no model. One record per trade reference."""
+    ids = list(dict.fromkeys(re.findall(r"TRD\d{6}", text)))
+    lines = text.splitlines()
+    trades = []
+    for tid in ids:
+        segment = text if len(ids) == 1 else next(l for l in lines if tid in l)
+        trades.append(dict(_read_fields(segment, text), trade_id=tid,
+                           source=f"unstructured_text:{doc_id}" if doc_id else "unstructured_text",
+                           extraction_method="rules"))
+    return trades
 
 
 def _parse_trades(message):
