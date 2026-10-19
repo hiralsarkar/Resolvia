@@ -1,21 +1,10 @@
 """
-train.py - the Triage Agent's family classifier.
+Trains the family classifier that Triage uses for routing.
 
-This is the OTHER half of the family-vs-root_cause reconciliation: the official proposal's literal methodology
-step 4 ("classify breaks into TRADE/SETTLEMENT/POSITION/CASH") maps
-cleanly onto TRIAGE, not RCA. Family IS trivially separable (RF/XGBoost
-hit 1.000 macro-F1 in Week 1's check_ml_targets.py) - and that's
-appropriate here: a fast first-pass routing decision should be cheap
-and near-certain, not deep. The hard, genuinely diagnostic
-classification (root_cause) is correctly reserved for RCA, later in
-the pipeline once real investigation has happened. Reporting the same
-1.000 macro-F1 as a Triage result is not a flaw here the way it would
-have been as the RCA target - it's the honest finding for what a
-routing step should do.
-
-No tuning/CV writeup needed here (that rigor already lives in
-docs/model_comparison.md for the root_cause target) - this is a much
-simpler fit, saved for the Triage Agent to load.
+Family (POSITION, CASH, SETTLEMENT, TRADE) is easy to separate: tree models
+get it right every time. That would be a weak target for the main model
+comparison, but it's exactly what a routing step should be, cheap and nearly
+certain. The harder root-cause model is trained in models/ml_classifier.
 """
 
 import os
@@ -26,7 +15,7 @@ from sklearn.preprocessing import LabelEncoder
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "data")
 sys.path.insert(0, DATA_DIR)
-from check_ml_targets import build_features, FEATURE_COLS  # noqa: E402
+from features import build_features, FEATURE_COLS  # noqa: E402
 
 SAVED_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "saved")
 

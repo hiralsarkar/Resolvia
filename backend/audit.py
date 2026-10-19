@@ -1,7 +1,9 @@
-"""Operational audit logging for Resolvia.
+"""
+Operational audit log.
 
-Keeps a lightweight local JSON event log so the UI can show human and system
-activity without introducing a database dependency for the demo deployment.
+A local JSON file of every human and system action the app records: who did
+what, to which break, and when. A database would be the right home in
+production; a file keeps the demo deployable anywhere.
 """
 import json
 import os

@@ -1,21 +1,12 @@
 """
-embed_store.py
+A small local vector index.
 
-Minimal local embedding index - sentence-transformers (all-MiniLM-L6-v2,
-frozen, pretrained) for vectors, plain numpy
-cosine similarity for retrieval. No pgvector/Supabase - a local index is
-sufficient at this corpus size (a few thousand documents).
+Vectors come from sentence-transformers (all-MiniLM-L6-v2, used as-is) and
+search is a dot product in NumPy. At a few thousand documents that's all you
+need; there's no vector database.
 
-Two indices are built by build_indices.py:
-  - evidence documents (backend/embeddings/saved/evidence_index.*)
-  - corporate-action reference KB (backend/embeddings/saved/ca_reference_index.*)
-
-RAG has two uses here: (1) evidence retrieval - given a
-break, find semantically related documents even without an explicit
-break_id->doc_id join; (2) knowledge grounding - given a CA-flagged
-break, retrieve the relevant action-type definition before an agent
-judges mandatory vs voluntary. Precedent retrieval over resolved_cases
-is built separately (see build_resolved_cases.py).
+build_indices.py builds three of these: the evidence documents, the
+corporate-action reference entries and the resolved precedent cases.
 """
 
 import json

@@ -1846,7 +1846,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -1871,7 +1871,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -1896,7 +1896,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -1921,7 +1921,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -1946,7 +1946,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -1971,7 +1971,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -1996,7 +1996,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -2021,7 +2021,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -2046,7 +2046,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -2071,7 +2071,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -2096,7 +2096,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -2121,7 +2121,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -2146,7 +2146,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -2171,7 +2171,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -2196,7 +2196,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -2221,7 +2221,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -2246,7 +2246,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -2271,7 +2271,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -2296,7 +2296,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -2321,7 +2321,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "MANDATORY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Apply the mandatory corporate action ratio from the notice to the position.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -6986,7 +6986,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7001,8 +7001,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00034",
@@ -7011,7 +7011,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7026,8 +7026,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00044",
@@ -7036,7 +7036,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7051,8 +7051,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00072",
@@ -7061,7 +7061,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7076,8 +7076,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00078",
@@ -7086,7 +7086,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7101,8 +7101,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00128",
@@ -7111,7 +7111,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7126,8 +7126,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00131",
@@ -7136,7 +7136,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7151,8 +7151,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00142",
@@ -7161,7 +7161,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7176,8 +7176,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00174",
@@ -7186,7 +7186,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7201,8 +7201,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00232",
@@ -7211,7 +7211,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7226,8 +7226,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00245",
@@ -7236,7 +7236,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7251,8 +7251,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00275",
@@ -7261,7 +7261,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7276,8 +7276,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00311",
@@ -7286,7 +7286,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7301,8 +7301,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00324",
@@ -7311,7 +7311,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7326,8 +7326,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00329",
@@ -7336,7 +7336,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7351,8 +7351,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00351",
@@ -7361,7 +7361,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7376,8 +7376,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00373",
@@ -7386,7 +7386,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7401,8 +7401,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00384",
@@ -7411,7 +7411,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7426,8 +7426,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00389",
@@ -7436,7 +7436,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7451,8 +7451,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00417",
@@ -7461,7 +7461,7 @@
     "family": "POSITION",
     "severity": "P1",
     "corporate_action_type": "VOLUNTARY",
-    "recommended_action": "Apply the mandatory corporate action ratio to the position (mechanical correction, pending confirmation this is genuinely mandatory - see corporate_action_context).",
+    "recommended_action": "Hold. Don't change the position until the client or portfolio manager's election has been received and logged.",
     "authority_tier": "CONTROLLED_ACTION",
     "rca_confidence": 0.5034,
     "evidence_cited": [
@@ -7476,8 +7476,8 @@
       "ca_reference:Merger with Election (Cash or Stock)",
       "ca_reference:Voluntary Tender Offer / Buyback"
     ],
-    "final_status": "REOPENED",
-    "validation_reason": "post-execution state still does not match expected outcome - needs re-investigation, not another blind retry"
+    "final_status": "ON_HOLD",
+    "validation_reason": "position held as instructed; waiting for the client's election before any change"
   },
   {
     "break_id": "BRK00036",

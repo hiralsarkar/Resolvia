@@ -1,17 +1,17 @@
 """
-Ingestion Agent.
+Ingestion Agent: turns incoming documents into trade records.
 
-Three paths into the same common trade schema:
-  - ingest_structured_row()   deterministic CSV/API parsing (no model)
-  - ingest_text()             LLM extraction (tool-call/JSON
-                               schema output) for text-based emails,
-                               notes, WhatsApp-style messages
-  - ingest_scanned_image()    EasyOCR (frozen, pretrained) -> the same
-                               ingest_text() LLM extraction step
+Three ways in, all ending in the same trade schema:
+  ingest_structured_row()   a CSV or API row, parsed directly
+  ingest_text()             emails, notes and chat messages, read by an LLM
+                            through a record_trades tool call
+  ingest_scanned_image()    EasyOCR first, then the same LLM step
 
-A multi-trade batch email extracts to a LIST of records, not one -
-the schema and both LLM paths handle that explicitly rather than
-silently keeping only the first trade found.
+A batch email with several trades comes back as several records, not just
+the first one found.
+
+Not part of the break pipeline itself (that starts from the reconciliation
+feed), but it's how new evidence would get in.
 """
 
 import os
@@ -57,17 +57,16 @@ EXTRACTION_TOOL = {
 EXTRACTION_SYSTEM_PROMPT = """You extract structured trade data from broker/custodian confirmation \
 documents for a trade reconciliation system. Documents may be formal emails, terse system \
 notes, informal chat/WhatsApp-style messages, OCR output from a scanned PDF (which may contain \
-minor character errors), or a single email covering multiple trades. Extract every trade found \
-- a batch email with several trades must produce one entry per trade, not just the first. \
+minor character errors), or a single email covering multiple trades. Extract every trade found; \
+a batch email with several trades must produce one entry per trade, not just the first. \
 Normalize symbol aliases and company names to their ticker (RELIANCE, TCS, INFY, HDFCBANK, \
 ICICIBANK, SBIN, BHARTIARTL, ITC, LT, AXISBANK, KOTAKBANK, WIPRO, HINDUNILVR, MARUTI, TATASTEEL). \
-Normalize all dates to YYYY-MM-DD. If a field genuinely isn't present in the document, use null \
+Normalize all dates to YYYY-MM-DD. If a field isn't in the document in the document, use null \
 rather than guessing. Call record_trades with your findings."""
 
 
 def ingest_structured_row(row):
-    """Deterministic passthrough for an already-structured CSV/API row -
-    no model involved."""
+    """A row that's already structured just needs its types fixing."""
     return {
         "trade_id": row["trade_id"],
         "symbol": row["symbol"],
@@ -96,9 +95,7 @@ def _parse_trades(message):
 
 
 def ingest_text(text, doc_id=None):
-    """LLM extraction for any text-based document (email, terse note,
-    chat-style, or already-OCR'd scanned document). Returns a list of
-    trade dicts (usually length 1, more for a batch email)."""
+    """Reads trades out of any text document. Usually one trade, more for a batch email."""
     trades = []
     for model in llm.model_list():  # free models are flaky; move on if one returns nothing
         try:
@@ -121,12 +118,10 @@ def ingest_text(text, doc_id=None):
 
 
 def ingest_scanned_image(image_path, doc_id=None, reader=None):
-    """OCR (EasyOCR, frozen pretrained) -> ingest_text() on the result."""
+    """OCR the image, then read the text like any other document."""
     if reader is None:
         import easyocr
-        # verbose=False - EasyOCR's download progress bar prints a Unicode
-        # block character that crashes under Windows' default cp1252
-        # console codepage (hit this directly during testing).
+        # verbose=False: EasyOCR's progress bar crashes a default Windows console
         reader = easyocr.Reader(["en"], gpu=False, verbose=False)
 
     lines = reader.readtext(image_path, detail=0)
@@ -147,7 +142,7 @@ if __name__ == "__main__":
     with open("../../data/trades.csv", newline="") as f:
         rows = list(csv.DictReader(f))
     for row in rows[:3]:
-        row = dict(row, symbol=row["security"])  # trades.csv column is `security`, not `symbol`
+        row = dict(row, symbol=row["security"])  # trades.csv calls it security
         print(json.dumps(ingest_structured_row(row), indent=2))
 
     if "--skip-llm" in sys.argv:

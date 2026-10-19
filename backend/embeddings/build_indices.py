@@ -1,9 +1,9 @@
 """
-build_indices.py
+Builds the three embedding indexes and saves them to embeddings/saved/.
 
-Builds the two embedding indices (evidence documents, CA reference KB)
-and saves them to backend/embeddings/saved/. Re-run whenever
-broker_confirms/ or ca_reference.json changes.
+Rerun it whenever the documents, ca_reference.json or resolved_cases.json
+change. Run knowledge/build_resolved_cases.py first if the precedent corpus
+needs refreshing.
 """
 
 import csv
@@ -49,9 +49,8 @@ def build_ca_reference_index():
 
 
 def build_resolved_cases_index():
-    """Precedent corpus, seeded by backend/knowledge/build_resolved_cases.py
-    (run that first - or after any data regeneration - if resolved_cases.json
-    is missing or stale)."""
+    """The precedent cases. Run knowledge/build_resolved_cases.py first if
+    resolved_cases.json is missing or the data has been regenerated."""
     path = os.path.join(KNOWLEDGE_DIR, "resolved_cases.json")
     if not os.path.exists(path):
         print("resolved_cases.json not found - run build_resolved_cases.py first, skipping")

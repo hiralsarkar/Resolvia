@@ -1,11 +1,9 @@
 """
-verify_ocr.py
+Checks the OCR on its own, without any LLM.
 
-Runs EasyOCR (frozen/pretrained, no LLM call needed) against every
-scanned_images/*.jpg and checks the extracted text against the known
-ground truth (the matching broker_confirms/<doc_id>.txt, per schema.md -
-the .txt IS the ground truth, same doc_id). Doesn't call any LLM
-(no key needed) - just verifies the OCR layer in isolation.
+Runs EasyOCR over every image in data/scanned_images and compares the key
+tokens it reads (trade IDs, symbols, numbers) with the matching .txt file,
+which is the ground truth for that scan.
 """
 
 import os
@@ -17,8 +15,7 @@ DATA_DIR = os.path.join(HERE, "..", "..", "data")
 
 
 def key_tokens(text):
-    """Trade IDs, symbols, quantities - the fields that matter for
-    downstream extraction, not prose. Case/whitespace-insensitive."""
+    """Trade IDs, symbols and numbers: the bits that matter downstream, not the prose."""
     return set(re.findall(r"TRD\d+|[A-Z]{2,}\d*|\b\d{2,}\b", text.upper()))
 
 

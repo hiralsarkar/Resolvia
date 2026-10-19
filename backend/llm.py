@@ -1,14 +1,12 @@
 """
-llm.py
+Small OpenRouter client for the two optional LLM steps: extracting trades from
+free-text documents (ingestion.py, the document upload in the app) and the
+analyst-facing write-up in rca.py. Nothing else in the pipeline needs it.
 
-Thin OpenRouter client used by the two optional LLM layers (document
-extraction in ingestion.py and the root-cause narrative in rca.py).
-Everything else in the pipeline runs without it.
-
-Configuration comes from the environment or a `.env` file in the repo root:
-  OPENROUTER_API_KEY   required for any LLM call
-  OPENROUTER_MODEL     optional, one model id or a comma-separated list tried in
-                       order (free models get rate-limited, so the next one steps in)
+Settings come from the environment or a .env file in the repo root:
+  OPENROUTER_API_KEY   needed for any LLM call
+  OPENROUTER_MODEL     optional. One model id, or a comma-separated list tried
+                       in order, since free models get rate-limited.
 """
 
 import os

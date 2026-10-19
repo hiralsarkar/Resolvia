@@ -1,17 +1,14 @@
 """
-train.py - the graded Model Comparison / Model Tuning deliverable.
+Trains and compares the root-cause classifier (20 classes).
 
-Target is root_cause (20 classes), not break_type/family - see Open
-See data/check_ml_targets.py: the
-official proposal's literal wording ("classify into TRADE/SETTLEMENT/
-POSITION/CASH") is satisfied by deriving family from the predicted
-root_cause (a strict many-to-one mapping), reported alongside as
-`family_macro_f1`. root_cause is the real, non-degenerate target.
+1. 5-fold stratified cross-validation on TRAIN for Logistic Regression,
+   Random Forest and XGBoost, scored on macro-F1 so every class counts equally.
+2. Grid search on whichever model wins.
+3. One evaluation on the held-out TEST set: macro-F1, precision, recall,
+   per-class F1 and the confusion between the corporate-action classes.
+4. Saves the model and writes docs/analysis/model_comparison.md.
 
-Compares LogisticRegression / RandomForest / XGBoost via stratified 5-fold
-CV on TRAIN (macro-F1), tunes the CV winner with GridSearchCV, evaluates
-the tuned model on TEST (macro-F1, precision, recall, per-class F1,
-confusion matrix), and writes docs/model_comparison.md.
+Family is reported too, by mapping each predicted root cause to its family.
 """
 
 import os
@@ -30,12 +27,12 @@ from xgboost import XGBClassifier
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "data")
 sys.path.insert(0, DATA_DIR)
-from check_ml_targets import build_features, FEATURE_COLS  # noqa: E402
+from features import build_features, FEATURE_COLS  # noqa: E402
 from taxonomy import ROOT_CAUSES  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SAVED_DIR = os.path.join(HERE, "saved")
-DOCS_DIR = os.path.join(HERE, "..", "..", "..", "docs")
+DOCS_DIR = os.path.join(HERE, "..", "..", "..", "docs", "analysis")
 
 CANDIDATES = {
     "LogisticRegression": lambda: LogisticRegression(max_iter=1000),
@@ -90,8 +87,7 @@ def main():
                                     zero_division=0, output_dict=True)
     cm = confusion_matrix(y_test, preds)
 
-    # Derived family metric - satisfies the proposal's literal "four break
-    # families" wording without the target itself being degenerate.
+    # family follows from the predicted root cause, so report it as well
     pred_root_causes = le.inverse_transform(preds)
     true_family = test["family"].values
     pred_family = np.array([ROOT_CAUSES[rc]["family"] for rc in pred_root_causes])
@@ -108,83 +104,79 @@ def main():
                  test_macro_f1, test_precision, test_recall, family_macro_f1,
                  report, cm, le.classes_, len(train), len(test))
     print(f"\nSaved model -> backend/models/ml_classifier/saved/root_cause_classifier.joblib")
-    print(f"Wrote report -> docs/model_comparison.md")
+    print(f"Wrote report -> docs/analysis/model_comparison.md")
 
 
 def write_report(cv_results, winner_name, best_params, tuned_cv_score,
-                  test_macro_f1, test_precision, test_recall, family_macro_f1,
-                  report, cm, classes, n_train, n_test):
-    lines = []
-    lines.append("# Model Comparison - Resolvia Break Classifier\n")
-    lines.append(f"Target: **root_cause** (20 classes), not break_type/family. The "
-                  f"proposal's literal wording (\"classify into TRADE/"
-                  f"SETTLEMENT/POSITION/CASH\") is satisfied by deriving family from the predicted "
-                  f"root_cause; root_cause is the target that actually gives Model Comparison and "
-                  f"Model Tuning something real to show (family alone hits a degenerate 1.000 "
-                  f"macro-F1 for tree models - see `data/check_ml_targets.py`).\n")
-    lines.append(f"Train: {n_train} breaking trades. Test: {n_test} breaking trades. "
-                 f"5-fold stratified CV on train, macro-F1 selection (handles the 20-class imbalance "
-                 f"better than accuracy).\n")
-
-    lines.append("## 1. Candidate comparison (5-fold CV, macro-F1)\n")
-    lines.append("| Model | CV macro-F1 (mean +/- std) |")
-    lines.append("|---|---|")
+                 test_macro_f1, test_precision, test_recall, family_macro_f1,
+                 report, cm, classes, n_train, n_test):
+    lines = [
+        "# Model comparison: root-cause classifier\n",
+        "The target is the root cause (20 classes). Break family is also reported, by mapping each "
+        "predicted root cause to its family. Family on its own is too easy to be a useful target: "
+        "tree models score 1.000 on it (see `data/check_ml_targets.py`).\n",
+        f"Train: {n_train} breaks. Test: {n_test} breaks. Models are compared with 5-fold stratified "
+        "cross-validation on the training set and scored on macro-F1, which weighs all 20 classes "
+        "equally.\n",
+        "## 1. Candidates (5-fold CV, macro-F1)\n",
+        "| Model | CV macro-F1 (mean ± std) |",
+        "|---|---|",
+    ]
     for name, r in cv_results.items():
-        marker = " **<- winner**" if name == winner_name else ""
-        lines.append(f"| {name} | {r['mean']:.3f} +/- {r['std']:.3f}{marker} |")
-    lines.append("")
+        marker = " **(winner)**" if name == winner_name else ""
+        lines.append(f"| {name} | {r['mean']:.3f} ± {r['std']:.3f}{marker} |")
 
-    lines.append(f"## 2. Tuning ({winner_name})\n")
-    lines.append(f"GridSearchCV over {winner_name}, 5-fold CV, macro-F1 scoring.\n")
-    lines.append(f"- Best params: `{best_params}`")
-    lines.append(f"- Tuned CV macro-F1: {tuned_cv_score:.3f}\n")
-
-    lines.append("## 3. Held-out TEST results\n")
-    lines.append(f"- **root_cause macro-F1: {test_macro_f1:.3f}** (precision {test_precision:.3f}, "
-                 f"recall {test_recall:.3f})")
-    lines.append(f"- **derived family macro-F1: {family_macro_f1:.3f}** (family = "
-                 f"`taxonomy.ROOT_CAUSES[predicted_root_cause][\"family\"]` - reported to satisfy "
-                 f"the proposal's four-break-family framing, not a separately trained target)")
-    cv_summary = ", ".join(f"{n} {cv_results[n]['mean']:.3f}" for n in cv_results)
-    lines.append(f"- CV macro-F1 by candidate: {cv_summary} (rules/RPA baseline is run and reported "
-                 f"separately - see `backend/eval/baseline_comparison.py`)\n")
-
-    lines.append("## 4. Per-class F1 (TEST)\n")
-    lines.append("| root_cause | precision | recall | f1 | support |")
-    lines.append("|---|---|---|---|---|")
+    lines += [
+        "",
+        f"## 2. Tuning the winner ({winner_name})\n",
+        "Grid search, 5-fold CV, macro-F1.\n",
+        f"- Best parameters: `{best_params}`",
+        f"- Tuned CV macro-F1: {tuned_cv_score:.3f}\n",
+        "## 3. Held-out test set\n",
+        f"- **Root-cause macro-F1: {test_macro_f1:.3f}** (precision {test_precision:.3f}, "
+        f"recall {test_recall:.3f})",
+        f"- **Family macro-F1: {family_macro_f1:.3f}** (derived from the predicted root cause)",
+        "- The rules baseline is in `backend/eval/baseline_comparison.py` and the full pipeline "
+        "result in `backend/eval/pipeline_eval.py`.\n",
+        "## 4. Per-class results (test)\n",
+        "| Root cause | Precision | Recall | F1 | Support |",
+        "|---|---|---|---|---|",
+    ]
     for cls in classes:
         m = report[cls]
         lines.append(f"| {cls} | {m['precision']:.2f} | {m['recall']:.2f} | {m['f1-score']:.2f} | {int(m['support'])} |")
-    lines.append("")
 
-    lines.append("## 5. Confusion matrix highlights\n")
     ca_idx = [i for i, c in enumerate(classes) if c.startswith("CA_")]
     if len(ca_idx) == 3:
         sub_cm = cm[np.ix_(ca_idx, ca_idx)]
-        lines.append("Confusion among the 3 corporate-action sub-causes specifically "
-                     "(CA_INCORRECT_ENTITLEMENT / CA_MANDATORY_NOT_REFLECTED / CA_VOLUNTARY_DECISION) "
-                     "- these are deliberately structurally identical in the generator (see schema.md), "
-                     "so confusion here is expected and correctly attributable to needing document "
-                     "evidence (the corporate action notice), not a modeling failure:\n")
-        lines.append("```")
-        lines.append("            " + "  ".join(c[:18] for c in [classes[i] for i in ca_idx]))
+        short = {"CA_INCORRECT_ENTITLEMENT": "incorrect", "CA_MANDATORY_NOT_REFLECTED": "mandatory",
+                 "CA_VOLUNTARY_DECISION": "voluntary"}
+        lines += [
+            "",
+            "## 5. Where it goes wrong\n",
+            "Every miss is between the corporate-action classes. Mandatory and voluntary events were "
+            "generated to look identical in the numbers, so the model can't separate them; only the "
+            "corporate action notice can. Rows are the true class, columns the prediction:\n",
+            "| true \\ predicted | " + " | ".join(short[classes[i]] for i in ca_idx) + " |",
+            "|---|" + "---|" * len(ca_idx),
+        ]
         for i, row_idx in enumerate(ca_idx):
-            lines.append(f"{classes[row_idx][:18]:18s} " + "  ".join(f"{sub_cm[i][j]:18d}" for j in range(len(ca_idx))))
-        lines.append("```\n")
+            lines.append(f"| {short[classes[row_idx]]} | " + " | ".join(str(sub_cm[i][j]) for j in range(len(ca_idx))) + " |")
+        lines.append("")
+        lines.append("In the running system the RCA agent reads the notice's CAMV field and corrects "
+                     "this, and a person signs off on every corporate action anyway.\n")
 
-    lines.append("## 6. Honest caveats\n")
-    lines.append(f"- {n_train + n_test} breaking trades across 20 classes "
-                 f"(~{round((n_train + n_test) / 20)}/class average, stratified) - per-class F1 "
-                 f"above should still be read with the support column, not in isolation.")
-    lines.append("- Test macro-F1 in the 0.94-ish range (tree models) is inflated by clean synthetic "
-                 "deltas being close to separable once the right features exist, same caveat as the "
-                 "earlier 9-class classifier's 1.000 result - not evidence the general problem is solved.")
-    lines.append("- The CA sub-cause confusion is the one genuinely intended finding: it's the "
-                 "empirical argument for why an LLM/document-reading step is needed at all, not just "
-                 "a structured classifier.")
+    lines += [
+        "## 6. Reading these numbers\n",
+        f"- About {round((n_train + n_test) / 20)} breaks per class. Read per-class F1 next to its support.",
+        "- The near-perfect scores outside the corporate-action classes come from clean synthetic "
+        "differences. They show the features work, not that real-world breaks are this easy.",
+        "- The corporate-action confusion is the finding that matters: it's why the system reads "
+        "documents and keeps a person in the loop.",
+    ]
 
     with open(os.path.join(DOCS_DIR, "model_comparison.md"), "w", encoding="utf-8") as f:
-        f.write("\n".join(lines))
+        f.write("\n".join(lines) + "\n")
 
 
 if __name__ == "__main__":
