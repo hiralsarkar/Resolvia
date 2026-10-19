@@ -1,39 +1,29 @@
 """
-generate_trade_breaks.py (v7 / Resolvia rewrite)
+Builds the synthetic trading book and its breaks.
 
-Generates the Resolvia operational data universe. Replaces the old single "two-sided pair" model with five
-relational tables:
+This script plays the bank's existing reconciliation engine: it hands
+Resolvia a feed of breaks. Because we inject every fault ourselves, we know
+the true root cause of each one, which is what makes it possible to measure
+anything.
 
-  trades              - one row per trade: the canonical/booked (internal) view
-  positions           - one row per trade: the observed (external/custodian) position
-  cash_transactions   - one or more rows per trade: the observed cash movement(s)
-  settlements         - one row per trade: the observed settlement state
-  breaks              - one row per trade THAT HAS A BREAK: family + root cause +
-                         source/target values + severity + metadata
+Five tables come out, all keyed by trade:
 
-Design (see Open Issue #3 in the v7 plan): this generator plays the role of
-"the reconciliation engine that already exists at the bank" - it produces
-BREAK INPUT, the same job backend/agents/matching.py used to do. matching.py
-itself is repurposed as a break-feed generator utility rather than deleted;
-this script is the more direct/controllable way to build the labeled dataset
-since ground truth needs to be known, not detected.
+  trades              the booked (internal) trade, plus the counterparty's
+                      confirmed version of it
+  positions           what the custodian shows we hold
+  cash_transactions   the cash that actually posted (0, 1 or 2 rows a trade)
+  settlements         how the trade actually settled
+  breaks              one row per broken trade: family, root cause,
+                      expected and observed values, severity
 
-Every trade gets exactly one row in each of positions/cash_transactions(*)/
-settlements, matching the trade's expected values when clean. ~15-20% of
-trades get exactly one root cause injected (see taxonomy.py), which perturbs
-whichever table that root cause belongs to and produces one breaks row.
-TRADE-family breaks (including the two CONF_* confirmation causes) have no
-separate "external confirmation" table - the discrepancy is carried directly
-on the breaks row's source_value/target_value, consistent with the
-"we begin at BREAK INPUT, we don't rebuild a matching engine" framing.
+Every trade starts clean, so all four observed tables agree with the booking.
+Half the trades then get exactly one of the 20 root causes injected, which
+changes the table that cause lives in. CASH_MISSING_ENTRY leaves no cash row
+and CASH_DUPLICATE_ENTRY leaves two.
 
-(*) CASH_MISSING_ENTRY produces zero cash_transactions rows for that trade;
-CASH_DUPLICATE_ENTRY produces two. Every other case produces exactly one.
-
-USAGE: python generate_trade_breaks.py
-OUTPUTS (all in this directory): trades.csv, positions.csv,
-  cash_transactions.csv, settlements.csv, breaks.csv - each with a `split`
-  column (TRAIN/TEST), split by trade_id (80/20).
+Usage:  python generate_trade_breaks.py
+Writes the five CSVs into this folder, each with a TRAIN/TEST split column
+(80/20 by trade).
 """
 
 import csv
@@ -41,14 +31,13 @@ import random
 from datetime import datetime, timedelta
 
 from taxonomy import ROOT_CAUSES, CA_ROOT_CAUSES, CORPORATE_ACTION_TYPE, validate_taxonomy
+from reference_data import COUNTERPARTIES, EXPECTED_SSI
 
 random.seed(42)
 validate_taxonomy()
 
-# ---------------------------------------------------------------------
-# STEP 1: clean trade universe (unchanged in spirit from v6 - swap
-# load_clean_trades() for a real NSE bhavcopy loader before the final demo)
-# ---------------------------------------------------------------------
+# Step 1: a clean trade universe. load_clean_trades() could be swapped for a
+# real NSE bhavcopy loader without touching anything else.
 
 DEMO_SYMBOLS = [
     ("RELIANCE", 2850.50), ("TCS", 4120.75), ("INFY", 1890.30),
@@ -58,21 +47,9 @@ DEMO_SYMBOLS = [
     ("HINDUNILVR", 2745.60), ("MARUTI", 12980.00), ("TATASTEEL", 172.45),
 ]
 
-COUNTERPARTIES = ["ICICI-CUST", "HDFC-CUST", "KOTAK-CUST", "DEUTSCHE-BROKER",
-                   "MORGANSTANLEY-BROKER", "NOMURA-BROKER"]
-
-# expected SSI per counterparty (used by SETL_WRONG_SSI) - deliberately not
-# alphabetically/numerically adjacent so a wrong SSI can't be mistaken for a
-# rounding artifact.
-EXPECTED_SSI = {
-    "ICICI-CUST": "SSI-IN-0091", "HDFC-CUST": "SSI-IN-0147",
-    "KOTAK-CUST": "SSI-IN-0203", "DEUTSCHE-BROKER": "SSI-DE-5510",
-    "MORGANSTANLEY-BROKER": "SSI-US-7742", "NOMURA-BROKER": "SSI-JP-3389",
-}
-
 PORTFOLIOS = ["EQ-CORE-01", "EQ-CORE-02", "EQ-ALPHA-03", "EQ-INDEX-04"]
 
-CA_RATIOS = [1.5, 2.0, 3.0]  # clean, round ratios - a real split/bonus, not noise
+CA_RATIOS = [1.5, 2.0, 3.0]  # round ratios, like a real split or bonus
 
 
 def load_clean_trades(n=3000):
@@ -99,11 +76,8 @@ def load_clean_trades(n=3000):
             "booking_status": "BOOKED",
             "settlement_date": settlement_date.strftime("%Y-%m-%d"),
             "side": random.choice(["BUY", "SELL"]),
-            # external confirmation view - defaults to agreeing with the
-            # booked values; TRADE-family injectors below mutate these.
-            # Without this, TRADE-family breaks would only be detectable by
-            # reading the breaks row itself (the label), not by observing
-            # anything independent - see the comment on TRADE_ONLY_INJECTORS.
+            # the counterparty's confirmed view. It agrees with the booking
+            # until a TRADE-family fault is injected.
             "confirmed_price": price, "confirmed_quantity": qty,
             "confirmed_trade_date": trade_date.strftime("%Y-%m-%d"),
             "confirmed_counterparty": counterparty,
@@ -112,11 +86,7 @@ def load_clean_trades(n=3000):
     return trades
 
 
-# ---------------------------------------------------------------------
-# STEP 2: per-family derivation of the "observed" tables, and break
-# injection. One function per root cause keeps each injection rule
-# self-contained and independently readable/testable.
-# ---------------------------------------------------------------------
+# Step 2: the observed tables, and one small injector per root cause.
 
 def _date(s):
     return datetime.strptime(s, "%Y-%m-%d")
@@ -155,7 +125,7 @@ def derive_clean_settlement(trade, settle_id):
     }
 
 
-# --- POSITION-family injections (mutate the position row) ---
+# Position faults change the position row.
 
 def inject_pos_missing_booking(trade, position):
     position["actual_quantity"] = 0
@@ -192,16 +162,15 @@ def inject_ca_mandatory_not_reflected(trade, position):
 
 
 def inject_ca_voluntary_decision(trade, position):
-    # Deliberately the same structural signature as CA_MANDATORY_NOT_REFLECTED -
-    # telling these two apart is supposed to require the corporate action
-    # notice (Week 2+ document evidence), not the structured deltas alone.
+    # Looks exactly like CA_MANDATORY_NOT_REFLECTED in the numbers. Only the
+    # corporate action notice tells them apart.
     ratio = random.choice(CA_RATIOS)
     position["actual_quantity"] = trade["quantity"]
     return {"source_value": round(trade["quantity"] * ratio), "target_value": trade["quantity"],
             "breaking_fields": "actual_quantity"}
 
 
-# --- CASH-family injections (mutate cash row list) ---
+# Cash faults change the list of cash rows.
 
 def inject_cash_missing_entry(trade, cash_rows):
     removed = cash_rows.pop()
@@ -224,7 +193,7 @@ def inject_cash_wrong_amount(trade, cash_rows):
 
 
 def inject_cash_fx_input_difference(trade, cash_rows):
-    fx_rate = random.choice([1.02, 1.035, 1.05, 1.07, 0.96, 0.93])  # plausible stale/wrong FX rate
+    fx_rate = random.choice([1.02, 1.035, 1.05, 1.07, 0.96, 0.93])  # a stale or wrong FX rate
     new_amt = round(trade["trade_value"] * fx_rate, 2)
     cash_rows[0]["amount"] = new_amt
     cash_rows[0]["currency"] = random.choice(["USD", "EUR", "GBP"])
@@ -232,7 +201,7 @@ def inject_cash_fx_input_difference(trade, cash_rows):
             "breaking_fields": "amount,currency"}
 
 
-# --- SETTLEMENT-family injections (mutate settlement row) ---
+# Settlement faults change the settlement row.
 
 def inject_setl_wrong_ssi(trade, settlement):
     correct_ssi = EXPECTED_SSI[trade["counterparty"]]
@@ -260,18 +229,14 @@ def inject_setl_missing_instruction(trade, settlement):
 
 def inject_setl_incorrect_date(trade, settlement):
     settlement["settlement_date"] = _fmt(_date(trade["settlement_date"]) + timedelta(days=1))
-    # status stays SETTLED - it did settle, just logged against the wrong date
+    # it did settle, just logged against the wrong date
     return {"source_value": trade["settlement_date"], "target_value": settlement["settlement_date"],
             "breaking_fields": "settlement_date"}
 
 
-# --- TRADE-family injections ---
-# These mutate the trade's own confirmed_* fields (the "external
-# confirmation" view added in load_clean_trades) rather than just
-# returning a delta for the breaks row. Without that, the only place a
-# TRADE-family discrepancy would exist is the breaks row itself - which
-# is the label. A classifier fit on breaks.source_value/target_value
-# would be reading the answer, not learning anything.
+# Trade faults change the trade's confirmed_* fields. If they only lived on
+# the breaks row, a classifier would be reading the label instead of
+# observing anything.
 
 def inject_trade_price_mismatch(trade):
     delta_pct = random.uniform(0.011, 0.03) * random.choice([-1, 1])
@@ -343,21 +308,14 @@ SETTLEMENT_INJECTORS = {
     "SETL_INCORRECT_DATE": inject_setl_incorrect_date,
 }
 
-# CASH injectors handled separately below - they need row-list surgery
-# (add/remove rows), not a single dict mutation, so they don't fit the
-# same one-arg-mutates-in-place shape as the others.
+# Cash injectors are called separately below because they add or remove rows.
 
 
-# ---------------------------------------------------------------------
-# STEP 3: assemble the five tables
-# ---------------------------------------------------------------------
+# Step 3: put the five tables together.
 
 def _stratified_root_causes(n_breaks):
-    """Deterministic near-even coverage across all 20 root causes, rather
-    than relying on uniform random draw to even out over a large sample.
-    floor(n_breaks/20) of each cause, remainder distributed round-robin,
-    then shuffled so assignment order doesn't correlate with trade_id
-    order. At n_breaks=3000 this is exactly 150/cause."""
+    """An even share of breaks per root cause, shuffled so the order doesn't
+    follow trade_id. With 3,000 breaks that is exactly 150 each."""
     keys = list(ROOT_CAUSES.keys())
     base, remainder = divmod(n_breaks, len(keys))
     causes = keys * base + keys[:remainder]
@@ -369,9 +327,8 @@ def build_dataset(trades, break_rate=0.175):
     positions, cash_txns, settlements, breaks = [], [], [], []
     pos_id, cash_id, settle_id, break_id = 1, 1, 1, 1
 
-    # decide which trades break, and which root cause each gets - stratified
-    # so every root cause gets proportional representation regardless of
-    # break_rate, instead of leaving thin classes to random variance.
+    # pick the trades that break and give each a root cause, spread evenly
+    # so no class ends up thin by chance
     n_breaks = round(len(trades) * break_rate)
     breaking_trade_ids = random.sample([t["trade_id"] for t in trades], n_breaks)
     causes_for_breaks = _stratified_root_causes(n_breaks)
@@ -420,7 +377,7 @@ def build_dataset(trades, break_rate=0.175):
                 "severity": meta["severity"], "status": "OPEN", "age": 0,
                 "counterparty": trade["counterparty"], "client": trade["portfolio"],
                 "corporate_action_type": CORPORATE_ACTION_TYPE.get(root_cause, ""),
-                "needs_evidence_bundle": False,  # set below for a sampled subset
+                "needs_evidence_bundle": False,  # set below
             })
             break_id += 1
 
@@ -428,12 +385,11 @@ def build_dataset(trades, break_rate=0.175):
         cash_txns.extend(cash_rows)
         settlements.append(settlement)
 
-    # Evidence-bundle rule (per-family, not a flat sample): CA, SETTLEMENT
-    # and TRADE breaks get a document for every occurrence - this mirrors
-    # real workflows where a contract note / settlement message / CA
-    # notice is generated for every relevant event, not sampled. POSITION
-    # (non-CA) and CASH breaks get a ~25% sample, since an ops note only
-    # exists when someone thought to write one.
+    # Which breaks come with a document. Every corporate action, settlement
+    # and trade break does, because a notice, settlement message or contract
+    # note exists for every one of those events. Only about a quarter of the
+    # other position and cash breaks do, since an ops note only exists when
+    # somebody wrote one.
     SAMPLE_RATE = 0.25
     chosen_ids = set()
     non_ca_position = [b for b in breaks if b["break_type"] == "POSITION" and not b["corporate_action_type"]]
@@ -453,9 +409,7 @@ def build_dataset(trades, break_rate=0.175):
     return positions, cash_txns, settlements, breaks
 
 
-# ---------------------------------------------------------------------
-# STEP 4: write CSVs with a `split` column (TRAIN/TEST by trade_id)
-# ---------------------------------------------------------------------
+# Step 4: write the CSVs with a TRAIN/TEST split by trade.
 
 def write_csv(path, rows, fieldnames):
     with open(path, "w", newline="") as f:
@@ -466,19 +420,14 @@ def write_csv(path, rows, fieldnames):
 
 
 if __name__ == "__main__":
-    # n=6000 / break_rate=0.50 (scaled-up dataset): deliberately
-    # inflated break rate vs. real production reconciliation (~1-5%) to
-    # densify per-root-cause training/test examples to 150 each (stratified,
-    # see _stratified_root_causes) - a training-data density choice, not a
-    # claim about realistic break incidence. Document/evidence realism is
-    # handled separately (generate_broker_confirms.py's SWIFT/NSE-grounded
-    # templates), independent of this volume choice.
+    # A 50% break rate is far above real life (1 to 5%). It's there to give
+    # each of the 20 root causes 150 examples, not to claim anything about
+    # how often breaks happen.
     trades = load_clean_trades(n=6000)
     positions, cash_txns, settlements, breaks = build_dataset(trades, break_rate=0.50)
 
-    # split by trade_id - sorted(set(...)) before shuffle for determinism
-    # (see v6's hard-won bug fix: raw set() iteration order depends on
-    # per-process hash randomization even with a fixed random.seed()).
+    # sort before shuffling: set order changes between runs even with a
+    # fixed seed, which used to make the split differ from run to run
     trade_ids = sorted({t["trade_id"] for t in trades})
     random.shuffle(trade_ids)
     split_idx = int(len(trade_ids) * 0.8)

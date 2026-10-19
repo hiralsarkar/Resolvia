@@ -1,45 +1,35 @@
 """
-taxonomy.py
+The break taxonomy: 4 families and 20 root causes.
 
-The Resolvia break taxonomy (v7 plan, Section 6 + Section 10): 4 break
-families for routing, 20 root causes for the actual investigation/ML
-target. See check_ml_targets.py - the 4 families
-are deliberately too coarse to be a meaningful ML target on their own
-(family is close to "which table has a non-null delta"); root_cause is
-the harder, more realistic classification problem and is what Week 2's
-model comparison should predict.
+Family (POSITION, CASH, SETTLEMENT, TRADE) is what the reconciliation engine
+tags and what Triage routes on. Root cause is what RCA has to work out, and
+it's the target of the main classifier. Family turned out to be too easy to
+be an interesting model target (it is close to "which table has a
+difference"); see check_ml_targets.py.
 
-Corporate action handling (v7 Section 7/27): CA breaks manifest as
-POSITION-family breaks (the position simply looks wrong), but carry a
-separate `corporate_action_type` of MANDATORY or VOLUNTARY. Mandatory
-is mechanical (mirrors a clean, known ratio like a 2-for-1 split).
-Voluntary looks the same at the structured-data level - deliberately,
-since telling them apart is supposed to require reading the corporate
-action notice (Week 2+ document evidence), not just fitting numbers.
-Whichever agent handles this later must hardcode "voluntary always
-escalates to a human regardless of confidence" - that rule is a
-governance choice, not something to learn from data.
+Corporate actions show up as POSITION breaks, because the position simply
+looks wrong, and carry a corporate_action_type of MANDATORY or VOLUNTARY.
+A mandatory event (a split, a bonus) is mechanical. A voluntary one (a
+tender, a conversion) needs the client to choose. In the numbers the two look
+the same, on purpose: telling them apart means reading the notice. Whatever
+the model says, a person signs off on every corporate action.
+
+Severity: P0 is settlement or critical risk, P1 high, P2 lower.
 """
 
-# ---------------------------------------------------------------------
-# Root cause catalogue: (root_cause_key, family, severity, description)
-# family in {POSITION, CASH, SETTLEMENT, TRADE}
-# severity: P0 (settlement/critical risk), P1 (high), P2 (lower)
-# ---------------------------------------------------------------------
-
 ROOT_CAUSES = {
-    # --- POSITION family ---
+    # position
     "POS_MISSING_BOOKING": {
         "family": "POSITION", "severity": "P0",
-        "description": "Missing upstream booking - position never reflected externally",
+        "description": "Missing booking: the position never showed up externally",
     },
     "POS_WRONG_QUANTITY": {
         "family": "POSITION", "severity": "P1",
-        "description": "Wrong quantity - external position differs by a non-round amount",
+        "description": "Wrong quantity: the external position is off by a non-round amount",
     },
     "POS_TIMING_DIFFERENCE": {
         "family": "POSITION", "severity": "P2",
-        "description": "Timing difference - quantities agree, as-of dates don't (expected to self-resolve)",
+        "description": "Timing difference: quantities agree but as-of dates don't (usually clears itself)",
     },
     "CA_INCORRECT_ENTITLEMENT": {
         "family": "POSITION", "severity": "P1",
@@ -47,14 +37,14 @@ ROOT_CAUSES = {
     },
     "CA_MANDATORY_NOT_REFLECTED": {
         "family": "POSITION", "severity": "P1",
-        "description": "Mandatory corporate action (split/bonus) not yet reflected externally - mechanical, auto-correctable",
+        "description": "Mandatory corporate action (split or bonus) not yet reflected externally",
     },
     "CA_VOLUNTARY_DECISION": {
         "family": "POSITION", "severity": "P1",
-        "description": "Voluntary corporate action (tender/conversion) pending an election - requires a human business decision, always escalated",
+        "description": "Voluntary corporate action (tender or conversion) waiting on the client's election",
     },
 
-    # --- CASH family ---
+    # cash
     "CASH_MISSING_ENTRY": {
         "family": "CASH", "severity": "P0",
         "description": "Expected cash movement never posted",
@@ -69,13 +59,13 @@ ROOT_CAUSES = {
     },
     "CASH_FX_INPUT_DIFFERENCE": {
         "family": "CASH", "severity": "P2",
-        "description": "Cash posted in a different currency / at a stale or incorrect FX rate",
+        "description": "Cash posted in another currency or at a stale or wrong FX rate",
     },
 
-    # --- SETTLEMENT family ---
+    # settlement
     "SETL_WRONG_SSI": {
         "family": "SETTLEMENT", "severity": "P0",
-        "description": "Settlement instruction references the wrong SSI/beneficiary account - the payment-failure flagship scenario",
+        "description": "Settlement instruction points at the wrong SSI or beneficiary account, so the payment fails",
     },
     "SETL_LATE_COUNTERPARTY": {
         "family": "SETTLEMENT", "severity": "P1",
@@ -87,10 +77,10 @@ ROOT_CAUSES = {
     },
     "SETL_INCORRECT_DATE": {
         "family": "SETTLEMENT", "severity": "P2",
-        "description": "Settlement recorded against the wrong date (holiday-calendar-style off-by-one)",
+        "description": "Settlement recorded against the wrong date (an off-by-one, like a holiday calendar slip)",
     },
 
-    # --- TRADE / CONFIRMATION family ---
+    # trade and confirmation
     "TRADE_PRICE_MISMATCH": {
         "family": "TRADE", "severity": "P2",
         "description": "Confirmed price differs from booked price",
@@ -121,9 +111,7 @@ BREAK_FAMILIES = ["POSITION", "CASH", "SETTLEMENT", "TRADE"]
 
 CA_ROOT_CAUSES = {"CA_INCORRECT_ENTITLEMENT", "CA_MANDATORY_NOT_REFLECTED", "CA_VOLUNTARY_DECISION"}
 
-# root cause -> corporate_action_type written onto the breaks row (None for
-# every non-CA root cause). Only CA_VOLUNTARY_DECISION carries the hardcoded
-# always-escalate rule downstream.
+# corporate_action_type written onto the breaks row; blank for everything else
 CORPORATE_ACTION_TYPE = {
     "CA_INCORRECT_ENTITLEMENT": "MANDATORY",
     "CA_MANDATORY_NOT_REFLECTED": "MANDATORY",

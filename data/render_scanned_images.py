@@ -1,13 +1,9 @@
 """
-render_scanned_images.py
+Turns a sample of the generated documents into scanned-looking JPGs so the
+OCR step has real images to read: a slight rotation, paper speckle and JPEG
+compression.
 
-Renders a subset of the generated broker_confirms/*.txt documents as
-actual scanned-style images (not text pretending to be a scan), so the
-OCR step has genuine image input to process. Adds realistic noise:
-slight rotation, paper-texture speckle, and JPEG compression artifacts.
-
-The original .txt content IS the OCR ground truth (per schema.md) -
-no separate mapping needed, just match doc_id -> filename.
+The matching .txt file is the ground truth for OCR (same doc_id).
 
 Output: scanned_images/doc_XXXX.jpg
 """
@@ -19,7 +15,10 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 random.seed(11)
 
-FONT_PATH = r"C:\Windows\Fonts\consola.ttf"
+# Consolas on Windows, DejaVu Sans Mono on most Linux machines
+FONT_CANDIDATES = [r"C:\Windows\Fonts\consola.ttf",
+                   "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"]
+FONT_PATH = next((p for p in FONT_CANDIDATES if os.path.exists(p)), FONT_CANDIDATES[0])
 FONT_SIZE = 18
 PAGE_SIZE = (1000, 1300)
 MARGIN = 60
@@ -36,7 +35,7 @@ def render_text_to_image(text, font):
 
 
 def add_paper_texture(img):
-    """Light speckle noise to mimic paper grain / scan artifacts."""
+    """Light speckle, like paper grain on a scan."""
     noise = Image.effect_noise(img.size, 18).convert("L")
     return Image.blend(img.convert("L"), noise, alpha=0.04)
 

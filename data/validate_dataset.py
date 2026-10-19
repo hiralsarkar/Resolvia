@@ -1,9 +1,6 @@
 """
-validate_dataset.py
-
-Data cleaning / integrity checks for the five-table dataset. Run as a script
-rather than buried in the EDA notebook so it can be re-run any time the
-generator changes.
+Integrity checks for the five tables. It's a script rather than a notebook
+cell so it can be rerun whenever the generator changes.
 
 Checks:
   1. Every trade_id referenced by positions/cash_transactions/settlements/
@@ -11,8 +8,8 @@ Checks:
   2. Every trade has exactly one position and one settlement row.
   3. Every trade has 0, 1, or 2 cash_transactions rows (0 only for
      CASH_MISSING_ENTRY, 2 only for CASH_DUPLICATE_ENTRY).
-  4. `split` (TRAIN/TEST) is consistent for a trade across all five tables
-     - a trade's evidence must never straddle the split.
+  4. A trade has the same TRAIN/TEST split in all five tables, so no trade's
+     evidence ends up on both sides.
   5. Every breaks.severity is in {P0, P1, P2}; every breaks.break_type is
      one of the 4 families; every breaks.mismatch_type is a known root
      cause key and belongs to the family recorded on the same row.
@@ -56,7 +53,7 @@ def main():
         if dupes:
             errors.append(f"{name}: duplicate {key} values: {dupes[:5]}{'...' if len(dupes) > 5 else ''}")
 
-    # 2. Referential integrity + row-count-per-trade checks
+    # 2. every row points at a real trade, with the right number of rows per trade
     pos_by_trade = Counter(p["trade_id"] for p in positions)
     settle_by_trade = Counter(s["trade_id"] for s in settlements)
     cash_by_trade = Counter(c["trade_id"] for c in cash)
@@ -108,11 +105,9 @@ def main():
             errors.append(f"breaks {b['break_id']}: corporate_action_type={b['corporate_action_type']!r} "
                            f"inconsistent with root cause {b['mismatch_type']}")
 
-    # 5. TRADE-family breaks must be observable independently of the breaks
-    # row itself - confirmed_* must actually differ from the booked value
-    # for exactly the fields the break claims, and must NOT differ for any
-    # trade that isn't a TRADE-family break (no silent leakage/no silent
-    # under-injection).
+    # 5. trade breaks have to be visible outside the breaks row: confirmed_*
+    # differs from the booking on exactly the fields the break names, and
+    # never on a trade without a trade break
     trade_break_by_id = {b["source_record_id"]: b for b in breaks if b["break_type"] == "TRADE"}
     for t in trades:
         tid = t["trade_id"]
@@ -126,7 +121,7 @@ def main():
         if tid not in trade_break_by_id and confirmed_differs:
             errors.append(f"trade {tid}: confirmed_* view differs from booked view but no TRADE-family break recorded")
 
-    # 6. every trade appears in at most one break (single-root-cause design)
+    # 6. one break per trade at most
     break_trade_counts = Counter(b["source_record_id"] for b in breaks)
     multi = [tid for tid, c in break_trade_counts.items() if c > 1]
     if multi:

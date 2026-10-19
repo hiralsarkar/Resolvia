@@ -1,39 +1,28 @@
 """
-generate_broker_confirms.py 
+Writes the evidence documents that go with the breaks.
 
-Generates evidence documents for breaks flagged `needs_evidence_bundle=True`
-in breaks.csv (see generate_trade_breaks.py's per-family evidence rule:
-100% of CA/SETTLEMENT/TRADE breaks, ~25% sample of POSITION-non-CA/CASH).
+Every corporate-action, settlement and trade break gets a document, and about
+a quarter of the other position and cash breaks do (see
+generate_trade_breaks.py). Each family gets the kind of document a bank
+would actually receive for it:
 
-Documents are grounded document format in real messaging/document
-standards researched for this project, routed by break family so each
-document type is generated where it's the authentic real-world artifact:
-  - CA breaks              -> SWIFT MT564-style corporate action notice
-                               (ISO 15022: CAMV mandatory/voluntary field,
-                               NOAC default option code for voluntary events)
-  - SETTLEMENT-family       -> SWIFT MT54x-style settlement instruction/
-                               status message (:16R:/:16S: block syntax,
-                               :20C:/:35B:/:36B:/:98A:/:95Q: field tags)
-  - TRADE-family            -> NSE/SEBI-style contract note (UCC, SEBI reg
-                               no., STT/GST/stamp duty breakdown)
-  - POSITION (non-CA), CASH -> original plain-English ops templates
-                               (email/note/chat/scanned/whatsapp/batch) -
-                               no equivalent standardized real-world format
-                               exists for internal position/cash breaks;
-                               these are legitimately ops correspondence.
+  corporate actions    a SWIFT MT564-style notice. The CAMV field says
+                       mandatory (MAND) or voluntary (VOLU); voluntary events
+                       list their options with NOAC as the default.
+  settlement           a SWIFT MT54x-style instruction or status message
+                       (:16R:/:16S: blocks, :20C:, :35B:, :36B:, :98A:, :95Q:)
+  trade                an NSE/SEBI-style contract note (UCC, SEBI reg no.,
+                       STT, GST, stamp duty) showing the counterparty's version
+  position and cash    plain ops correspondence: emails, terse notes, chat
+                       and WhatsApp-style messages, scanned-looking advices and
+                       batch emails covering several trades
 
-Every generated document is clearly synthetic by construction: fake BICs/
-SEBI registration numbers/client codes, an internal demo counterparty
-list - never formatted to be mistakable for a genuine institutional
-record. For TRADE-family breaks, the document reflects the external/
-confirmed view (trades.confirmed_* columns) - i.e. what the counterparty
-actually sent, which disagrees with the booking on purpose. For every
-other family, the document reflects the booked trade (the trade itself
-isn't what's wrong - the position/cash/settlement record is).
+Everything is obviously synthetic: made-up BICs, SEBI numbers and client
+codes, and a demo counterparty list.
 
 Output:
-  broker_confirms/doc_0001.txt ... doc_0NNN.txt
-  broker_confirms_mapping.csv  (doc_id -> break_id -> ground truth)
+  broker_confirms/doc_0001.txt and onwards
+  broker_confirms_mapping.csv  (doc_id, break_id and the ground truth)
 """
 
 import csv
@@ -177,11 +166,8 @@ SINGLE_TRADE_TEMPLATES = [template_formal_email, template_terse_note,
                            template_whatsapp_style]
 
 
-# ---------------------------------------------------------------------
-# Format-authentic templates, grounded in ISO 15022 (SWIFT) and
-# NSE/SEBI contract note conventions. Synthetic values throughout (fake
-# BICs, fake SEBI reg no.) - structurally realistic, never a real record.
-# ---------------------------------------------------------------------
+# Templates that follow ISO 15022 (SWIFT) and NSE/SEBI contract note
+# layouts. The structure is realistic; every value is made up.
 
 BIC_BY_COUNTERPARTY = {
     "ICICI-CUST": "ICICINBBXXX", "HDFC-CUST": "HDFCINBBXXX",
@@ -193,9 +179,8 @@ CA_EVENT_CODE = {"MANDATORY": "BONU", "VOLUNTARY": "TEND"}
 
 
 def _ratio_str(trade_qty, source_value):
-    """Recover the approximate CA ratio implied by source_value/quantity
-    and render as a clean 'X:Y' - CA_RATIOS in generate_trade_breaks.py
-    are deliberately round (1.5/2.0/3.0), so this recovers cleanly."""
+    """Turns entitled quantity / booked quantity back into an 'X:Y' ratio.
+    The generator only uses 1.5, 2 and 3, so this always comes out clean."""
     try:
         frac = Fraction(float(source_value) / float(trade_qty)).limit_denominator(3)
         return f"{frac.numerator}:{frac.denominator}"
@@ -204,11 +189,10 @@ def _ratio_str(trade_qty, source_value):
 
 
 def template_mt564_ca_notice(trade, brk):
-    """SWIFT MT564-style corporate action notification. CAMV (mandatory/
-    voluntary indicator) and the NOAC default option code are structural
-    parts of ISO 15022, not a Resolvia design choice - grounding the
-    always-escalate-voluntary rule in the standard itself, not just an
-    internal policy."""
+    """SWIFT MT564-style corporate action notice. CAMV (mandatory or
+    voluntary) and the NOAC default option come straight from ISO 15022,
+    so the rule that voluntary events wait for the client is backed by the
+    standard and not only by our own policy."""
     ca_type = brk["corporate_action_type"]  # MANDATORY | VOLUNTARY
     event_code = CA_EVENT_CODE[ca_type]
     ratio = _ratio_str(trade["quantity"], brk["source_value"])
@@ -263,9 +247,8 @@ def template_mt564_ca_notice(trade, brk):
 
 
 def template_mt54x_settlement(trade, settlement, brk):
-    """SWIFT MT54x-style (MT540-548) settlement instruction/status
-    message. Field tags follow the ISO 15022 :16R:/:16S: block structure
-    (GENL/TRADDET/FIAC/SETDET) and :95Q: party-code convention."""
+    """SWIFT MT54x-style (MT540 to MT548) settlement message, using the ISO
+    15022 :16R:/:16S: blocks (GENL, TRADDET, FIAC, SETDET) and :95Q: party codes."""
     ref = f"SEME{trade['trade_id'][-6:]}{random.randint(10,99)}"
     is_missing_instruction = settlement.get("instruction_status") == "MISSING"
     msg_type = "MT548" if is_missing_instruction else "MT542"
@@ -312,10 +295,9 @@ SEBI_REG_BY_COUNTERPARTY = {
 
 
 def template_contract_note(trade, brk):
-    """NSE/SEBI-style contract note. Field list (SEBI reg no., UCC,
-    STT/exchange charges/SEBI turnover fee/stamp duty/GST breakdown)
-    follows the exchange-prescribed contract note format; brokerage/
-    charge rates below are illustrative, not the current SEBI schedule."""
+    """NSE/SEBI-style contract note with the usual fields (SEBI reg no., UCC,
+    STT, exchange charges, SEBI fee, stamp duty, GST). The charge rates are
+    illustrative, not the current SEBI schedule."""
     qty = int(float(trade["confirmed_quantity"] or trade["quantity"]))
     price = float(trade["confirmed_price"] or trade["price"])
     side = trade["side"]
@@ -367,10 +349,9 @@ This contract note is issued subject to the rules, byelaws of NSE.
 
 
 def build_confirm_row(trade, brk):
-    """The document reflects the external/confirmed view for TRADE-family
-    breaks (that's the whole point - the confirmation disagrees with the
-    booking); for every other family it reflects the clean booked trade,
-    since the trade itself isn't what's wrong."""
+    """For trade breaks the document shows the counterparty's confirmed
+    version, since that's what disagrees with the booking. For everything
+    else it shows the booked trade, because the trade itself is fine."""
     if brk["break_type"] == "TRADE":
         return {
             "trade_id": trade["trade_id"],
@@ -415,11 +396,9 @@ def main(trades_csv="trades.csv", breaks_csv="breaks.csv", settlements_csv="sett
     mapping = []
     doc_counter = 1
 
-    # Route by family/CA-type: CA/SETTLEMENT/TRADE breaks get the format-
-    # authentic single-document templates (never batched - a settlement
-    # message or contract note is always one instruction, not a digest
-    # email). POSITION(non-CA)/CASH breaks keep the original plain-English
-    # ops-correspondence templates, including the batch-email pool.
+    # Corporate action, settlement and trade breaks get one formal document
+    # each (a settlement message is never part of a digest email). Position
+    # and cash breaks get ops correspondence, some of it batched.
     ca_breaks = [b for b in all_breaks if b["corporate_action_type"]]
     settlement_breaks = [b for b in all_breaks if b["break_type"] == "SETTLEMENT" and not b["corporate_action_type"]]
     trade_breaks = [b for b in all_breaks if b["break_type"] == "TRADE" and not b["corporate_action_type"]]
