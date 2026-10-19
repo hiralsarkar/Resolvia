@@ -38,6 +38,10 @@ The rules baseline gets every mechanical cause and none of the corporate-action 
 | Precedent cases (`backend/knowledge/resolved_cases.json`) | 400: 380 closed, 20 on hold |
 | Root causes run end to end through the Orchestrator | 20 of 20 |
 
+## Under stress
+
+The numbers above are on clean data. With noise on prices and cash, a second fault on some trades, and damaged or missing notices, the RCA agent still scores 0.973 and no wrong fix runs unnoticed. That's in [stress tests and modelling depth](09-robustness.md).
+
 ## How I read these numbers
 
 The data is synthetic and clean, so the near-perfect scores show that the features and the pipeline work, not that real breaks are this easy. The finding I'd expect to carry over is the shape of it: rules and a structured model both stall on the case that needs a document and a judgment, and that's the case I built the system around.

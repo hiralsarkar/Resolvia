@@ -8,10 +8,10 @@ In operations, a wrong automated action is a failed payment or a wrong position.
 
 | Principle | What I built | Where it lives | Evidence |
 |---|---|---|---|
-| **Human oversight** | Anything that changes money, a quantity, an SSI or a counterparty waits for a person. So does any diagnosis RCA flags: every corporate action, and anything below 70% confidence. | `backend/control_gate.py`, `backend/agents/rca.py` | 466 of 607 test breaks (77%) waited for a person |
+| **Human oversight** | Anything that changes money, a quantity, an SSI or a counterparty waits for a person. So does any diagnosis RCA flags: every corporate action, and anything below 0.80 calibrated confidence. | `backend/control_gate.py`, `backend/agents/rca.py` | 466 of 607 test breaks (77%) waited for a person |
 | **Accountability** | `record_decision()` is the only way an approval gets in, and it records who, when and why. Each case also keeps its own history, the gate keeps a log, and the app logs every action with the operator's ID. | `backend/control_gate.py`, `backend/orchestrator.py`, `backend/audit.py` | 0 unauthorised executions in every run |
 | **Transparency** | RCA writes a decision record: expected vs actual, the field, confidence, alternatives the model considered, and every piece of evidence it used. When the notice overrides the model, the record says so. | `backend/agents/rca.py` | the override is logged in the case history |
-| **Reliability** | Fixes run on copies, never the source. Validation re-runs the original comparison instead of trusting the diagnosis, so a wrong fix reopens the case. The test set was used once. | `backend/execution_simulator.py`, `backend/agents/validation.py` | 0 reopened and 0 wrong diagnoses on the test set |
+| **Reliability** | Fixes run on copies, never the source. Validation re-runs the original comparison instead of trusting the diagnosis, so a wrong fix reopens the case. The model is trained on messy data and calibrated, and 23 tests run on every push. | `backend/execution_simulator.py`, `backend/agents/validation.py`, `tests/` | 0 unseen wrong fixes in every stress test |
 | **Privacy** | All data is synthetic, with made-up BICs, SEBI numbers and client codes. Documents uploaded in the app are read in memory for that session and never written to disk. | `data/`, `frontend/document_evidence.py` | no real customer data anywhere |
 | **Bounded GenAI** | The LLM can extract fields and write a short explanation. Its prompt forbids recommending actions, its output is labelled unverified, and the system runs fully without it. | `backend/llm.py`, `backend/agents/ingestion.py` | every decision works with no API key |
 
@@ -30,15 +30,15 @@ Some decisions are governance choices, so I wrote them as fixed rules rather tha
 |---|---|---|
 | Govern | Who is accountable, and what are the rules? | Authority tiers per action, one approval door, named approvers |
 | Map | What's the context and what could go wrong? | Scoped to cash equities; each agent's authority written down; the corporate-action failure mode found and designed for |
-| Measure | How do you know it works? | Rules baseline, cross-validation, one-time test set, per-class F1, end-to-end evaluation |
+| Measure | How do you know it works? | Rules baseline, cross-validation, one-time test set, per-class F1, end-to-end evaluation, stress tests, calibration error, a scored test for the LLM's extraction |
 | Manage | What happens when it's wrong? | Human approval before action, re-check after action, REOPENED instead of a silent retry, full audit trail |
 
 ## What I haven't covered yet
 
 - **Fairness.** This system doesn't make decisions about people, so fairness in the usual sense doesn't apply directly. The closest question is whether some counterparties or clients get slower or worse handling. I haven't measured that.
-- **Drift.** The model was trained on one fault per trade. In production I'd monitor confidence and override rates and retrain when they move.
+- **Drift.** I haven't built monitoring. In production I'd watch the confidence distribution and the rate of notice overrides, and retrain when they move.
 - **Real access control.** Approval rights should come from the bank's directory, with a rule that nobody approves their own work. Here the operator ID is typed in.
 
 The model itself is documented in the [model card](model-card.md).
 
-Back to [the tour](README.md)
+Next: [stress tests and modelling depth](09-robustness.md)

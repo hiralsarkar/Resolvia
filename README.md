@@ -49,11 +49,19 @@ A mandatory corporate action that wasn't applied and a voluntary one waiting for
 | Rules baseline, root-cause macro-F1 | 0.820 |
 | Random Forest, root-cause macro-F1 | 0.933 |
 | RCA agent with the notice, root-cause macro-F1 | 1.000 |
+| RCA agent under the messiest stress test | 0.973 |
+| Wrong fixes that ran unnoticed, in every stress test | 0 |
 | Test breaks that needed a person before anything ran | 77% |
 | Unauthorised executions | 0 |
 | OCR accuracy on scanned confirms | ~99% |
 
 All of this is on synthetic data. I explain what that does and doesn't prove in [the results](docs/06-results.md).
+
+## How it holds up when the data gets messy
+
+![Stress test results](docs/images/robustness.svg)
+
+Clean data flatters any model, so I added noise to prices and cash, gave some trades a second fault, and damaged or removed the corporate action notices. Accuracy bends; safety doesn't. In every scenario, wrong diagnoses either reached a person or failed the re-check and reopened. Along the way I trained the production model on messy copies of the data, calibrated its confidence, chose the review threshold by cost, measured how much human review is really needed, and built a scored test for the LLM's document reading. The details are in [stress tests and modelling depth](docs/09-robustness.md).
 
 ## Responsible AI
 
@@ -73,6 +81,7 @@ I've written the whole project up in [`docs`](docs), one picture at a time:
 6. [Results](docs/06-results.md): rules vs model vs the whole system
 7. [Limits and next steps](docs/07-limits-and-next-steps.md): what production would need
 8. [Responsible AI and governance](docs/08-responsible-ai.md): oversight, accountability and the model card
+9. [Stress tests and modelling depth](docs/09-robustness.md): messy data, calibration, review policy and the LLM test
 
 The [field guide](docs/field-guide.pdf) tells the same story on phone-sized pages.
 
@@ -93,6 +102,13 @@ To use the REST API, the training scripts or the notebook, install `backend/requ
 
 The LLM write-ups are optional. Copy `.env.example` to `.env` and add an OpenRouter key to switch them on.
 
+Cases, approvals and the audit trail are saved to a local SQLite file, so they survive a restart. To run the tests:
+
+```bash
+pip install -r tests/requirements.txt
+pytest -q tests
+```
+
 ## What's where
 
 ```
@@ -104,10 +120,12 @@ backend/
   models/            training scripts and saved models
   embeddings/        the three search indexes
   knowledge/         corporate-action rules and precedent cases
-  eval/              rules baseline, end-to-end evaluation, gate demo
+  eval/              baselines, end-to-end and stress tests, approval policy, extraction
   api/               REST API
+  store.py           SQLite storage for cases, decisions and the audit trail
 frontend/            the Streamlit workbench
-docs/                the tour, diagrams, model report, EDA notebook, proposal
+tests/               23 tests, run on every push
+docs/                the tour, diagrams, model and stress-test reports, EDA notebook, proposal
 ```
 
 ## About

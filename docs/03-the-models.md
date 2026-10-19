@@ -37,6 +37,8 @@ A mandatory corporate action that hasn't been applied and a voluntary one waitin
 
 That's my argument for the rest of the system. A structured model alone hits a ceiling exactly where a business judgment lives. So I made the RCA agent read the notice and correct the model, and I send every corporate action to a person no matter how confident anyone is. In the running system that takes root-cause macro-F1 on the test set from 0.933 to 1.000.
 
+The model the RCA agent runs goes one step further. I retrained it on messy copies of the data and calibrated it, so it holds up better when prices are noisy or a trade has two faults, and its confidence means something. That's covered in [stress tests and modelling depth](09-robustness.md).
+
 The near-perfect scores elsewhere come from clean synthetic data. They show the features work; they don't show real breaks are this easy. The full report is in [`analysis/model_comparison.md`](analysis/model_comparison.md).
 
 Next: [the agents](04-the-agents.md)

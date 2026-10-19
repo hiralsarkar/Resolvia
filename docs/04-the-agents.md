@@ -28,8 +28,8 @@ It only sees what the reconciliation engine would hand over. The root-cause colu
 `rca.py` answers "why did it happen?" and writes a decision record: expected, actual, field, root cause, confidence, alternatives, evidence cited, and whether a person needs to review it.
 
 - The root-cause model gives the diagnosis and its alternatives from `predict_proba`.
-- For corporate actions it reads the MT564 notice. If the notice says voluntary and the model said mandatory (or the other way round), the notice wins and the record says so.
-- Two fixed rules decide whether a person must review the diagnosis: any corporate action, or confidence below 0.70. Confidence never decides authority.
+- For corporate actions it reads the MT564 notice: the CAMV field, the event code and the narrative, each tolerant of one OCR slip. If they agree and the model disagrees, the notice wins and the record says so. If they conflict, the notice isn't trusted and the break falls back to the model and a person.
+- Two fixed rules decide whether a person must review the diagnosis: any corporate action, or calibrated confidence below 0.80, a threshold I chose by cost ([stress tests](09-robustness.md)). Confidence never decides authority.
 - It looks up precedents for the cause it diagnosed: what happened on similar cases before.
 - An optional LLM step turns the record into a short paragraph for the analyst. It's told not to recommend anything.
 
