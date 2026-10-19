@@ -9,16 +9,65 @@ sys.path.insert(0, os.path.join(BACKEND_DIR, "agents"))
 
 import orchestrator  # noqa: E402
 import control_gate  # noqa: E402
-from investigation import _tables  # noqa: E402
+from investigation import _tables, break_feed  # noqa: E402
+from theme import root_cause_label  # noqa: E402
 from audit import record as _audit_record, list_events as _audit_events, summary as _audit_summary  # noqa: E402
+
+# What the reconciliation engine says, in plain words, before any diagnosis.
+REPORTED_ISSUE = {
+    "actual_quantity": "Position quantity differs",
+    "as_of_date": "Position date differs",
+    "amount": "Cash amount differs",
+    "amount,cash_id": "Cash postings don't match",
+    "amount,currency": "Cash amount and currency differ",
+    "ssi_code": "Settlement instruction differs",
+    "settlement_date,settlement_status": "Settlement not completed on time",
+    "instruction_status": "Settlement instruction status differs",
+    "settlement_date": "Settlement date differs",
+    "price": "Confirmed price differs",
+    "quantity": "Confirmed quantity differs",
+    "trade_date": "Confirmed trade date differs",
+    "counterparty": "Confirmed counterparty differs",
+    "confirmation": "Confirmation not received",
+    "quantity,price": "Confirmed quantity and price differ",
+}
+
 
 @st.cache_data(show_spinner=False)
 def load_breaks_df():
-    t=_tables(); rows=[]
-    for bid,b in t["breaks"].items():
-        trade=t["trades"].get(b["source_record_id"],{})
-        rows.append({"break_id":bid,"family":b["break_type"],"root_cause_key":b["mismatch_type"],"root_cause":b["root_cause"],"severity":b["severity"],"counterparty":b["counterparty"],"client":b["client"],"corporate_action":b["corporate_action_type"] or "","needs_evidence":b["needs_evidence_bundle"]=="True","exposure":float(trade.get("trade_value",0) or 0),"security":trade.get("security",""),"business_date":b["business_date"]})
+    """The break queue as the reconciliation engine hands it over.
+
+    The generator's root-cause label is left out on purpose. The app only
+    learns the cause from the RCA agent, the same as it would in production."""
+    t = _tables()
+    rows = []
+    for bid in t["breaks"]:
+        b = break_feed(bid)
+        trade = t["trades"].get(b["source_record_id"], {})
+        issue = REPORTED_ISSUE.get(b["breaking_fields"], b["breaking_fields"])
+        if b["corporate_action_type"]:
+            issue = f"Corporate action: {issue[0].lower()}{issue[1:]}"
+        rows.append({
+            "break_id": bid, "family": b["break_type"], "reported_issue": issue,
+            "severity": b["severity"], "counterparty": b["counterparty"], "client": b["client"],
+            "corporate_action": b["corporate_action_type"] or "",
+            "needs_evidence": b["needs_evidence_bundle"] == "True",
+            "exposure": float(trade.get("trade_value", 0) or 0),
+            "security": trade.get("security", ""), "business_date": b["business_date"],
+        })
     return pd.DataFrame(rows)
+
+
+def diagnosed_cause(break_id):
+    case = orchestrator.get_case(break_id)
+    return ((case or {}).get("rca") or {}).get("root_cause")
+
+
+def issue_label(row):
+    """The diagnosis once RCA has run, otherwise what the break feed reported."""
+    cause = diagnosed_cause(row.break_id)
+    return root_cause_label(cause) if cause else row.reported_issue
+
 
 def audit(action, break_id=None, detail="", actor_id=None, source="UI", metadata=None, dedupe_key=None):
     return _audit_record(actor_id or st.session_state.get("operator_id","OPS-1047"),action,break_id,detail,source,metadata,dedupe_key=dedupe_key)
@@ -46,7 +95,7 @@ def resume_case(break_id,on_event=None):
     case=orchestrator.resume_case(break_id,on_event=on_event); _sync_case_audit(case); return case
 
 def approve(break_id,approver,notes=None,on_event=None,mode="Controlled Action"):
-    audit("APPROVAL_GRANTED",break_id,f"Approved by {approver}; execution mode: {mode}; notes: {notes or '—'}")
+    audit("APPROVAL_GRANTED",break_id,f"Approved by {approver}; execution mode: {mode}; notes: {notes or 'none'}")
     control_gate.record_decision(break_id,"APPROVE",approver,f"[{mode}] {notes or ''}".strip())
     case=orchestrator.get_case(break_id); case["execution_mode"]=mode; orchestrator._log(case,"EXECUTION_MODE",mode)
     audit("CONTROLLED_ACTION_SELECTED",break_id,f"Execution mode: {mode}")
@@ -72,7 +121,7 @@ def begin_manual(break_id,operator,notes=""):
 def submit_manual(break_id,operator,action_taken,evidence_reference,checklist):
     """Record the human-performed correction and move to verification.
 
-    This deliberately does not call the automatic execution simulator and
+    This does not call the execution simulator and
     does not close the case. Verification remains a separate control step.
     """
     case=orchestrator.get_case(break_id)
@@ -106,11 +155,11 @@ def verify_manual(break_id,verifier,verification_notes):
     return case
 
 def mark(break_id,status,approver,notes=None):
-    audit("CASE_ESCALATED" if status=="ESCALATED" else "CASE_REVIEWED",break_id,f"{status} by {approver}; notes: {notes or '—'}")
+    audit("CASE_ESCALATED" if status=="ESCALATED" else "CASE_REVIEWED",break_id,f"{status} by {approver}; notes: {notes or 'none'}")
     case=orchestrator.get_case(break_id); case["status"]=status; orchestrator._log(case,"HUMAN_"+status,f"by {approver}: {notes or ''}".strip()); _sync_case_audit(case); return case
 
 def reject(break_id,approver,notes=None):
-    audit("APPROVAL_REJECTED",break_id,f"Rejected by {approver}; notes: {notes or '—'}"); control_gate.record_decision(break_id,"REJECT",approver,notes); return resume_case(break_id)
+    audit("APPROVAL_REJECTED",break_id,f"Rejected by {approver}; notes: {notes or 'none'}"); control_gate.record_decision(break_id,"REJECT",approver,notes); return resume_case(break_id)
 
 def case_status(break_id):
     case=orchestrator.get_case(break_id); return case["status"] if case else "NOT_STARTED"
@@ -123,7 +172,7 @@ def resolved_cases_summary():
     if not os.path.exists(path): return {"n":0,"n_closed":0,"n_reopened":0}
     import json
     with open(path,encoding="utf-8") as f: cases=json.load(f)
-    return {"n":len(cases),"n_closed":sum(1 for c in cases if c["final_status"]=="CLOSED"),"n_reopened":sum(1 for c in cases if c["final_status"]=="REOPENED")}
+    return {"n":len(cases),"n_closed":sum(1 for c in cases if c["final_status"]=="CLOSED"),"n_reopened":sum(1 for c in cases if c["final_status"]=="REOPENED"),"n_on_hold":sum(1 for c in cases if c["final_status"]=="ON_HOLD")}
 
 def summary_kpis():
     df=load_breaks_df(); statuses=all_case_statuses(); n_total=len(df); n_cased=len(statuses); n_closed=sum(s=="CLOSED" for s in statuses.values()); n_awaiting=sum(s=="AWAITING_APPROVAL" for s in statuses.values()); n_reopened=sum(s=="REOPENED" for s in statuses.values())

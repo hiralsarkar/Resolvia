@@ -1,12 +1,14 @@
-fastapi
-uvicorn[standard]
+# What the Streamlit app needs at runtime (this is the file Streamlit Cloud installs)
+streamlit
+plotly
+pandas
+numpy
+scikit-learn==1.9.0
+joblib
 requests
 python-dotenv
-supabase
-scikit-learn
-xgboost
-lightgbm
-joblib
+
+# embeddings and OCR
 torch==2.9.0
 torchvision==0.24.0
 transformers==4.44.2
@@ -15,13 +17,8 @@ tokenizers==0.19.1
 regex==2023.12.25
 sentence-transformers==3.0.1
 easyocr
-pandas
-nbformat
-nbclient
-ipykernel
-matplotlib
-streamlit
-plotly
+
+# reading uploaded documents
 pypdf
 python-docx
 openpyxl

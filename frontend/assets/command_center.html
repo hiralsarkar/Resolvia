@@ -553,10 +553,10 @@
       validation: { stat: "CLOSED", lines: ["Re-checking the records…", "Cash amount matches", "Ledger balance matches", "Case closed"] },
     },
     {
-      id: "BRK00399", type: "Corporate Action — Mandatory", authority: "CONTROLLED_ACTION", elapsed: "22.6s",
+      id: "BRK00399", type: "Corporate Action: Mandatory", authority: "CONTROLLED_ACTION", elapsed: "22.6s",
       triage: { stat: "CA Specialist Queue", lines: ["Checking the exception…", "Type: Position · High priority", "Routing to Corporate Actions queue"] },
       investigate: { stat: "Notice found", lines: ["Collecting the trade records…", "Reading the corporate action notice…", "Mandatory event · 2-for-1", "Checking corporate action rules"] },
-      rca: { stat: "50.3%", lines: ["Working out the cause…", "Cause found: CA – Mandatory Not Reflected", "Certainty: 50.3% — unsure if optional", "Sent to a person to double-check"] },
+      rca: { stat: "Notice: MAND", lines: ["Working out the cause…", "Model: mandatory or voluntary, can't tell", "Notice says mandatory (CAMV//MAND)", "Corporate action, so a person checks"] },
       resolution: { stat: "Needs approval", lines: ["Checking how much is at risk…", "At risk: ₹2.6 Cr · High", "Fix: apply the share entitlement", "Approval: needs a person"] },
       gate: { stat: "Approved", lines: ["Needs a person: Review · Approve · Escalate", "Waiting for a person to decide…", "Approved by the Operations Head", "Carried out: Controlled Action (system)"] },
       validation: { stat: "CLOSED", lines: ["Re-checking the records…", "Share entitlement applied", "Share count matches", "Case closed"] },
@@ -566,8 +566,8 @@
       triage: { stat: "Trade Support Desk", lines: ["Checking the exception…", "Type: Trade · Critical priority", "Routing to Trade Support Desk"] },
       investigate: { stat: "2 related cases", lines: ["Collecting the trade records…", "No confirmation on file…", "Searching similar past cases…", "2 related cases found"] },
       rca: { stat: "100%", lines: ["Working out the cause…", "Cause found: Confirmation Missing", "Certainty: 100%", "No competing explanation"] },
-      resolution: { stat: "None needed", lines: ["Checking how much is at risk…", "Paperwork only — no money changes", "Fix: chase the other party", "Approval: none needed"] },
-      gate: { stat: "Allowed", lines: ["Proposal — no signature needed", "Allowed by policy"] },
+      resolution: { stat: "None needed", lines: ["Checking how much is at risk…", "Paperwork only, no money changes", "Fix: chase the other party", "Approval: none needed"] },
+      gate: { stat: "Allowed", lines: ["Proposal, no signature needed", "Allowed by policy"] },
       validation: { stat: "CLOSED", lines: ["Re-checking the records…", "Confirmation received", "Case closed"] },
     }
   ];
@@ -601,7 +601,7 @@
     var el = desks[agent].querySelector('[data-console]');
     el.innerHTML = '<div class="console-line shown" style="opacity:.5;">Awaiting next exception…</div>';
     var statEl = desks[agent].querySelector('[data-stat]');
-    desks[agent].querySelector('[data-stat-value]').textContent = '—';
+    desks[agent].querySelector('[data-stat-value]').textContent = '-';
     statEl.classList.remove('shown');
     if (agent === 'investigate') {
       desks.investigate.querySelectorAll('.doc-fly').forEach(function (d) { d.classList.remove('fly'); });
@@ -735,7 +735,7 @@
         : fromAgent === 'investigate' ? 'Routing to Root Cause Agent'
         : fromAgent === 'rca' ? 'Routing to Resolution Proposal Agent'
         : fromAgent === 'resolution' ? 'Checking control gate…'
-        : (c.authority === 'PROPOSAL' ? 'Allowed by policy — executing…' : 'Authorized — executing repair…');
+        : (c.authority === 'PROPOSAL' ? 'Allowed by policy, executing…' : 'Authorized, executing repair…');
 
       if (reduced) {
         litSpoke(toAgent, true); pulseHub(msg); mobileOrch(fromAgent, msg);

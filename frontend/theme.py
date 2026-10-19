@@ -1,18 +1,15 @@
 """
-theme.py - "Command Center" design system (v3, 2026-09-17).
+Colours, labels and global CSS for the app.
 
-Unifies the operational app with the hero animation's visual language
-(same dark void/graphite surfaces, same cyan/violet/magenta/amber/
-emerald semantic palette, same Bricolage Grotesque + Manrope +
-JetBrains Mono type system, same glow/pulse motion grammar) so the
-marketing hero and the actual tool read as one product, not two skins.
-Color still carries meaning first: cyan=data/detection, violet=AI
-reasoning, magenta=recommendation, amber=human-authorization attention,
-emerald=verified/resolved - the same mapping the hero uses per agent.
+The app uses the same look as the landing animation so the two feel like one
+product: dark surfaces, Bricolage Grotesque, Manrope and JetBrains Mono, and
+colour that always means something. Cyan is data and detection, violet is AI
+reasoning, magenta is a recommendation, amber is waiting on a person, and
+green is verified.
 """
 
 COLORS = {
-    "bone": "#0A0B10",           # base canvas (was warm-light, now void)
+    "bone": "#0A0B10",           # page background
     "surface": "#12141D",        # raised card
     "surface_sunken": "#171A25", # recessed panel
     "ink": "#F2F3F8",            # primary text (near-white on dark)
@@ -20,7 +17,7 @@ COLORS = {
     "ink_faint": "#565B6E",      # tertiary text
     "hairline": "#232733",
 
-    "accent": "#4CE0FF",         # cyan - brand/interactive default
+    "accent": "#4CE0FF",         # cyan, the default interactive colour
     "accent_soft": "rgba(76,224,255,0.14)",
     "accent_deep": "#1FA8C9",
 
@@ -62,11 +59,10 @@ STATUS_COLOR = {
     "HALTED_DATA_QUALITY": (COLORS["signal"], COLORS["signal_soft"]),
     "IN_REVIEW": (COLORS["violet"], COLORS["violet_soft"]),
     "ESCALATED": (COLORS["magenta"], COLORS["magenta_soft"]),
+    "ON_HOLD": (COLORS["amber"], COLORS["amber_soft"]),
 }
 
-# Human-readable labels for the 20 internal root_cause enum keys - shown
-# instead of raw SETL_MISSING_INSTRUCTION-style identifiers anywhere a
-# person (not a downstream script) reads them.
+# Plain names for the 20 root-cause keys, used wherever a person reads them
 ROOT_CAUSE_LABEL = {
     "POS_MISSING_BOOKING": "Missing Booking",
     "POS_WRONG_QUANTITY": "Wrong Quantity",
@@ -94,7 +90,7 @@ ROOT_CAUSE_LABEL = {
 STATUS_LABEL = {
     "CLOSED": "Resolved", "REOPENED": "Needs another look", "AWAITING_APPROVAL": "Waiting for approval",
     "REJECTED": "Rejected", "OPEN": "Open", "NOT_STARTED": "Not started yet",
-    "HALTED_DATA_QUALITY": "Stopped - data problem", "IN_REVIEW": "In review", "ESCALATED": "Escalated to senior", "CASE_CREATED": "Started",
+    "HALTED_DATA_QUALITY": "Stopped: data problem", "ON_HOLD": "On hold for client election", "IN_REVIEW": "In review", "ESCALATED": "Escalated to senior", "CASE_CREATED": "Started",
 }
 SEVERITY_LABEL = {"P0": "Critical", "P1": "High", "P2": "Low"}
 TIER_LABEL = {"CONTROLLED_ACTION": "Needs approval", "PROPOSAL": "No approval needed"}

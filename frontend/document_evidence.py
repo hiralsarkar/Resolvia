@@ -99,7 +99,7 @@ def review_supplemental_evidence(break_id, row, case, documents):
     baseline = {
         "break_id": break_id,
         "break_type": str(row.get("family", "")),
-        "root_cause": str((case.get("rca") or {}).get("root_cause", row.get("root_cause_key", ""))),
+        "root_cause": str((case.get("rca") or {}).get("root_cause") or row.get("reported_issue", "")),
         "breaking_field": str(row.get("root_cause", "")),
         "expected_value": str((case.get("rca") or {}).get("expected", "")),
         "actual_value": str((case.get("rca") or {}).get("actual", "")),
@@ -111,8 +111,8 @@ def review_supplemental_evidence(break_id, row, case, documents):
         f"DOCUMENT: {d['name']}\nEXTRACTION METHOD: {d['method']}\n{d['text']}"
         for d in documents
     )
-    # This is deliberately a separate review, not a silent replacement of
-    # the trained classifier's result or the existing resolution proposal.
+    # kept as a separate review so it never quietly replaces the model's
+    # result or the proposal
     import sys
     backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "backend"))
     if backend_dir not in sys.path:
@@ -135,8 +135,8 @@ def review_supplemental_evidence(break_id, row, case, documents):
         return {"mode": "LLM-assisted supplemental review",
                 "review": message.get("content", "").strip(),
                 "baseline": baseline, "created_at": datetime.now(timezone.utc).isoformat()}
-    # Useful no-key fallback: provide traceable extracted evidence and
-    # simple exact-value matching, without pretending to reason semantically.
+    # without an API key: show the extracted text and exact value matches,
+    # and don't pretend to reason about it
     haystack = document_text.casefold()
     matches = {k: (v if v and v.casefold() in haystack else None)
                for k, v in baseline.items() if v}

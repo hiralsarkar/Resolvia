@@ -1,6 +1,6 @@
 """Resolvia operational workbench.
 
-The interface is intentionally role-first: analysts get a clear next action,
+Built around roles: analysts get a clear next action,
 managers get a concise workload view, and auditors get an immediate case
 history. The UI uses plain operational language and keeps implementation
 details out of the working surface.
@@ -119,7 +119,7 @@ def render_home():
         for _,r in attention.iterrows():
             cols=st.columns([1.2,1.5,1.1,1.4,.9,.9])
             cols[0].markdown(f'**{r.break_id}**')
-            cols[1].markdown(f'{root_cause_label(r.root_cause_key)}')
+            cols[1].markdown(bb.issue_label(r))
             cols[2].markdown(f'**{int(r.age_days)}d** old')
             cols[3].markdown(f'₹{r.exposure:,.0f}')
             cols[4].markdown(_status(df.loc[df.break_id==r.break_id,"status"].iloc[0]))
@@ -147,14 +147,15 @@ def render_operations():
         q=search.strip().upper(); view=view[view.apply(lambda r:q in str(r.break_id).upper() or q in str(r.security).upper() or q in str(r.counterparty).upper(),axis=1)]
     view=view.sort_values(["severity","age_days","exposure"],ascending=[True,False,False]).head(150)
     st.caption(f"{len(view):,} breaks shown")
-    display=view[["break_id","root_cause_key","family","severity","age_days","status","exposure","counterparty"]].rename(columns={"break_id":"Break","root_cause_key":"Issue","family":"Category","severity":"Priority","age_days":"Age","status":"Status","exposure":"Exposure","counterparty":"Counterparty"})
-    display["Issue"]=display.Issue.map(root_cause_label); display["Priority"]=display.Priority.map(lambda x:SEVERITY_LABEL.get(x,x)); display["Status"]=display.Status.map(_status); display["Age"]=display.Age.astype(str)+"d"
+    view["issue"]=view.apply(bb.issue_label,axis=1)
+    display=view[["break_id","issue","family","severity","age_days","status","exposure","counterparty"]].rename(columns={"break_id":"Break","issue":"Issue","family":"Category","severity":"Priority","age_days":"Age","status":"Status","exposure":"Exposure","counterparty":"Counterparty"})
+    display["Priority"]=display.Priority.map(lambda x:SEVERITY_LABEL.get(x,x)); display["Status"]=display.Status.map(_status); display["Age"]=display.Age.astype(str)+"d"
     event=st.dataframe(display,hide_index=True,width="stretch",height=470,on_select="rerun",selection_mode="single-row",key="wb_queue",column_config={"Exposure":st.column_config.NumberColumn(format="₹%d")})
     if event.selection and event.selection.get("rows"):
         bid=display.iloc[event.selection["rows"][0]]["Break"]
         st.session_state["selected_break"]=bid
         row=_row_for(bid)
-        st.markdown(f'<div class="wb-card"><div class="wb-label">Selected break</div><div style="font-size:1.35rem;font-weight:800">{bid}</div><div class="wb-muted">{root_cause_label(row.root_cause_key)} · {row.counterparty} · ₹{row.exposure:,.0f}</div></div>',unsafe_allow_html=True)
+        st.markdown(f'<div class="wb-card"><div class="wb-label">Selected break</div><div style="font-size:1.35rem;font-weight:800">{bid}</div><div class="wb-muted">{bb.issue_label(row)} · {row.counterparty} · ₹{row.exposure:,.0f}</div></div>',unsafe_allow_html=True)
         x,y,z=st.columns([1.4,1.4,1.4])
         if x.button("Open case →",key="wb_open_selected",type="primary",use_container_width=True):_open_case(bid)
         if y.button("View audit history",key="wb_audit_selected",use_container_width=True):_open_audit(bid)
@@ -180,7 +181,7 @@ def render_case():
     if row is None:st.error("Break not found.");return
     st.markdown('<span class="eyebrow">Case Workspace</span>',unsafe_allow_html=True)
     h1,h2=st.columns([3,1])
-    h1.markdown(f'<div class="wb-title">{bid}</div><div class="wb-sub">{root_cause_label(row.root_cause_key)} · {row.counterparty}</div>',unsafe_allow_html=True)
+    h1.markdown(f'<div class="wb-title">{bid}</div><div class="wb-sub">{bb.issue_label(row)} · {row.counterparty}</div>',unsafe_allow_html=True)
     h2.markdown(f'<div class="wb-label">Exposure</div><div class="wb-big">₹{row.exposure:,.0f}</div>',unsafe_allow_html=True)
     case=bb.get_case(bid)
     if case is None:
@@ -202,7 +203,7 @@ def render_case():
         rca=case.get("rca") or {}; proposal=case.get("proposal") or {}; inv=case.get("investigation") or {}; triage=case.get("triage") or {}
         st.markdown('<div class="wb-card"><div class="wb-label">What we know</div>',unsafe_allow_html=True)
         c1,c2,c3=st.columns(3); c1.metric("Priority",SEVERITY_LABEL.get(row.severity,row.severity)); c2.metric("Owner",triage.get("route","Operations")); c3.metric("Status",_status(status))
-        if rca: st.markdown(f'**Cause:** {root_cause_label(rca.get("root_cause",row.root_cause_key))}<br><span class="wb-muted">Evidence-backed assessment. Certainty: {rca.get("confidence",0)*100:.0f}%</span>',unsafe_allow_html=True)
+        if rca: st.markdown(f'**Cause:** {root_cause_label(rca["root_cause"]) if rca.get("root_cause") else row.reported_issue}<br><span class="wb-muted">Evidence-backed assessment. Certainty: {rca.get("confidence",0)*100:.0f}%</span>',unsafe_allow_html=True)
         if proposal: st.markdown(f'**Recommended next step:** {proposal.get("recommended_action","Review the resolution guidance.")}')
         st.markdown('</div>',unsafe_allow_html=True)
         if inv:
@@ -244,7 +245,7 @@ def render_resolution():
     if not case:st.warning("Review the case before opening the resolution workspace.");return
     row=_row_for(bid); proposal=case.get("proposal") or {}; gate=case.get("gate_result") or {}
     st.markdown('<span class="eyebrow">Decision Workspace</span>',unsafe_allow_html=True); st.markdown(f'<div class="wb-title">Resolve {bid}</div>',unsafe_allow_html=True); st.markdown('<div class="wb-sub">Choose the approved path. Nothing is carried out until the required human decision is recorded.</div>',unsafe_allow_html=True)
-    c1,c2,c3=st.columns(3); c1.metric("Issue",root_cause_label(row.root_cause_key)); c2.metric("Status",_status(case.get("status"))); c3.metric("Approval", "Required" if not gate.get("authorized") else "Not required")
+    c1,c2,c3=st.columns(3); c1.metric("Issue",bb.issue_label(row)); c2.metric("Status",_status(case.get("status"))); c3.metric("Approval", "Required" if not gate.get("authorized") else "Not required")
     st.markdown('<div class="wb-card">',unsafe_allow_html=True)
     st.markdown("### Proposed resolution")
     st.markdown(proposal.get("recommended_action","No resolution proposal is available yet."))
@@ -275,7 +276,7 @@ def render_playbook():
     st.markdown('<span class="eyebrow">Analyst Guidance</span>',unsafe_allow_html=True); st.markdown(f'<div class="wb-title">Manual resolution · {bid}</div>',unsafe_allow_html=True)
     st.markdown('<div class="wb-sub">A practical checklist for resolving the break when the correction is performed by an analyst.</div>',unsafe_allow_html=True)
     if not case:st.warning("Complete the case review first.");return
-    root=(case.get("rca") or {}).get("root_cause",row.root_cause_key)
+    root=(case.get("rca") or {}).get("root_cause")
     playbooks=getattr(__import__("operational_views"),"PLAYBOOKS",{})
     default=getattr(__import__("operational_views"),"DEFAULT_PLAYBOOK")
     owner,escalation,reason,evidence,steps,do_not=playbooks.get(root,default)
@@ -322,7 +323,7 @@ def render_manager():
     else:
         for _,r in att.iterrows():
             cols=st.columns([1.1,1.8,.6,1,.9,.9])
-            cols[0].markdown(f"**{r.break_id}**");cols[1].markdown(root_cause_label(r.root_cause_key));cols[2].markdown(f"{r.age_days}d");cols[3].markdown(f"₹{r.exposure:,.0f}");cols[4].markdown(_status(r.status));
+            cols[0].markdown(f"**{r.break_id}**");cols[1].markdown(bb.issue_label(r));cols[2].markdown(f"{r.age_days}d");cols[3].markdown(f"₹{r.exposure:,.0f}");cols[4].markdown(_status(r.status));
             if cols[5].button("Open",key=f"mgr_open_{r.break_id}"):_open_case(r.break_id)
     st.markdown("### Ageing")
     age=df.age_days.value_counts().sort_index(); age=age[age.index<=7]

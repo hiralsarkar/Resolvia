@@ -1,6 +1,6 @@
-"""Human-first case and resolution workflow.
+"""Case and resolution pages, built around the analyst.
 
-The analyst flow is deliberately ordered as:
+The flow runs:
 Review -> Understand -> Read Guide -> Choose method -> Act -> Verify -> Close.
 Choosing Manual never closes a case and never counts as approval.
 """
@@ -75,7 +75,7 @@ def render_case():
         return
     case = bb.get_case(bid)
     st.markdown(f'<div class="rc-title">{bid}</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="rc-sub">{root_cause_label(row.root_cause_key)} · {row.counterparty}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="rc-sub">{bb.issue_label(row)} · {row.counterparty}</div>', unsafe_allow_html=True)
 
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Priority", SEVERITY_LABEL.get(row.severity, row.severity))
@@ -98,15 +98,15 @@ def render_case():
     investigation = case.get("investigation") or {}
     triage = case.get("triage") or {}
 
-    st.markdown('<div class="rc-card"><div class="rc-label">What happened</div><h3>' + root_cause_label(rca.get("root_cause", row.root_cause_key)) + '</h3><div class="rc-muted">' + str(rca.get("explanation", "")) + '</div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="rc-card"><div class="rc-label">What happened</div><h3>' + (root_cause_label(rca["root_cause"]) if rca.get("root_cause") else row.reported_issue) + '</h3><div class="rc-muted">' + str(rca.get("explanation", "")) + '</div></div>', unsafe_allow_html=True)
 
     with st.expander("See evidence used for the analysis", expanded=False):
         st.json(investigation.get("structured_evidence", {}))
         if investigation.get("document_evidence", {}).get("has_document"):
             st.write(investigation["document_evidence"].get("text", ""))
 
-    # Supplemental documents are scoped to this selected break and kept in
-    # Streamlit session state; they do not silently overwrite the original RCA.
+    # extra documents belong to this break only, live in the session, and
+    # never overwrite the original RCA
     st.markdown("### Additional evidence")
     st.caption("Upload new documents for this break. RESOLVIA extracts their contents and creates a separate supplemental review; the original analysis and approval controls remain unchanged.")
     import document_evidence as de
@@ -212,6 +212,10 @@ def render_case():
         st.success("Resolved and verified. This case is closed.")
     elif status == "ESCALATED":
         st.warning("Escalated. The break remains open until the receiving owner resolves or reassigns it.")
+    elif status == "ON_HOLD":
+        st.info("On hold. This is a voluntary corporate action, so the position stays as it is until the client's election is received and logged.")
+    elif status == "REOPENED":
+        st.error("The fix did not clear the break when the records were checked again. It needs another look, not a retry.")
 
     st.markdown("### Case history")
     case_audit(bid)
@@ -233,7 +237,7 @@ def render_guide():
     if not case:
         st.warning("Complete the case review before opening the guide.")
         return
-    root = (case.get("rca") or {}).get("root_cause", row.root_cause_key)
+    root = (case.get("rca") or {}).get("root_cause")
     views = __import__("operational_views")
     playbooks = getattr(views, "PLAYBOOKS", {})
     default = getattr(views, "DEFAULT_PLAYBOOK")
@@ -338,5 +342,9 @@ def render_resolution():
         st.success("This case is closed after verification.")
     elif status == "ESCALATED":
         st.warning("This case is escalated and remains open.")
+    elif status == "ON_HOLD":
+        st.info("On hold until the client's election is received.")
+    elif status == "REOPENED":
+        st.error("Verification failed: the break is still there after the fix.")
     if st.button("View this break's audit →", key="real_resolution_audit"):
         audit(bid)

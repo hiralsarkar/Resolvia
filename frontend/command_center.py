@@ -1,20 +1,11 @@
 """
-command_center.py - the app's home page.
+The landing page: the agent-architecture animation from
+assets/command_center.html, followed by a real button into the work queue.
 
-Embeds the same command-center animation published as the marketing
-hero artifact (frontend/assets/command_center.html - single source of
-truth, edit that file and both the artifact and this page pick it up)
-so clicking into the actual product opens the identical experience,
-not a lookalike. Pure presentation - no backend calls, no case state.
-
-The "Start Reviewing Exceptions" button below is a real Streamlit
-button, not part of the embedded HTML - st.components.v1.html renders
-in a sandboxed iframe that can't call back into Streamlit's session
-state, so the one actual navigation action on this page has to live
-outside it. This is also the app's single most important guided-next-
-step control: a first-time, non-technical user should never have to
-work out the sidebar on their own to get from "watching the demo" to
-"looking at a real exception."
+The button has to live outside the animation because Streamlit renders HTML
+components in a sandboxed iframe that can't change the app's page. It's the
+one thing a first-time visitor needs to find, so it sits right under the
+animation.
 """
 
 import os
@@ -29,8 +20,7 @@ def render():
         html = f.read()
     st.components.v1.html(html, height=1400, scrolling=False)
 
-    # Keep the real Streamlit navigation button after the full architecture
-    # visual, at the end of the page rather than above the animation.
+    # the way in sits after the animation, not above it
     st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
     c1, c2, c3 = st.columns([1, 1.3, 1])
     with c2:
