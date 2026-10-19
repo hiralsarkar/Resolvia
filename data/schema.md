@@ -1,6 +1,6 @@
 # Data dictionary
 
-Everything in this folder is synthetic. There is no public dataset of real trade breaks, because trade and reconciliation data is confidential at every bank, custodian and broker. So, the same way PaySim does for fraud, we simulate clean operations, inject known faults and keep the answer.
+Everything in this folder is synthetic. There is no public dataset of real trade breaks, because trade and reconciliation data is confidential at every bank, custodian and broker. So, the same way PaySim does for fraud, I simulated clean operations, injected known faults and kept the answer.
 
 `generate_trade_breaks.py` plays the bank's existing reconciliation engine. Resolvia doesn't do matching; it starts from the break feed this script produces.
 

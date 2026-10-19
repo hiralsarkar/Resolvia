@@ -15,9 +15,11 @@
   <img src="https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI"/>
 </p>
 
-When two systems in a bank disagree about a trade, a reconciliation engine raises a break. Finding that break is a solved problem. Fixing it still means someone digging through trade records, settlement messages, custodian statements and emails, working out what went wrong, getting sign-off and then checking the fix actually worked.
+When two systems in a bank disagree about a trade, a reconciliation engine raises a break. Finding that break is a solved problem. Fixing it is not: it still means someone digging through trade records, settlement messages, custodian statements and emails, working out what went wrong, getting sign-off and then checking the fix actually worked.
 
-Resolvia does that legwork for cash-equity breaks. Five agents gather the evidence, diagnose the root cause, propose a fix and check the result, while a hard-coded gate makes sure nothing that moves money happens without a named person approving it.
+I built Resolvia to do that legwork for cash-equity breaks. Five agents gather the evidence, diagnose the root cause, propose a fix and check the result, and a hard-coded gate makes sure nothing that moves money happens without a named person approving it.
+
+The principle I designed it around:
 
 > **AI investigates. Humans authorise. Systems execute. AI validates.**
 
@@ -32,11 +34,11 @@ Resolvia does that legwork for cash-equity breaks. Five agents gather the eviden
 5. **The Control Gate** blocks anything consequential until a person approves it.
 6. **Validation** re-runs the check that raised the break. Closed means the field now matches; anything else reopens.
 
-## The one idea worth remembering
+## The finding the project rests on
 
 ![The corporate-action trap](docs/images/ca-trap.svg)
 
-A mandatory corporate action that wasn't applied and a voluntary one waiting for the client's decision look identical in the data. The model can't tell them apart (it gets 18 of 20 root causes perfect and fails exactly here), a rules engine can't either, and the right actions are opposite. The difference is one field on the SWIFT notice. So Resolvia reads the notice, and a person signs off every corporate action anyway.
+A mandatory corporate action that wasn't applied and a voluntary one waiting for the client's decision look identical in the data. The model can't tell them apart (it gets 18 of 20 root causes perfect and fails exactly here), a rules engine can't either, and the right actions are opposite. The difference is one field on the SWIFT notice. So I made the RCA agent read the notice, and I still send every corporate action to a person.
 
 ![Results](docs/images/results.svg)
 
@@ -51,11 +53,11 @@ A mandatory corporate action that wasn't applied and a voluntary one waiting for
 | Unauthorised executions | 0 |
 | OCR accuracy on scanned confirms | ~99% |
 
-All of this is on synthetic data. More on what that does and doesn't prove in [the results](docs/06-results.md).
+All of this is on synthetic data. I explain what that does and doesn't prove in [the results](docs/06-results.md).
 
 ## Take the tour
 
-The [`docs`](docs) folder walks through the whole project, one picture at a time:
+I've written the whole project up in [`docs`](docs), one picture at a time:
 
 1. [The problem](docs/01-the-problem.md): why matching is solved and resolution isn't
 2. [The data](docs/02-the-data.md): a synthetic bank where every fault is known
@@ -65,7 +67,7 @@ The [`docs`](docs) folder walks through the whole project, one picture at a time
 6. [Results](docs/06-results.md): rules vs model vs the whole system
 7. [Limits and next steps](docs/07-limits-and-next-steps.md): what production would need
 
-Or read the [field guide](docs/field-guide.pdf), the same story on phone-sized pages.
+The [field guide](docs/field-guide.pdf) tells the same story on phone-sized pages.
 
 ## Run it
 
@@ -78,7 +80,7 @@ pip install -r frontend/requirements.txt
 streamlit run frontend/app.py
 ```
 
-The first case takes about 20 seconds while the models and indexes load. A good one to start with is **BRK00013**, a failed payment with the wrong settlement instruction.
+The first case takes about 20 seconds while the models and indexes load. I usually start with **BRK00013**, a failed payment with the wrong settlement instruction.
 
 To use the REST API, the training scripts or the notebook, install `backend/requirements.txt` instead, then from `backend/` run `uvicorn api.main:app --reload`.
 
@@ -103,4 +105,4 @@ docs/                the tour, diagrams, model report, EDA notebook, proposal
 
 ## About
 
-Built by Hiral Sarkar as the capstone for the PG program in Data Science and Analytics with Gen AI (PGA 45). The original [proposal](docs/reports/capstone-proposal.pdf) and [business case](docs/reports/business-case.pdf) are in `docs/reports`.
+I'm Hiral Sarkar, and I built Resolvia as my capstone for the PG program in Data Science and Analytics with Gen AI (PGA 45). My original [proposal](docs/reports/capstone-proposal.pdf) and [business case](docs/reports/business-case.pdf) are in `docs/reports`.

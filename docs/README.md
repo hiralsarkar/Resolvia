@@ -1,6 +1,6 @@
 # The tour
 
-Seven short stops, each built around a picture. Read them in order and you'll know how Resolvia works and why it's built the way it is.
+I've written Resolvia up as seven short stops, each built around a picture. Read them in order and you'll see how it works and why I built it the way I did.
 
 | | Stop | What you'll see |
 |---|---|---|
@@ -10,11 +10,11 @@ Seven short stops, each built around a picture. Read them in order and you'll kn
 | 4 | [The agents](04-the-agents.md) | Five specialists, what each one may and may not do |
 | 5 | [Control and audit](05-control-and-audit.md) | The gate, the state machine and the trail |
 | 6 | [Results](06-results.md) | Rules vs model vs the full system |
-| 7 | [Limits and next steps](07-limits-and-next-steps.md) | What a production version would need |
+| 7 | [Limits and next steps](07-limits-and-next-steps.md) | What I'd add to take it to production |
 
 Also in this folder:
 
-- [`field-guide.pdf`](field-guide.pdf), the whole project on phone-sized pages
+- [`field-guide.pdf`](field-guide.pdf), my walkthrough of the whole project on phone-sized pages
 - [`analysis/model_comparison.md`](analysis/model_comparison.md), the full model report
 - [`analysis/eda_notebook.ipynb`](analysis/eda_notebook.ipynb), the exploratory analysis
-- [`reports/`](reports), the original capstone proposal and business case
+- [`reports/`](reports), my original capstone proposal and business case

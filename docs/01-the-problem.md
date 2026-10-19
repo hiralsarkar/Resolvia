@@ -6,7 +6,7 @@ What happens next is still mostly people. Someone has to find the evidence, conn
 
 ![The automation ladder](images/ladder.svg)
 
-Resolvia sits at level 3 and starts where matching ends. It never rebuilds matching. The two levels in between are the baselines it's measured against:
+I placed Resolvia at level 3, starting where matching ends. I chose not to rebuild matching. The two levels in between are the baselines I measure it against:
 
 - **Manual (level 1).** I don't invent a stopwatch time. Instead I count how many evidence sources an analyst has to open to reach a root cause: the four tables every time, one more if there's a document, one more for a corporate action notice. That averages 4.9 per break.
 - **Rules (level 2).** Hand-written if/else rules over the same 15 features the model sees. That's roughly what a rules engine or RPA bot can do without reading documents. It scores a macro-F1 of 0.820.
@@ -15,10 +15,10 @@ Resolvia sits at level 3 and starts where matching ends. It never rebuilds match
 
 > AI investigates. Humans authorise. Systems execute. AI validates.
 
-Every design decision in the repo follows from that line. The agents can gather, diagnose and propose. Only a recorded human decision can let a consequential action run. And nothing counts as resolved until the records have been checked again.
+Every design decision I made follows from that line. The agents can gather, diagnose and propose. Only a recorded human decision can let a consequential action run. And nothing counts as resolved until the records have been checked again.
 
 ## Scope
 
-Indian cash equities (T+1, INR), four break families, 20 root causes, and corporate actions as the specialist case. Derivatives, FX, securities lending, collateral and real payment systems are out of scope.
+I scoped it to Indian cash equities (T+1, INR), four break families, 20 root causes, and corporate actions as the specialist case. I left derivatives, FX, securities lending, collateral and real payment systems out.
 
 Next: [the data](02-the-data.md)

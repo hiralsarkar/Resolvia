@@ -38,8 +38,8 @@ The rules baseline gets every mechanical cause and none of the corporate-action 
 | Precedent cases (`backend/knowledge/resolved_cases.json`) | 400: 380 closed, 20 on hold |
 | Root causes run end to end through the Orchestrator | 20 of 20 |
 
-## How to read them
+## How I read these numbers
 
-The data is synthetic and clean, so the near-perfect scores show that the features and the pipeline work, not that real breaks are this easy. The finding that carries over is the shape of it: rules and a structured model both stall on the case that needs a document and a judgment, and that's the case the system is built around.
+The data is synthetic and clean, so the near-perfect scores show that the features and the pipeline work, not that real breaks are this easy. The finding I'd expect to carry over is the shape of it: rules and a structured model both stall on the case that needs a document and a judgment, and that's the case I built the system around.
 
 Next: [limits and next steps](07-limits-and-next-steps.md)

@@ -1,14 +1,14 @@
 # 7. Limits and next steps
 
-## What this build doesn't do
+## What my build doesn't do
 
 - **Synthetic data.** Every number here comes from generated data with clean faults and exactly one fault per broken trade. Real breaks are messier and often have more than one cause.
 - **Simulated execution.** Fixes are applied to a copy of the records. Nothing touches a real settlement, trading or payment system.
 - **In-memory cases.** The app keeps open cases in memory, so they reset when the server restarts. The audit log is a local file.
 - **No sign-in.** The operator ID is typed in. There's no authentication or role-based permissions behind the approval step.
-- **The notice is always there.** Every synthetic corporate action has a clean MT564 with a CAMV field. In real life the notice may be late, missing or a scan, and that case should fall back to a person, which the system already requires for every corporate action.
+- **The notice is always there.** Every synthetic corporate action has a clean MT564 with a CAMV field. In real life the notice may be late, missing or a scan, and that case should fall back to a person, which I already require for every corporate action.
 
-## What a production version would need
+## What I'd add for production
 
 1. **The bank's break feed** in place of the generator, plus real reference data: NSE bhavcopy prices and a corporate actions feed (see `load_clean_trades()` in `data/generate_trade_breaks.py`).
 2. **A database** for cases, decisions and the audit trail, with the trail made append-only.

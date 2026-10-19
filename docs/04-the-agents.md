@@ -2,7 +2,7 @@
 
 ![The five agents](images/agents.svg)
 
-Each agent is a Python module in [`backend/agents/`](../backend/agents) with one entry function, a fixed input and output, and a stated limit on what it's allowed to do. They're specialists rather than chatbots. Each uses the cheapest tool that does its job reliably, and the LLM is optional throughout.
+I built each agent as a Python module in [`backend/agents/`](../backend/agents) with one entry function, a fixed input and output, and a stated limit on what it's allowed to do. They're specialists rather than chatbots: each one uses the cheapest tool that does its job reliably, and the LLM is optional throughout.
 
 ![How one break moves through Resolvia](images/architecture.svg)
 
@@ -19,7 +19,7 @@ Each agent is a Python module in [`backend/agents/`](../backend/agents) with one
 
 `investigation.py` answers "what evidence do we have?" It reads and retrieves; it never judges. It returns the trade, position, cash and settlement records, the document (OCR if it only exists as a scan), the three most similar other documents and, for corporate actions, the matching entries from an 18-entry reference base, searched with the notice itself.
 
-It only sees what the reconciliation engine would hand over. The root-cause columns in `breaks.csv` are ground truth for training and are kept out of the running system on purpose.
+It only sees what the reconciliation engine would hand over. The root-cause columns in `breaks.csv` are ground truth for training, and I keep them out of the running system on purpose.
 
 ![How retrieval works](images/retrieval.svg)
 
@@ -35,14 +35,14 @@ It only sees what the reconciliation engine would hand over. The root-cause colu
 
 ## Resolution proposal
 
-`resolution.py` answers "what should we do?" Once the cause is known the fix is mechanical, so it comes from a fixed catalogue rather than being made up each time. Each entry has an action, an expected outcome and an authority tier:
+`resolution.py` answers "what should we do?" Once the cause is known the fix is mechanical, so I put the fixes in a fixed catalogue rather than having them made up each time. Each entry has an action, an expected outcome and an authority tier:
 
 - **CONTROLLED_ACTION** for 15 causes: anything that changes money, a quantity, an SSI or a counterparty.
 - **PROPOSAL** for 5 administrative ones: wait for a timing difference, chase a late counterparty or a missing confirmation, fix a date.
 
 Risk is arithmetic: HIGH for P0 or ₹10 lakh and up. A voluntary corporate action gets a **hold**: nothing changes until the client's election arrives.
 
-The proposal keeps two flags apart. RCA's flag is about the diagnosis; the approval flag is about the action. A confident diagnosis can still lead to an action that needs sign-off.
+I keep two flags apart in the proposal. RCA's flag is about the diagnosis; the approval flag is about the action. A confident diagnosis can still lead to an action that needs sign-off.
 
 ## Validation
 

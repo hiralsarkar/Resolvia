@@ -4,7 +4,7 @@
 
 ![The Control Gate](images/control-gate.svg)
 
-[`backend/control_gate.py`](../backend/control_gate.py) is policy code, not a model. A proposal goes through on policy only if it's an administrative PROPOSAL-tier step on a diagnosis nobody flagged. Everything else needs an APPROVE recorded against that break. No decision, or a REJECT, means blocked, and nothing is touched.
+I wrote [`backend/control_gate.py`](../backend/control_gate.py) as policy code, not a model. A proposal goes through on policy only if it's an administrative PROPOSAL-tier step on a diagnosis nobody flagged. Everything else needs an APPROVE recorded against that break. No decision, or a REJECT, means blocked, and nothing is touched.
 
 `record_decision()` is the only way a person's decision gets in. Nothing in the backend can approve on its own behalf. Across every run in this repo the number of unauthorised executions is zero.
 
@@ -27,7 +27,7 @@ The outcomes after execution:
 
 ## The audit trail
 
-There are three layers, so the auditor's question ("who approved what, when, and based on what?") always has an answer:
+I kept three layers, so the auditor's question ("who approved what, when, and based on what?") always has an answer:
 
 1. Each case keeps its own history of every stage, with UTC timestamps.
 2. The gate keeps its own log of every check and every decision.
@@ -37,7 +37,7 @@ There are three layers, so the auditor's question ("who approved what, when, and
 
 ![One failed payment](images/walkthrough.svg)
 
-This is the case to use in a demo. Break BRK00013 is a P0 payment sent with the wrong settlement instruction. Triage marks it urgent and sends it to Settlements. Investigation reads the MT54x message. RCA diagnoses the wrong SSI with full confidence. The proposal is to correct the SSI and resubmit, which is a controlled action, so the gate blocks it. A person approves with a note. The fix runs on a copy, Validation sees the SSI now matches, and the case closes.
+This is the case I use to demo it. Break BRK00013 is a P0 payment sent with the wrong settlement instruction. Triage marks it urgent and sends it to Settlements. Investigation reads the MT54x message. RCA diagnoses the wrong SSI with full confidence. The proposal is to correct the SSI and resubmit, which is a controlled action, so the gate blocks it. A person approves with a note. The fix runs on a copy, Validation sees the SSI now matches, and the case closes.
 
 ## The app
 
