@@ -1,27 +1,24 @@
 """
 Orchestrator.
 
-"The orchestrator is not another intelligent agent that makes financial
-decisions. It is the workflow controller." State machine:
+It runs the workflow; it doesn't make financial decisions. The states:
 
-  CASE CREATED -> TRIAGE -> INVESTIGATION -> RCA -> RESOLUTION PROPOSAL
-  -> HUMAN CONTROL -> [blocked | authorized] -> CONTROLLED ACTION
-  -> VALIDATION -> CLOSE/REOPEN -> AUDIT
+  CASE_CREATED -> TRIAGE -> INVESTIGATION -> RCA -> RESOLUTION PROPOSAL
+  -> CONTROL GATE -> (blocked: wait for a person) -> EXECUTION -> VALIDATION
+  -> CLOSED / REOPENED / ON_HOLD
 
-Two-phase because a real system can't synchronously block waiting for a
-human: create_case() runs every automatic stage in order and stops the
-moment it hits an unauthorized CONTROLLED_ACTION - the case sits in
-AWAITING_APPROVAL until someone calls control_gate.record_decision()
-externally, then resume_case() picks up exactly where it left off.
-Nothing in this module can itself set a decision or skip the gate check
-- "the orchestrator cannot decide that approval is unnecessary for an
-action that policy says requires approval" (architecture discussion,
-Section 7). It only calls through to control_gate and obeys the answer.
+It works in two phases because a program can't sit and wait for a person.
+create_case() runs every automatic stage and stops at the first thing it
+can't get past on its own: bad data, or an action that needs approval. The
+case then waits in AWAITING_APPROVAL until someone calls
+control_gate.record_decision(). resume_case() picks up from exactly where it
+stopped.
 
-Every case keeps a full history (audit log) of stage transitions,
-separate from control_gate's own gate-only audit log - this one covers
-the whole pipeline (Triage's routing decision, RCA's diagnosis, the
-proposal itself), not just approval events.
+The one decision the Orchestrator owns is what to do with the gate's answer:
+stop, or carry on. It can't decide that approval isn't needed.
+
+Every case keeps its own history of what happened and when. That's separate
+from the gate's log and covers the whole pipeline.
 """
 
 import os
@@ -40,7 +37,7 @@ import control_gate  # noqa: E402
 import execution_simulator  # noqa: E402
 from validation import validate  # noqa: E402
 
-_CASES = {}  # break_id -> case state dict
+_CASES = {}  # break_id -> case
 
 
 def _log(case, event, detail=""):
@@ -59,29 +56,20 @@ def _new_case(break_id):
 
 
 def _advance(case, on_event=None):
-    """Runs every stage the case hasn't completed yet, stopping at the
-    first thing it can't get past on its own (a data-quality halt, or
-    an unauthorized CONTROLLED_ACTION). Safe to call repeatedly - each
-    stage only runs once (guarded by `is None`), so resume_case() just
-    calls this again and it naturally continues from wherever it
-    stopped.
+    """Runs every stage that hasn't run yet and stops at the first blocker.
 
-    `on_event(stage_key, label, detail)` is an optional callback fired
-    right after each real stage completes - a UI hook only (the frontend
-    uses it to show genuine per-agent progress synced to actual
-    execution, not a fake animation timed independently of it). Never
-    required, never changes control flow."""
+    Safe to call again: each stage runs once. on_event(stage, label, detail)
+    is an optional hook the UI uses to show progress as each stage really
+    finishes. It never changes the flow."""
     break_id = case["break_id"]
 
-    def fire(stage_key, label, detail):
+    def fire(stage, label, detail):
         if on_event:
-            on_event(stage_key, label, detail)
+            on_event(stage, label, detail)
 
     if case["triage"] is None:
-        case["triage"] = triage.triage(break_id)
-        t = case["triage"]
-        _log(case, "TRIAGE_COMPLETE",
-             f"family={t['predicted_family']} priority={t['priority']} route={t['route']}")
+        t = case["triage"] = triage.triage(break_id)
+        _log(case, "TRIAGE_COMPLETE", f"family={t['predicted_family']} priority={t['priority']} route={t['route']}")
         fire("triage", "Triage Agent", f"routed to {t['route']}, priority {t['priority']}")
         if not t["valid"]:
             case["status"] = "HALTED_DATA_QUALITY"
@@ -90,38 +78,33 @@ def _advance(case, on_event=None):
 
     if case["investigation"] is None:
         case["investigation"] = investigation.investigate(break_id)
-        doc = case["investigation"]["document_evidence"]
-        _log(case, "INVESTIGATION_COMPLETE", f"has_document={doc.get('has_document', False)}")
-        fire("investigation", "Investigation Agent",
-             "evidence gathered" + (", document retrieved" if doc.get("has_document") else ""))
+        has_doc = case["investigation"]["document_evidence"].get("has_document", False)
+        _log(case, "INVESTIGATION_COMPLETE", f"has_document={has_doc}")
+        fire("investigation", "Investigation Agent", "evidence gathered" + (", document read" if has_doc else ""))
 
     if case["rca"] is None:
-        case["rca"] = rca.analyze(break_id)
-        r = case["rca"]
-        _log(case, "RCA_COMPLETE",
-             f"root_cause={r['root_cause']} confidence={r['confidence']:.2f} "
-             f"requires_human_decision={r['requires_human_decision']}")
-        fire("rca", "RCA Agent", f"{r['root_cause']} at {r['confidence']*100:.1f}% confidence")
+        r = case["rca"] = rca.analyze(break_id, evidence=case["investigation"])
+        _log(case, "RCA_COMPLETE", f"root_cause={r['root_cause']} confidence={r['confidence']:.2f} "
+                                   f"requires_human_decision={r['requires_human_decision']}")
+        if r.get("document_finding") and r["document_finding"]["changed"]:
+            _log(case, "RCA_DOCUMENT_OVERRIDE",
+                 f"model said {r['document_finding']['model_said']}, notice says "
+                 f"{r['document_finding']['mandatory_flag']}")
+        fire("rca", "RCA Agent", f"{r['root_cause']} at {r['confidence'] * 100:.1f}% confidence")
 
     if case["proposal"] is None:
-        case["proposal"] = resolution.propose(break_id, rca_result=case["rca"], evidence=case["investigation"])
-        p = case["proposal"]
+        p = case["proposal"] = resolution.propose(break_id, rca_result=case["rca"], evidence=case["investigation"])
         _log(case, "RESOLUTION_PROPOSAL_COMPLETE",
-             f"action={p['recommended_action'][:70]!r} authority_tier={p['authority_tier']}")
+             f"action={p['recommended_action'][:70]!r} authority_tier={p['authority_tier']} "
+             f"approval_required={p['approval_required']}")
         fire("proposal", "Resolution Proposal Agent", p["authority_tier"].replace("_", " "))
 
-    gate_result = control_gate.check_gate(case["proposal"])
-    case["gate_result"] = gate_result
-    _log(case, "GATE_CHECK:" + ("AUTHORIZED" if gate_result["authorized"] else "BLOCKED"),
-         gate_result["reason"])
-    # This fire is deliberately attributed to "Orchestrator", not an agent -
-    # control_gate.check_gate() is a fixed policy lookup; deciding what to
-    # DO with that answer (halt the case vs. proceed to execution) is the
-    # one real branching decision the Orchestrator itself makes per run.
-    fire("gate", "Orchestrator", "gate authorized - proceeding" if gate_result["authorized"]
-         else "gate blocked - halting for human approval")
+    gate = case["gate_result"] = control_gate.check_gate(case["proposal"])
+    _log(case, "GATE_CHECK:" + ("AUTHORIZED" if gate["authorized"] else "BLOCKED"), gate["reason"])
+    fire("gate", "Orchestrator", "gate authorised, continuing" if gate["authorized"]
+         else "gate blocked, waiting for a person")
 
-    if not gate_result["authorized"]:
+    if not gate["authorized"]:
         decision = control_gate.get_decision(break_id)
         if decision and decision["decision"] == "REJECT":
             case["status"] = "REJECTED"
@@ -130,39 +113,35 @@ def _advance(case, on_event=None):
             case["status"] = "AWAITING_APPROVAL"
         return case
 
+    feed = investigation.break_feed(break_id)
     if case["post_execution"] is None:
-        break_row = investigation._tables()["breaks"][break_id]
-        case["post_execution"] = execution_simulator.execute(break_id, case["investigation"], break_row)
-        _log(case, "EXECUTION_COMPLETE")
-        fire("post_execution", "Execution", "repair applied")
+        case["post_execution"] = execution_simulator.execute(case["proposal"], case["investigation"], feed)
+        _log(case, "EXECUTION_COMPLETE", f"applied fix for {case['proposal']['root_cause']}")
+        fire("post_execution", "Execution", "fix applied")
 
-    break_row = investigation._tables()["breaks"][break_id]
-    case["validation"] = validate(break_id, break_row, case["post_execution"])
+    case["validation"] = validate(break_id, feed, case["post_execution"], case["proposal"])
     _log(case, "VALIDATION_COMPLETE", case["validation"]["reason"])
     fire("validation", "Validation Agent", case["validation"]["status"])
 
-    case["status"] = case["validation"]["status"]  # CLOSED or REOPENED
+    case["status"] = case["validation"]["status"]
     _log(case, f"CASE_{case['status']}")
-    fire("done", "Orchestrator", f"case {case['status'].lower()} - sequencing complete")
+    fire("done", "Orchestrator", f"case {case['status'].lower().replace('_', ' ')}")
     return case
 
 
 def create_case(break_id, on_event=None):
     if break_id in _CASES:
-        raise ValueError(f"case for {break_id} already exists - use resume_case() or get_case()")
-    case = _new_case(break_id)
-    _CASES[break_id] = case
+        raise ValueError(f"a case for {break_id} already exists, use resume_case() or get_case()")
+    case = _CASES[break_id] = _new_case(break_id)
     _log(case, "CASE_CREATED")
     return _advance(case, on_event=on_event)
 
 
 def resume_case(break_id, on_event=None):
-    """Call after control_gate.record_decision(break_id, ...) has been
-    invoked externally by a human. Re-checks the gate and continues
-    from wherever the case stopped."""
+    """Call after control_gate.record_decision(). Re-checks the gate and carries on."""
     case = _CASES.get(break_id)
     if case is None:
-        raise KeyError(f"no case exists for {break_id} - call create_case() first")
+        raise KeyError(f"no case for {break_id}, call create_case() first")
     return _advance(case, on_event=on_event)
 
 
@@ -179,43 +158,11 @@ if __name__ == "__main__":
     reset()
     breaks = investigation._tables()["breaks"]
 
-    # PROPOSAL-tier: should flow straight through in one create_case() call.
-    conf_id = next(bid for bid, b in breaks.items() if b["mismatch_type"] == "CONF_MISSING")
-    print(f"=== PROPOSAL-tier case {conf_id} - single create_case() call ===")
-    case = create_case(conf_id)
-    print(f"  status after create_case: {case['status']}")
-
-    # CONTROLLED_ACTION: should halt at AWAITING_APPROVAL, then resume after approval.
-    ssi_id = next(bid for bid, b in breaks.items() if b["mismatch_type"] == "SETL_WRONG_SSI")
-    print(f"\n=== CONTROLLED_ACTION case {ssi_id} - two-phase via create_case() + resume_case() ===")
-    case = create_case(ssi_id)
-    print(f"  status after create_case (before approval): {case['status']}")
-    control_gate.record_decision(ssi_id, "APPROVE", "ops.head@resolvia.local", notes="verified SSI with custodian")
-    case = resume_case(ssi_id)
-    print(f"  status after resume_case (after approval): {case['status']}")
-
-    print(f"\n  Full case history for {ssi_id}:")
+    ssi = next(b for b, r in breaks.items() if r["mismatch_type"] == "SETL_WRONG_SSI")
+    case = create_case(ssi)
+    print(f"{ssi} after create_case: {case['status']}")
+    control_gate.record_decision(ssi, "APPROVE", "ops.head@resolvia.local", notes="SSI checked with custodian")
+    case = resume_case(ssi)
+    print(f"{ssi} after approval: {case['status']}\n")
     for e in case["history"]:
-        print(f"    {e['timestamp']}  {e['event']:30s} {e['detail']}")
-
-    # Full coverage through the Orchestrator's own interface (not the
-    # agents directly) - confirms the wiring itself works, not just the
-    # underlying agents in isolation.
-    print(f"\n=== Coverage: create_case()+resume_case() through the Orchestrator, one break per root cause ===")
-    control_gate.reset()
-    reset()
-    seen = set()
-    outcomes = {}
-    for bid, b in breaks.items():
-        rc = b["mismatch_type"]
-        if rc in seen:
-            continue
-        seen.add(rc)
-        case = create_case(bid)
-        if case["status"] == "AWAITING_APPROVAL":
-            control_gate.record_decision(bid, "APPROVE", "coverage.run@resolvia.local")
-            case = resume_case(bid)
-        outcomes[rc] = case["status"]
-
-    from collections import Counter
-    print(f"  {len(seen)}/20 root causes: {dict(Counter(outcomes.values()))}")
+        print(f"  {e['timestamp']}  {e['event']:30s} {e['detail']}")
