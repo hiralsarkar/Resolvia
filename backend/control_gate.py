@@ -15,28 +15,23 @@ The rule:
 
 record_decision() is the only way a person's decision gets in. Nothing in this
 module, or anywhere else in the backend, can approve on its own behalf.
+Decisions and the gate's log are kept in SQLite (store.py), so they survive a
+restart.
 """
 
-from datetime import datetime, timezone
-
-_DECISIONS = {}  # break_id -> {"decision", "approver", "timestamp", "notes"}
-_AUDIT_LOG = []  # append only
-
-
-def _now():
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+import store
 
 
 def _log(break_id, event, detail=""):
-    _AUDIT_LOG.append({"break_id": break_id, "event": event, "detail": detail, "timestamp": _now()})
+    store.log_gate(break_id, event, detail)
 
 
 def record_decision(break_id, decision, approver, notes=None):
     if decision not in ("APPROVE", "REJECT"):
         raise ValueError(f"decision must be APPROVE or REJECT, got {decision!r}")
-    _DECISIONS[break_id] = {"decision": decision, "approver": approver, "timestamp": _now(), "notes": notes}
+    store.put_decision(break_id, decision, approver, store.now(), notes)
     _log(break_id, f"HUMAN_DECISION:{decision}", f"by {approver}" + (f" - {notes}" if notes else ""))
-    return _DECISIONS[break_id]
+    return store.get_decision(break_id)
 
 
 def needs_approval(proposal):
@@ -55,7 +50,7 @@ def check_gate(proposal):
         _log(break_id, "GATE_CHECK:AUTHORIZED", result["reason"])
         return result
 
-    decision = _DECISIONS.get(break_id)
+    decision = store.get_decision(break_id)
     if decision is None:
         why = "a controlled action" if proposal["authority_tier"] == "CONTROLLED_ACTION" \
             else "a diagnosis flagged for review"
@@ -75,15 +70,12 @@ def check_gate(proposal):
 
 def get_decision(break_id):
     """None means nobody has decided yet, which is different from a REJECT."""
-    return _DECISIONS.get(break_id)
+    return store.get_decision(break_id)
 
 
 def audit_trail(break_id=None):
-    if break_id is None:
-        return list(_AUDIT_LOG)
-    return [e for e in _AUDIT_LOG if e["break_id"] == break_id]
+    return store.gate_events(break_id)
 
 
 def reset():
-    _DECISIONS.clear()
-    _AUDIT_LOG.clear()
+    store.reset("decisions", "gate_log")

@@ -13,6 +13,9 @@ import os
 import sys
 from collections import Counter
 
+
+# batch runs use a throwaway database, never the real audit trail
+os.environ.setdefault("RESOLVIA_DB", ":memory:")
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
 sys.path.insert(0, os.path.join(HERE, "..", "agents"))

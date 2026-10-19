@@ -115,6 +115,7 @@ def begin_manual(break_id,operator,notes=""):
     case["manual_resolution"]={"operator":operator,"started_at":pd.Timestamp.utcnow().isoformat(),"notes":notes,"actions":[],"evidence":[]}
     orchestrator._log(case,"MANUAL_RESOLUTION_STARTED",f"by {operator}: {notes or 'manual correction started'}")
     audit("MANUAL_RESOLUTION_STARTED",break_id,f"Manual resolution started by {operator}; {notes or 'no note'}",actor_id=operator)
+    orchestrator.save(case)
     _sync_case_audit(case)
     return case
 
@@ -134,6 +135,7 @@ def submit_manual(break_id,operator,action_taken,evidence_reference,checklist):
     case["status"]="AWAITING_VERIFICATION"
     orchestrator._log(case,"MANUAL_ACTION_SUBMITTED",f"by {operator}; evidence={evidence_reference}")
     audit("MANUAL_ACTION_SUBMITTED",break_id,f"Manual correction recorded by {operator}; evidence/reference: {evidence_reference}",actor_id=operator)
+    orchestrator.save(case)
     _sync_case_audit(case)
     return case
 
@@ -151,12 +153,13 @@ def verify_manual(break_id,verifier,verification_notes):
     orchestrator._log(case,"CASE_CLOSED","manual resolution verified")
     audit("MANUAL_RESOLUTION_VERIFIED",break_id,f"Verified by {verifier}: {verification_notes}",actor_id=verifier)
     audit("CASE_CLOSED",break_id,"Case closed after independent manual-resolution verification",actor_id=verifier)
+    orchestrator.save(case)
     _sync_case_audit(case)
     return case
 
 def mark(break_id,status,approver,notes=None):
     audit("CASE_ESCALATED" if status=="ESCALATED" else "CASE_REVIEWED",break_id,f"{status} by {approver}; notes: {notes or 'none'}")
-    case=orchestrator.get_case(break_id); case["status"]=status; orchestrator._log(case,"HUMAN_"+status,f"by {approver}: {notes or ''}".strip()); _sync_case_audit(case); return case
+    case=orchestrator.get_case(break_id); case["status"]=status; orchestrator._log(case,"HUMAN_"+status,f"by {approver}: {notes or ''}".strip()); orchestrator.save(case); _sync_case_audit(case); return case
 
 def reject(break_id,approver,notes=None):
     audit("APPROVAL_REJECTED",break_id,f"Rejected by {approver}; notes: {notes or 'none'}"); control_gate.record_decision(break_id,"REJECT",approver,notes); return resume_case(break_id)
@@ -164,7 +167,7 @@ def reject(break_id,approver,notes=None):
 def case_status(break_id):
     case=orchestrator.get_case(break_id); return case["status"] if case else "NOT_STARTED"
 
-def all_case_statuses(): return {bid:c["status"] for bid,c in orchestrator._CASES.items()}
+def all_case_statuses(): return orchestrator.case_statuses()
 
 @st.cache_data(show_spinner=False)
 def resolved_cases_summary():

@@ -3,7 +3,7 @@ End-to-end evaluation on the held-out TEST breaks.
 
 The model comparison (models/ml_classifier/train.py) scores the classifier on
 its own. This scores the whole system the way it actually runs: every TEST
-break goes through the Orchestrator, controlled actions are approved, and we
+break goes through the Orchestrator, controlled actions are approved, and I
 count what comes out the other end.
 
 Reports
@@ -22,6 +22,9 @@ from collections import Counter
 
 from sklearn.metrics import f1_score
 
+
+# batch runs use a throwaway database, never the real audit trail
+os.environ.setdefault("RESOLVIA_DB", ":memory:")
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
 sys.path.insert(0, os.path.join(HERE, "..", "agents"))

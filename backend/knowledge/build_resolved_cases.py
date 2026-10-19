@@ -1,7 +1,7 @@
 """
 Builds the precedent corpus: a set of past cases the RCA agent can look back on.
 
-We take up to 20 breaks per root cause (ones with documents first, since they
+I take up to 20 breaks per root cause (ones with documents first, since they
 give richer evidence) and run them through the real Orchestrator, the same
 entry points the app uses. Anything that needs approval is approved here to
 stand in for an approval history. Once a case is resolved its root cause is
@@ -17,6 +17,9 @@ import os
 import sys
 from collections import Counter, defaultdict
 
+
+# batch runs use a throwaway database, never the real audit trail
+os.environ.setdefault("RESOLVIA_DB", ":memory:")
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "agents"))
 sys.path.insert(0, os.path.join(HERE, ".."))

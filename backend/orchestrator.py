@@ -7,6 +7,9 @@ It runs the workflow; it doesn't make financial decisions. The states:
   -> CONTROL GATE -> (blocked: wait for a person) -> EXECUTION -> VALIDATION
   -> CLOSED / REOPENED / ON_HOLD
 
+Cases are saved to SQLite (store.py) after every run, so an open case and
+its history survive a restart.
+
 It works in two phases because a program can't sit and wait for a person.
 create_case() runs every automatic stage and stops at the first thing it
 can't get past on its own: bad data, or an action that needs approval. The
@@ -35,9 +38,10 @@ import rca  # noqa: E402
 import resolution  # noqa: E402
 import control_gate  # noqa: E402
 import execution_simulator  # noqa: E402
+import store  # noqa: E402
 from validation import validate  # noqa: E402
 
-_CASES = {}  # break_id -> case
+_CASES = {}  # in-memory cache; store.py is the record
 
 
 def _log(case, event, detail=""):
@@ -129,31 +133,49 @@ def _advance(case, on_event=None):
     return case
 
 
+def save(case):
+    """Writes the case to the database. The pipeline saves after every run;
+    anything else that changes a case (the app's manual workflow) calls this."""
+    store.save_case(case)
+    return case
+
+
 def create_case(break_id, on_event=None):
-    if break_id in _CASES:
+    if get_case(break_id) is not None:
         raise ValueError(f"a case for {break_id} already exists, use resume_case() or get_case()")
     case = _CASES[break_id] = _new_case(break_id)
     _log(case, "CASE_CREATED")
-    return _advance(case, on_event=on_event)
+    return save(_advance(case, on_event=on_event))
 
 
 def resume_case(break_id, on_event=None):
     """Call after control_gate.record_decision(). Re-checks the gate and carries on."""
-    case = _CASES.get(break_id)
+    case = get_case(break_id)
     if case is None:
         raise KeyError(f"no case for {break_id}, call create_case() first")
-    return _advance(case, on_event=on_event)
+    return save(_advance(case, on_event=on_event))
 
 
 def get_case(break_id):
-    return _CASES.get(break_id)
+    if break_id not in _CASES:
+        stored = store.load_case(break_id)
+        if stored is None:
+            return None
+        _CASES[break_id] = stored
+    return _CASES[break_id]
+
+
+def case_statuses():
+    return store.case_statuses()
 
 
 def reset():
     _CASES.clear()
+    store.reset("cases")
 
 
 if __name__ == "__main__":
+    os.environ.setdefault("RESOLVIA_DB", ":memory:")
     control_gate.reset()
     reset()
     breaks = investigation._tables()["breaks"]

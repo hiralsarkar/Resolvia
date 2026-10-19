@@ -24,3 +24,4 @@ archive/
 
 # written by the app at runtime
 backend/knowledge/operational_audit.json
+backend/knowledge/*.db
