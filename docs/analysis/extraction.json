@@ -1,0 +1,224 @@
+{
+  "rules": {
+    "contract note": {
+      "trade_id": 1.0,
+      "symbol": 1.0,
+      "quantity": 1.0,
+      "price": 1.0,
+      "counterparty": 1.0,
+      "settlement_date": 1.0,
+      "n": 900
+    },
+    "all": {
+      "trade_id": 1.0,
+      "symbol": 1.0,
+      "quantity": 1.0,
+      "price": 1.0,
+      "counterparty": 0.925,
+      "settlement_date": 1.0,
+      "n": 1162
+    },
+    "terse note": {
+      "trade_id": 1.0,
+      "symbol": 1.0,
+      "quantity": 1.0,
+      "price": 1.0,
+      "counterparty": 1.0,
+      "settlement_date": 1.0,
+      "n": 34
+    },
+    "chat message": {
+      "trade_id": 1.0,
+      "symbol": 1.0,
+      "quantity": 1.0,
+      "price": 1.0,
+      "counterparty": 0.0,
+      "settlement_date": 1.0,
+      "n": 39
+    },
+    "formal email": {
+      "trade_id": 1.0,
+      "symbol": 1.0,
+      "quantity": 1.0,
+      "price": 1.0,
+      "counterparty": 1.0,
+      "settlement_date": 1.0,
+      "n": 46
+    },
+    "scanned-style advice": {
+      "trade_id": 1.0,
+      "symbol": 1.0,
+      "quantity": 1.0,
+      "price": 1.0,
+      "counterparty": 1.0,
+      "settlement_date": 1.0,
+      "n": 47
+    },
+    "WhatsApp": {
+      "trade_id": 1.0,
+      "symbol": 1.0,
+      "quantity": 1.0,
+      "price": 1.0,
+      "counterparty": 1.0,
+      "settlement_date": 1.0,
+      "n": 34
+    },
+    "batch email": {
+      "trade_id": 1.0,
+      "symbol": 1.0,
+      "quantity": 1.0,
+      "price": 1.0,
+      "counterparty": 0.226,
+      "settlement_date": 1.0,
+      "n": 62
+    }
+  },
+  "rules (2% character noise)": {
+    "contract note": {
+      "trade_id": 0.834,
+      "symbol": 0.723,
+      "quantity": 0.644,
+      "price": 0.662,
+      "counterparty": 0.832,
+      "settlement_date": 0.636,
+      "n": 900
+    },
+    "all": {
+      "trade_id": 0.832,
+      "symbol": 0.719,
+      "quantity": 0.659,
+      "price": 0.667,
+      "counterparty": 0.752,
+      "settlement_date": 0.629,
+      "n": 1162
+    },
+    "terse note": {
+      "trade_id": 0.824,
+      "symbol": 0.676,
+      "quantity": 0.676,
+      "price": 0.765,
+      "counterparty": 0.647,
+      "settlement_date": 0.588,
+      "n": 34
+    },
+    "chat message": {
+      "trade_id": 0.769,
+      "symbol": 0.667,
+      "quantity": 0.59,
+      "price": 0.59,
+      "counterparty": 0.0,
+      "settlement_date": 0.385,
+      "n": 39
+    },
+    "formal email": {
+      "trade_id": 0.957,
+      "symbol": 0.739,
+      "quantity": 0.826,
+      "price": 0.652,
+      "counterparty": 0.891,
+      "settlement_date": 0.739,
+      "n": 46
+    },
+    "scanned-style advice": {
+      "trade_id": 0.809,
+      "symbol": 0.723,
+      "quantity": 0.681,
+      "price": 0.638,
+      "counterparty": 0.702,
+      "settlement_date": 0.596,
+      "n": 47
+    },
+    "WhatsApp": {
+      "trade_id": 0.765,
+      "symbol": 0.706,
+      "quantity": 0.765,
+      "price": 0.647,
+      "counterparty": 0.588,
+      "settlement_date": 0.647,
+      "n": 34
+    },
+    "batch email": {
+      "trade_id": 0.806,
+      "symbol": 0.694,
+      "quantity": 0.71,
+      "price": 0.774,
+      "counterparty": 0.145,
+      "settlement_date": 0.645,
+      "n": 62
+    }
+  },
+  "rules (5% character noise)": {
+    "contract note": {
+      "trade_id": 0.621,
+      "symbol": 0.444,
+      "quantity": 0.352,
+      "price": 0.306,
+      "counterparty": 0.581,
+      "settlement_date": 0.324,
+      "n": 900
+    },
+    "all": {
+      "trade_id": 0.635,
+      "symbol": 0.458,
+      "quantity": 0.38,
+      "price": 0.329,
+      "counterparty": 0.527,
+      "settlement_date": 0.326,
+      "n": 1162
+    },
+    "terse note": {
+      "trade_id": 0.706,
+      "symbol": 0.471,
+      "quantity": 0.559,
+      "price": 0.471,
+      "counterparty": 0.5,
+      "settlement_date": 0.441,
+      "n": 34
+    },
+    "chat message": {
+      "trade_id": 0.718,
+      "symbol": 0.538,
+      "quantity": 0.385,
+      "price": 0.333,
+      "counterparty": 0.0,
+      "settlement_date": 0.103,
+      "n": 39
+    },
+    "formal email": {
+      "trade_id": 0.848,
+      "symbol": 0.674,
+      "quantity": 0.63,
+      "price": 0.413,
+      "counterparty": 0.696,
+      "settlement_date": 0.391,
+      "n": 46
+    },
+    "scanned-style advice": {
+      "trade_id": 0.66,
+      "symbol": 0.489,
+      "quantity": 0.468,
+      "price": 0.34,
+      "counterparty": 0.489,
+      "settlement_date": 0.277,
+      "n": 47
+    },
+    "WhatsApp": {
+      "trade_id": 0.618,
+      "symbol": 0.441,
+      "quantity": 0.382,
+      "price": 0.529,
+      "counterparty": 0.294,
+      "settlement_date": 0.382,
+      "n": 34
+    },
+    "batch email": {
+      "trade_id": 0.581,
+      "symbol": 0.419,
+      "quantity": 0.419,
+      "price": 0.403,
+      "counterparty": 0.113,
+      "settlement_date": 0.387,
+      "n": 62
+    }
+  }
+}

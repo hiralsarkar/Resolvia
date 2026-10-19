@@ -1,0 +1,190 @@
+{
+  "threshold": 0.8,
+  "auto_min_confidence": 0.95,
+  "clean": {
+    "policies": {
+      "strict (live)": {
+        "reviewed_pct": 76.8,
+        "controlled_auto": 0,
+        "auto_value_cr": 0.0,
+        "reopened": 0,
+        "silent_errors": 0
+      },
+      "auto under 1 lakh": {
+        "reviewed_pct": 74.1,
+        "controlled_auto": 16,
+        "auto_value_cr": 0.1,
+        "reopened": 0,
+        "silent_errors": 0
+      },
+      "auto under 5 lakh": {
+        "reviewed_pct": 62.8,
+        "controlled_auto": 85,
+        "auto_value_cr": 2.03,
+        "reopened": 0,
+        "silent_errors": 0
+      },
+      "auto under 10 lakh": {
+        "reviewed_pct": 54.9,
+        "controlled_auto": 133,
+        "auto_value_cr": 5.73,
+        "reopened": 0,
+        "silent_errors": 0
+      }
+    },
+    "reviewers": [
+      {
+        "miss_rate": 0.0,
+        "wrong_diagnoses_reviewed": 0,
+        "caught_by_person": 0.0,
+        "caught_by_validation": 0.0,
+        "slipped_through": 0.0
+      },
+      {
+        "miss_rate": 0.05,
+        "wrong_diagnoses_reviewed": 0,
+        "caught_by_person": 0.0,
+        "caught_by_validation": 0.0,
+        "slipped_through": 0.0
+      },
+      {
+        "miss_rate": 0.1,
+        "wrong_diagnoses_reviewed": 0,
+        "caught_by_person": 0.0,
+        "caught_by_validation": 0.0,
+        "slipped_through": 0.0
+      },
+      {
+        "miss_rate": 0.2,
+        "wrong_diagnoses_reviewed": 0,
+        "caught_by_person": 0.0,
+        "caught_by_validation": 0.0,
+        "slipped_through": 0.0
+      }
+    ]
+  },
+  "messy": {
+    "policies": {
+      "strict (live)": {
+        "reviewed_pct": 81.1,
+        "controlled_auto": 0,
+        "auto_value_cr": 0.0,
+        "reopened": 1,
+        "silent_errors": 0
+      },
+      "auto under 1 lakh": {
+        "reviewed_pct": 79.2,
+        "controlled_auto": 11,
+        "auto_value_cr": 0.06,
+        "reopened": 2,
+        "silent_errors": 0
+      },
+      "auto under 5 lakh": {
+        "reviewed_pct": 71.8,
+        "controlled_auto": 56,
+        "auto_value_cr": 1.39,
+        "reopened": 12,
+        "silent_errors": 0
+      },
+      "auto under 10 lakh": {
+        "reviewed_pct": 67.7,
+        "controlled_auto": 81,
+        "auto_value_cr": 3.27,
+        "reopened": 17,
+        "silent_errors": 0
+      }
+    },
+    "reviewers": [
+      {
+        "miss_rate": 0.0,
+        "wrong_diagnoses_reviewed": 9,
+        "caught_by_person": 9.0,
+        "caught_by_validation": 0.0,
+        "slipped_through": 0.0
+      },
+      {
+        "miss_rate": 0.05,
+        "wrong_diagnoses_reviewed": 9,
+        "caught_by_person": 8.5,
+        "caught_by_validation": 0.2,
+        "slipped_through": 0.2
+      },
+      {
+        "miss_rate": 0.1,
+        "wrong_diagnoses_reviewed": 9,
+        "caught_by_person": 8.1,
+        "caught_by_validation": 0.5,
+        "slipped_through": 0.4
+      },
+      {
+        "miss_rate": 0.2,
+        "wrong_diagnoses_reviewed": 9,
+        "caught_by_person": 7.2,
+        "caught_by_validation": 1.0,
+        "slipped_through": 0.8
+      }
+    ]
+  },
+  "very messy": {
+    "policies": {
+      "strict (live)": {
+        "reviewed_pct": 85.0,
+        "controlled_auto": 0,
+        "auto_value_cr": 0.0,
+        "reopened": 7,
+        "silent_errors": 0
+      },
+      "auto under 1 lakh": {
+        "reviewed_pct": 84.3,
+        "controlled_auto": 4,
+        "auto_value_cr": 0.02,
+        "reopened": 10,
+        "silent_errors": 0
+      },
+      "auto under 5 lakh": {
+        "reviewed_pct": 80.7,
+        "controlled_auto": 26,
+        "auto_value_cr": 0.61,
+        "reopened": 14,
+        "silent_errors": 0
+      },
+      "auto under 10 lakh": {
+        "reviewed_pct": 78.6,
+        "controlled_auto": 39,
+        "auto_value_cr": 1.58,
+        "reopened": 18,
+        "silent_errors": 0
+      }
+    },
+    "reviewers": [
+      {
+        "miss_rate": 0.0,
+        "wrong_diagnoses_reviewed": 35,
+        "caught_by_person": 35.0,
+        "caught_by_validation": 0.0,
+        "slipped_through": 0.0
+      },
+      {
+        "miss_rate": 0.05,
+        "wrong_diagnoses_reviewed": 35,
+        "caught_by_person": 33.2,
+        "caught_by_validation": 1.5,
+        "slipped_through": 0.3
+      },
+      {
+        "miss_rate": 0.1,
+        "wrong_diagnoses_reviewed": 35,
+        "caught_by_person": 31.5,
+        "caught_by_validation": 2.9,
+        "slipped_through": 0.6
+      },
+      {
+        "miss_rate": 0.2,
+        "wrong_diagnoses_reviewed": 35,
+        "caught_by_person": 28.0,
+        "caught_by_validation": 5.8,
+        "slipped_through": 1.2
+      }
+    ]
+  }
+}
