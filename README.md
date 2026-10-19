@@ -55,6 +55,12 @@ A mandatory corporate action that wasn't applied and a voluntary one waiting for
 
 All of this is on synthetic data. I explain what that does and doesn't prove in [the results](docs/06-results.md).
 
+## Responsible AI
+
+![Responsible AI, built into the workflow](docs/images/responsible-ai.svg)
+
+In operations a wrong automated action means a failed payment, so I built governance into the workflow rather than writing it up afterwards. I explain how each principle maps to the code, and to the NIST AI Risk Management Framework, in [Responsible AI and governance](docs/08-responsible-ai.md). The root-cause model has its own [model card](docs/model-card.md).
+
 ## Take the tour
 
 I've written the whole project up in [`docs`](docs), one picture at a time:
@@ -66,6 +72,7 @@ I've written the whole project up in [`docs`](docs), one picture at a time:
 5. [Control and audit](docs/05-control-and-audit.md): the gate, case states and the trail
 6. [Results](docs/06-results.md): rules vs model vs the whole system
 7. [Limits and next steps](docs/07-limits-and-next-steps.md): what production would need
+8. [Responsible AI and governance](docs/08-responsible-ai.md): oversight, accountability and the model card
 
 The [field guide](docs/field-guide.pdf) tells the same story on phone-sized pages.
 

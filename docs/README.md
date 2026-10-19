@@ -1,6 +1,6 @@
 # The tour
 
-I've written Resolvia up as seven short stops, each built around a picture. Read them in order and you'll see how it works and why I built it the way I did.
+I've written Resolvia up as eight short stops, each built around a picture. Read them in order and you'll see how it works and why I built it the way I did.
 
 | | Stop | What you'll see |
 |---|---|---|
@@ -11,6 +11,7 @@ I've written Resolvia up as seven short stops, each built around a picture. Read
 | 5 | [Control and audit](05-control-and-audit.md) | The gate, the state machine and the trail |
 | 6 | [Results](06-results.md) | Rules vs model vs the full system |
 | 7 | [Limits and next steps](07-limits-and-next-steps.md) | What I'd add to take it to production |
+| 8 | [Responsible AI and governance](08-responsible-ai.md) | Oversight, accountability, transparency, and the model card |
 
 Also in this folder:
 

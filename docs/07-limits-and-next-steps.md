@@ -36,4 +36,4 @@ python eval/baseline_comparison.py
 python eval/pipeline_eval.py
 ```
 
-Back to [the tour](README.md)
+Next: [Responsible AI and governance](08-responsible-ai.md)
