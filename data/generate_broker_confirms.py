@@ -30,25 +30,10 @@ import random
 import os
 from fractions import Fraction
 
+from reference_data import SYMBOL_ALIASES
+
 random.seed(7)
 
-SYMBOL_ALIASES = {
-    "RELIANCE": ["RELIANCE", "RIL", "Reliance Industries"],
-    "TCS": ["TCS", "Tata Consultancy Services", "Tata Consultancy"],
-    "INFY": ["INFY", "Infosys", "Infosys Ltd"],
-    "HDFCBANK": ["HDFCBANK", "HDFC Bank"],
-    "ICICIBANK": ["ICICIBANK", "ICICI Bank"],
-    "SBIN": ["SBIN", "SBI", "State Bank of India"],
-    "BHARTIARTL": ["BHARTIARTL", "Bharti Airtel", "Airtel"],
-    "ITC": ["ITC", "ITC Ltd"],
-    "LT": ["LT", "L&T", "Larsen & Toubro"],
-    "AXISBANK": ["AXISBANK", "Axis Bank"],
-    "KOTAKBANK": ["KOTAKBANK", "Kotak Bank", "Kotak Mahindra Bank"],
-    "WIPRO": ["WIPRO", "Wipro Ltd"],
-    "HINDUNILVR": ["HINDUNILVR", "HUL", "Hindustan Unilever"],
-    "MARUTI": ["MARUTI", "Maruti Suzuki"],
-    "TATASTEEL": ["TATASTEEL", "Tata Steel"],
-}
 
 CONTACT_NAMES = ["R. Menon", "S. Kapoor", "A. Fernandes", "N. Rao",
                   "P. Iyer", "K. Sharma", "V. Desai"]

@@ -1,8 +1,8 @@
 """
 Feature engineering for the break classifiers.
 
-For every break we join its trade, position, cash and settlement rows and
-measure how far the outside world is from what we booked. Only those
+For every break I join its trade, position, cash and settlement rows and
+measure how far the outside world is from what was booked. Only those
 observable differences go into the features. The label columns in
 breaks.csv (break_type, mismatch_type) are carried along as targets and are
 never used as inputs.
@@ -38,12 +38,20 @@ def _days(a, b):
     return (pd.to_datetime(a) - pd.to_datetime(b)).days
 
 
-def build_features():
-    trades = load("trades.csv").set_index("trade_id")
-    positions = load("positions.csv").set_index("trade_id")
-    settlements = load("settlements.csv").set_index("trade_id")
-    cash = load("cash_transactions.csv")
-    breaks = load("breaks.csv")
+def load_frames():
+    return {name: load(f"{name}.csv") for name in
+            ("trades", "positions", "settlements", "cash_transactions", "breaks")}
+
+
+def build_features(frames=None):
+    """frames: optional dict of DataFrames (same shape as the CSVs), so the
+    stress tests can rebuild features from perturbed records."""
+    frames = frames or load_frames()
+    trades = frames["trades"].set_index("trade_id")
+    positions = frames["positions"].set_index("trade_id")
+    settlements = frames["settlements"].set_index("trade_id")
+    cash = frames["cash_transactions"]
+    breaks = frames["breaks"]
 
     cash_counts = cash.groupby("trade_id").size()
     cash_first = cash.groupby("trade_id").first()
@@ -59,6 +67,7 @@ def build_features():
 
         rows.append({
             "break_id": b["break_id"],
+            "source_trade": tid,
             "family": b["break_type"],
             "root_cause": b["mismatch_type"],
             "split": b["split"],
