@@ -1,0 +1,20 @@
+# The tour
+
+Seven short stops, each built around a picture. Read them in order and you'll know how Resolvia works and why it's built the way it is.
+
+| | Stop | What you'll see |
+|---|---|---|
+| 1 | [The problem](01-the-problem.md) | Why matching is solved and resolution isn't |
+| 2 | [The data](02-the-data.md) | A synthetic bank where every fault is known |
+| 3 | [The models](03-the-models.md) | Features, the target choice, model comparison and the 0.933 |
+| 4 | [The agents](04-the-agents.md) | Five specialists, what each one may and may not do |
+| 5 | [Control and audit](05-control-and-audit.md) | The gate, the state machine and the trail |
+| 6 | [Results](06-results.md) | Rules vs model vs the full system |
+| 7 | [Limits and next steps](07-limits-and-next-steps.md) | What a production version would need |
+
+Also in this folder:
+
+- [`field-guide.pdf`](field-guide.pdf), the whole project on phone-sized pages
+- [`analysis/model_comparison.md`](analysis/model_comparison.md), the full model report
+- [`analysis/eda_notebook.ipynb`](analysis/eda_notebook.ipynb), the exploratory analysis
+- [`reports/`](reports), the original capstone proposal and business case
