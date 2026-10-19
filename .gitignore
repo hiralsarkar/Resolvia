@@ -9,10 +9,6 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 
-# node
-node_modules/
-.next/
-
 # model weights downloaded at runtime
 *.pt
 *.bin
@@ -25,4 +21,6 @@ Thumbs.db
 
 # local-only material
 archive/
-project_plan_resolvia.md
+
+# written by the app at runtime
+backend/knowledge/operational_audit.json
