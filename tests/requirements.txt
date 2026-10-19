@@ -1,0 +1,8 @@
+# enough to run the pipeline offline; embeddings are stubbed in tests/_setup.py
+pandas
+numpy
+scikit-learn==1.9.1
+joblib
+requests
+python-dotenv
+pytest
