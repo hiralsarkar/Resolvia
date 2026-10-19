@@ -1,15 +1,53 @@
 """
-Resolvia backend - FastAPI skeleton.
+REST API over the same pipeline the Streamlit app uses.
 
-Week 1: just a health check and a placeholder route per pipeline stage,
-so the app boots and the folder structure has something real behind it.
-Each route gets filled in as its agent/model is built (see /backend/agents,
-/backend/models).
+This is how another system (a ticketing tool, a reconciliation platform)
+would drive Resolvia: open a case for a break, read the result, and record a
+person's decision. Approval still only happens through record_decision().
+
+Run from backend/:  uvicorn api.main:app --reload
 """
 
-from fastapi import FastAPI
+import os
+import sys
 
-app = FastAPI(title="Resolvia - AI-Native Trade Reconciliation")
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(HERE, ".."))
+sys.path.insert(0, os.path.join(HERE, "..", "agents"))
+
+import control_gate  # noqa: E402
+import orchestrator  # noqa: E402
+from investigation import _tables, break_feed  # noqa: E402
+
+app = FastAPI(title="Resolvia", description="Exception investigation and controlled resolution")
+
+
+class Decision(BaseModel):
+    decision: str  # APPROVE or REJECT
+    approver: str
+    notes: str | None = None
+
+
+def _summary(case):
+    rca = case.get("rca") or {}
+    proposal = case.get("proposal") or {}
+    return {
+        "break_id": case["break_id"],
+        "status": case["status"],
+        "root_cause": rca.get("root_cause"),
+        "confidence": rca.get("confidence"),
+        "explanation": rca.get("explanation"),
+        "needs_person": rca.get("requires_human_decision"),
+        "recommended_action": proposal.get("recommended_action"),
+        "authority_tier": proposal.get("authority_tier"),
+        "approval_required": proposal.get("approval_required"),
+        "gate": (case.get("gate_result") or {}).get("reason"),
+        "validation": case.get("validation"),
+        "history": case["history"],
+    }
 
 
 @app.get("/health")
@@ -18,7 +56,46 @@ def health():
 
 
 @app.get("/breaks")
-def list_breaks():
-    """Week 2+: return classified breaks from the Matching/Classification
-    pipeline. Placeholder until the Ingestion + Matching agents exist."""
-    return {"breaks": [], "note": "pipeline not wired up yet"}
+def list_breaks(family: str | None = None, severity: str | None = None, limit: int = 100):
+    rows = []
+    for bid in _tables()["breaks"]:
+        feed = break_feed(bid)
+        if family and feed["break_type"] != family.upper():
+            continue
+        if severity and feed["severity"] != severity.upper():
+            continue
+        case = orchestrator.get_case(bid)
+        rows.append({"break_id": bid, "family": feed["break_type"], "severity": feed["severity"],
+                     "field": feed["breaking_fields"], "expected": feed["source_value"],
+                     "observed": feed["target_value"], "counterparty": feed["counterparty"],
+                     "status": case["status"] if case else "NOT_STARTED"})
+        if len(rows) >= limit:
+            break
+    return {"breaks": rows, "count": len(rows)}
+
+
+@app.post("/cases/{break_id}")
+def open_case(break_id: str):
+    if break_id not in _tables()["breaks"]:
+        raise HTTPException(404, f"no break {break_id}")
+    case = orchestrator.get_case(break_id) or orchestrator.create_case(break_id)
+    return _summary(case)
+
+
+@app.get("/cases/{break_id}")
+def get_case(break_id: str):
+    case = orchestrator.get_case(break_id)
+    if case is None:
+        raise HTTPException(404, f"no case open for {break_id}")
+    return _summary(case)
+
+
+@app.post("/cases/{break_id}/decision")
+def decide(break_id: str, body: Decision):
+    if orchestrator.get_case(break_id) is None:
+        raise HTTPException(404, f"no case open for {break_id}")
+    try:
+        control_gate.record_decision(break_id, body.decision.upper(), body.approver, body.notes)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+    return _summary(orchestrator.resume_case(break_id))
