@@ -370,9 +370,6 @@
     .inspector:not(.open) { display: none; }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
-  }
 
   footer.hero-foot { text-align: center; margin-top: 22px; font-size: 0.8rem; font-weight: 500; color: var(--mist-dim); }
 </style>
@@ -529,7 +526,8 @@
 <script>
 (function () {
   "use strict";
-  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // the walkthrough is the point of this page, so it always plays in full
+  var reduced = false;
   var NAMES = {triage:'Triage Agent',investigate:'Investigation Agent',rca:'Root Cause Agent',resolution:'Resolution Agent',gate:'Control Gate',validation:'Validation Agent'};
   var AGENTS = ["triage", "investigate", "rca", "resolution", "gate", "validation"];
 
@@ -576,8 +574,7 @@
   AGENTS.forEach(function (a, i) { PHASES.push(a); if (i < AGENTS.length - 1) PHASES.push('travel-' + a); });
   PHASES.push('hold');
 
-  // each agent works for 6 seconds, then the case moves on. The pacing is the same
-  // with reduced motion switched on; that setting only turns off the movement effects.
+  // each agent works for 6 seconds, then the case travels through the Orchestrator to the next
   var DUR = { triage: 6000, investigate: 6000, rca: 6000, resolution: 6000, gate: 6000, validation: 6000, hold: 5000 };
   var LINE_DELAY = 1200, TRAVEL_LEG = 1000, HUB_HOLD = 800;
 

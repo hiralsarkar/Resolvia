@@ -40,7 +40,7 @@ FAMILY_COLOR = {
     "POSITION": COLORS["accent"],
     "CASH": COLORS["forest"],
     "SETTLEMENT": COLORS["amber"],
-    "TRADE": COLORS["slate"],
+    "TRADE": COLORS["violet"],
 }
 
 SEVERITY_COLOR = {
@@ -129,6 +129,49 @@ def humanize_evidence(code):
 
 def root_cause_label(key):
     return ROOT_CAUSE_LABEL.get(key, key.replace("_", " ").title())
+
+
+# Line icons, drawn on a 24px grid. Used for page headers and the sidebar.
+ICONS = {
+    "architecture": '<circle cx="12" cy="12" r="3"/><circle cx="4.5" cy="5" r="2"/><circle cx="19.5" cy="5" r="2"/><circle cx="4.5" cy="19" r="2"/><circle cx="19.5" cy="19" r="2"/><path d="M6 6.5 9.8 10M18 6.5 14.2 10M6 17.5l3.8-3.5M18 17.5 14.2 14"/>',
+    "home": '<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+    "queue": '<path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1.3"/><circle cx="4" cy="12" r="1.3"/><circle cx="4" cy="18" r="1.3"/>',
+    "case": '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/><path d="M8 11h6M11 8v6"/>',
+    "resolution": '<path d="M14.7 6.3a4 4 0 0 0 5 5L13 18l-3 3-4-4 3-3 6.7-6.7a4 4 0 0 0-1-1z"/>',
+    "guide": '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 19a2 2 0 0 1 2-2h13"/><path d="M9 7h6"/>',
+    "audit": '<path d="M12 3 4 6v6c0 4.4 3.4 7.9 8 9 4.6-1.1 8-4.6 8-9V6l-8-3z"/><path d="m9 12 2 2 4-4"/>',
+    "manager": '<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>',
+}
+NAV_ICONS = [("architecture", "accent"), ("home", "forest"), ("queue", "amber"), ("case", "violet"),
+             ("resolution", "magenta"), ("guide", "accent"), ("audit", "forest"), ("manager", "violet")]
+
+
+def icon_svg(name, color, size=22):
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="1.8" '
+            f'stroke-linecap="round" stroke-linejoin="round">{ICONS[name]}</svg>')
+
+
+def page_header(icon, eyebrow, title, sub="", color=None):
+    """The header every page shares: a glowing icon tile, the title, and a flow line."""
+    import streamlit as st
+    color = color or COLORS["accent"]
+    st.markdown(
+        f'<div class="ph-hero" style="--c:{color}"><div class="ph-icon">{icon_svg(icon, color, 26)}</div>'
+        f'<div class="ph-text"><span class="eyebrow" style="color:{color} !important">{eyebrow}</span>'
+        f'<div class="ph-title">{title}</div>' + (f'<div class="ph-sub">{sub}</div>' if sub else "") + '</div></div>'
+        f'<div class="flowline" style="--c:{color}"><span></span></div>', unsafe_allow_html=True)
+
+
+def _nav_icon_css():
+    from urllib.parse import quote
+    rules = []
+    for i, (name, key) in enumerate(NAV_ICONS, start=1):
+        c = COLORS[key]
+        uri = quote(icon_svg(name, c, 24))
+        rules.append(
+            f'section[data-testid="stSidebar"] [role="radiogroup"] label:nth-of-type({i}) [data-testid="stMarkdownContainer"] p::before '
+            f'{{ background: url("data:image/svg+xml;utf8,{uri}") center/19px no-repeat, {c}1F; border-color: {c}66; box-shadow: 0 0 16px -5px {c}; }}')
+    return "\n".join(rules)
 
 
 def inject_global_css():
@@ -417,6 +460,64 @@ div[class*="st-key-rc_"] {{ width: 100% !important; }}
 div[class*="st-key-rc_"] .stButton {{ width: 100% !important; }}
 div[class*="st-key-rc_"] button {{ width: 100%; padding: 0.95rem 1rem !important; font-size: 1.05rem !important; border-radius: 14px !important; }}
 .st-key-rc_approve button, .st-key-rc_mode_system button {{ animation: cta-pulse 2.2s ease-in-out infinite; }}
+
+/* ---------- elite layer: icons, glow and flow everywhere ---------- */
+.ph-hero {{ display: flex; align-items: center; gap: 18px; margin: 2px 0 6px; animation: feed-in .5s ease both; }}
+.ph-icon {{ width: 58px; height: 58px; border-radius: 17px; display: grid; place-items: center; flex-shrink: 0;
+  background: color-mix(in srgb, var(--c) 13%, transparent); border: 1px solid color-mix(in srgb, var(--c) 50%, transparent);
+  box-shadow: 0 0 30px -8px var(--c), inset 0 0 18px -10px var(--c); animation: icon-breathe 3.2s ease-in-out infinite; }}
+.ph-icon svg {{ filter: drop-shadow(0 0 5px var(--c)); }}
+@keyframes icon-breathe {{ 50% {{ box-shadow: 0 0 42px -6px var(--c), inset 0 0 20px -10px var(--c); }} }}
+.ph-title {{ font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 2.2rem; letter-spacing: -0.04em; line-height: 1.05;
+  background: linear-gradient(90deg, #FFFFFF 30%, var(--c)); -webkit-background-clip: text; background-clip: text; color: transparent !important; }}
+.ph-sub {{ color: var(--ink-soft) !important; font-size: 0.95rem; margin-top: 4px; }}
+.flowline {{ position: relative; height: 2px; margin: 14px 0 22px; border-radius: 2px;
+  background: linear-gradient(90deg, var(--c), color-mix(in srgb, var(--c) 10%, transparent) 70%, transparent); opacity: .8; overflow: visible; }}
+.flowline span {{ position: absolute; top: -4px; left: 0; width: 10px; height: 10px; border-radius: 50%; background: #fff;
+  box-shadow: 0 0 10px #fff, 0 0 22px var(--c); animation: flow-run 4.5s cubic-bezier(.45,0,.55,1) infinite; }}
+@keyframes flow-run {{ 0% {{ left: 0; opacity: 0; }} 10% {{ opacity: 1; }} 85% {{ opacity: 1; }} 100% {{ left: 70%; opacity: 0; }} }}
+
+.section-h {{ display: flex; align-items: center; gap: 10px; margin: 26px 0 12px; font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 800; font-size: 1.3rem; letter-spacing: -0.02em; color: var(--ink); }}
+.section-dot {{ width: 10px; height: 10px; border-radius: 50%; background: var(--c); box-shadow: 0 0 12px var(--c); animation: pulse-dot 1.8s ease-in-out infinite; }}
+.glow-id {{ color: var(--accent) !important; font-weight: 700; text-shadow: 0 0 12px rgba(76,224,255,.45); }}
+.stMarkdown h3 {{ position: relative; padding-left: 16px; }}
+.stMarkdown h3::before {{ content: ""; position: absolute; left: 0; top: 18%; bottom: 18%; width: 4px; border-radius: 4px;
+  background: linear-gradient(180deg, var(--accent), var(--violet)); box-shadow: 0 0 12px var(--accent); }}
+
+/* cards across the app pick up a glass look with a coloured glow on hover */
+.stApp .wb-card, .stApp .wb-card-tight, .stApp .wb-action, .stApp .rc-card, .stApp .rc-next, .stApp .rc-step, .stApp .rv-card, .stApp .kpi-tile {{
+  background: radial-gradient(120% 90% at 0% 0%, rgba(76,224,255,.06), transparent 55%), linear-gradient(160deg, rgba(255,255,255,.04), rgba(255,255,255,.01)) !important;
+  border: 1px solid #262B3A !important; position: relative; overflow: hidden;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease !important; }}
+.stApp .wb-card:hover, .stApp .wb-card-tight:hover, .stApp .wb-action:hover, .stApp .rc-card:hover, .stApp .rc-next:hover, .stApp .rv-card:hover {{
+  border-color: rgba(76,224,255,.5) !important; box-shadow: 0 0 36px -16px var(--accent); transform: translateY(-2px); }}
+.stApp .wb-card-tight::before, .stApp .rc-next::before {{ content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--violet)); box-shadow: 0 0 10px var(--accent); }}
+.stApp .rc-next {{ border-color: rgba(76,224,255,.35) !important; box-shadow: 0 0 34px -18px var(--accent); }}
+.stApp div[data-testid="column"]:nth-child(2) .wb-card-tight::before {{ background: linear-gradient(90deg, var(--signal), var(--amber)); box-shadow: 0 0 10px var(--signal); }}
+.stApp div[data-testid="column"]:nth-child(3) .wb-card-tight::before {{ background: linear-gradient(90deg, var(--amber), var(--magenta)); box-shadow: 0 0 10px var(--amber); }}
+.stApp div[data-testid="column"]:nth-child(4) .wb-card-tight::before {{ background: linear-gradient(90deg, var(--violet), var(--forest)); box-shadow: 0 0 10px var(--violet); }}
+.stApp .wb-big, .stApp .rc-big {{ text-shadow: 0 0 18px rgba(76,224,255,.25); }}
+.stApp .wb-label, .stApp .rc-label {{ color: var(--accent) !important; letter-spacing: .12em; }}
+.stApp .wb-title, .stApp .rc-title {{ background: linear-gradient(90deg, #FFFFFF 35%, var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent !important; }}
+.stApp .wb-event:before {{ animation: pulse-dot 2s ease-in-out infinite; }}
+
+/* tables, expanders and inputs glow on focus */
+[data-testid="stDataFrame"] {{ box-shadow: 0 0 34px -20px var(--accent); border-color: #262B3A !important; }}
+[data-testid="stExpander"] {{ border: 1px solid #262B3A !important; }}
+[data-testid="stExpander"]:hover {{ border-color: rgba(167,139,250,.5) !important; box-shadow: 0 0 30px -18px var(--violet); }}
+.stTextInput input:focus, .stTextArea textarea:focus {{ border-color: var(--accent) !important; box-shadow: 0 0 0 1px var(--accent), 0 0 18px -6px var(--accent) !important; }}
+[data-testid="stFileUploaderDropzone"] {{ background: rgba(255,255,255,.02) !important; border: 1px dashed rgba(76,224,255,.35) !important; border-radius: 14px !important; }}
+.stButton > button {{ box-shadow: 0 0 16px -8px var(--accent); }}
+
+/* sidebar navigation: an icon tile per page */
+section[data-testid="stSidebar"] [role="radiogroup"] label > div > div:first-child:not([data-testid]) {{ display: none !important; }}
+section[data-testid="stSidebar"] [role="radiogroup"] label [data-testid="stMarkdownContainer"] p {{ display: flex !important; align-items: center; gap: 14px; }}
+section[data-testid="stSidebar"] [role="radiogroup"] label [data-testid="stMarkdownContainer"] p::before {{
+  content: ""; width: 38px; height: 38px; flex-shrink: 0; border-radius: 11px; border: 1px solid transparent; }}
+section[data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) [data-testid="stMarkdownContainer"] p::before {{ animation: icon-breathe 2.6s ease-in-out infinite; --c: var(--accent); }}
+{_nav_icon_css()}
 </style>
 """, unsafe_allow_html=True)
 

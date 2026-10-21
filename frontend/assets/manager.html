@@ -1,0 +1,403 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0B10; --card: rgba(255,255,255,0.03); --line: #232733; --ink: #F2F3F8; --soft: #8B90A3; --faint: #565B6E;
+    --cyan: #4CE0FF; --violet: #A78BFA; --magenta: #FF7AC6; --green: #34E5A6; --amber: #FFB454; --red: #FF5C7A;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: transparent; color: var(--ink); font-family: 'Manrope', sans-serif; }
+  .wrap { padding: 4px 2px 24px; }
+
+  /* filters */
+  .filters { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; margin-bottom: 18px; }
+  .fgroup { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .flabel { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--soft); margin-right: 4px; }
+  .chip { cursor: pointer; border: 1px solid var(--line); background: var(--card); color: var(--soft); border-radius: 999px;
+          padding: 7px 14px; font-weight: 700; font-size: 13px; display: inline-flex; gap: 7px; align-items: center; transition: all .2s ease; user-select: none; }
+  .chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); box-shadow: 0 0 8px var(--c); }
+  .chip:hover { border-color: var(--c, var(--cyan)); color: var(--ink); transform: translateY(-1px); }
+  .chip.on { color: #fff; border-color: var(--c, var(--cyan)); background: color-mix(in srgb, var(--c, var(--cyan)) 18%, transparent);
+             box-shadow: 0 0 22px -6px var(--c, var(--cyan)), inset 0 0 0 1px color-mix(in srgb, var(--c, var(--cyan)) 40%, transparent); }
+
+  /* KPI tiles */
+  .kpis { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 18px; }
+  .kpi { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 16px; padding: 16px 16px 14px;
+         background: linear-gradient(160deg, rgba(255,255,255,.045), rgba(255,255,255,.01)); transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+  .kpi::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--c); box-shadow: 0 0 12px var(--c);
+                 transform: scaleX(0); transform-origin: left; animation: grow .9s cubic-bezier(.2,.7,.3,1) forwards; }
+  .kpi:hover { transform: translateY(-3px); border-color: var(--c); box-shadow: 0 10px 34px -14px var(--c); }
+  .kpi .ic { width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; margin-bottom: 12px;
+             background: color-mix(in srgb, var(--c) 14%, transparent); border: 1px solid color-mix(in srgb, var(--c) 45%, transparent);
+             box-shadow: 0 0 18px -6px var(--c); }
+  .kpi .ic svg { width: 19px; height: 19px; stroke: var(--c); filter: drop-shadow(0 0 4px var(--c)); }
+  .kpi .v { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: clamp(17px, 2.3vw, 26px); line-height: 1.1; white-space: nowrap; }
+  .kpi .l { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--soft); margin-top: 4px; }
+  @keyframes grow { to { transform: scaleX(1); } }
+
+  /* panels */
+  .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; }
+  .panel { grid-column: span 6; border: 1px solid var(--line); border-radius: 18px; padding: 18px 20px 16px; position: relative; overflow: hidden;
+           background: radial-gradient(120% 80% at 0% 0%, color-mix(in srgb, var(--c, var(--cyan)) 7%, transparent), transparent 55%), linear-gradient(160deg, rgba(255,255,255,.035), rgba(255,255,255,.008));
+           opacity: 0; transform: translateY(10px); animation: rise .6s cubic-bezier(.2,.7,.3,1) forwards; transition: border-color .25s ease, box-shadow .25s ease; }
+  .panel:hover { border-color: color-mix(in srgb, var(--c, var(--cyan)) 55%, transparent); box-shadow: 0 0 40px -18px var(--c, var(--cyan)); }
+  .panel.w4 { grid-column: span 4; } .panel.w8 { grid-column: span 8; } .panel.w12 { grid-column: span 12; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+  .ph { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .ph .ic { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0;
+            background: color-mix(in srgb, var(--c) 14%, transparent); border: 1px solid color-mix(in srgb, var(--c) 45%, transparent); box-shadow: 0 0 18px -6px var(--c); }
+  .ph .ic svg { width: 18px; height: 18px; stroke: var(--c); filter: drop-shadow(0 0 4px var(--c)); }
+  .ph h3 { margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: -.02em; }
+  .ph p { margin: 2px 0 0; color: var(--soft); font-size: 12.5px; }
+
+  /* horizontal bars */
+  .hbar { display: grid; grid-template-columns: minmax(118px, 38%) 1fr 76px; align-items: center; gap: 12px; padding: 7px 0; cursor: default; }
+  .hbar .n { font-weight: 700; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hbar .t { height: 12px; border-radius: 999px; background: rgba(255,255,255,.05); overflow: hidden; }
+  .hbar .f { height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, color-mix(in srgb, var(--c) 55%, transparent), var(--c));
+             box-shadow: 0 0 14px -2px var(--c); transition: width 1s cubic-bezier(.2,.7,.3,1); }
+  .hbar .val { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; text-align: right; color: var(--ink); }
+  .hbar:hover .f { filter: brightness(1.25); }
+
+  /* stacked severity bars */
+  .sbar { display: grid; grid-template-columns: 110px 1fr 54px; gap: 12px; align-items: center; padding: 8px 0; }
+  .sbar .t { display: flex; height: 16px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,.05); gap: 2px; }
+  .sbar .seg { height: 100%; width: 0; background: var(--c); box-shadow: 0 0 12px -2px var(--c); transition: width 1s cubic-bezier(.2,.7,.3,1); cursor: default; }
+  .legend { display: flex; gap: 16px; margin-top: 10px; flex-wrap: wrap; }
+  .legend span { display: inline-flex; gap: 7px; align-items: center; font-size: 12px; color: var(--soft); font-weight: 600; }
+  .legend i { width: 9px; height: 9px; border-radius: 3px; background: var(--c); box-shadow: 0 0 8px var(--c); }
+
+  /* donut + gauge */
+  .donut-wrap { display: flex; align-items: center; gap: 22px; }
+  .donut-wrap svg { flex-shrink: 0; overflow: visible; }
+  .arc { fill: none; stroke-linecap: round; transition: stroke-width .2s ease, opacity .2s ease; cursor: pointer; }
+  .arc:hover { stroke-width: 24; }
+  .dl { flex: 1; display: grid; gap: 8px; }
+  .dl div { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-radius: 10px; border: 1px solid transparent; cursor: pointer; transition: all .2s ease; }
+  .dl div:hover, .dl div.on { border-color: var(--c); background: color-mix(in srgb, var(--c) 10%, transparent); }
+  .dl b { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; }
+  .dl b i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); box-shadow: 0 0 8px var(--c); }
+  .dl em { margin-left: 12px; white-space: nowrap; font-style: normal; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--soft); }
+  .center-num { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 24px; fill: var(--ink); }
+  .center-lbl { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: .12em; fill: var(--soft); }
+
+  /* columns */
+  .cols { display: flex; align-items: flex-end; gap: 14px; height: 170px; padding: 0 4px; border-bottom: 1px solid var(--line); }
+  .col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 6px; }
+  .col .bar { width: 100%; max-width: 54px; height: 0; border-radius: 9px 9px 3px 3px; background: linear-gradient(180deg, var(--c), color-mix(in srgb, var(--c) 35%, transparent));
+              box-shadow: 0 0 18px -4px var(--c); transition: height 1s cubic-bezier(.2,.7,.3,1); }
+  .col .num { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; }
+  .collbl { display: flex; gap: 14px; padding: 8px 4px 0; }
+  .collbl span { flex: 1; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--soft); }
+
+  /* pipeline flow */
+  .flow { position: relative; display: flex; justify-content: space-between; align-items: flex-start; padding: 6px 4px 0; }
+  .flow .rail { position: absolute; left: 7%; right: 7%; top: 34px; height: 2px; background: linear-gradient(90deg, var(--cyan), var(--violet), var(--amber), var(--green)); opacity: .45; }
+  .flow .pk { position: absolute; top: 29px; width: 12px; height: 12px; border-radius: 50%; background: #fff; box-shadow: 0 0 12px #fff, 0 0 26px var(--cyan); animation: travel 5.5s linear infinite; }
+  .flow .pk.b { animation-delay: 1.8s; } .flow .pk.c { animation-delay: 3.6s; }
+  @keyframes travel { 0% { left: 7%; opacity: 0; } 8% { opacity: 1; } 92% { opacity: 1; } 100% { left: 93%; opacity: 0; } }
+  .node { position: relative; z-index: 1; width: 23%; text-align: center; }
+  .node .ring { width: 58px; height: 58px; margin: 6px auto 10px; border-radius: 50%; display: grid; place-items: center; background: #0d0f16;
+                border: 1.5px solid var(--c); box-shadow: 0 0 24px -4px var(--c), inset 0 0 14px -6px var(--c); animation: breathe 3s ease-in-out infinite; }
+  .node .ring svg { width: 24px; height: 24px; stroke: var(--c); filter: drop-shadow(0 0 5px var(--c)); }
+  .node .cnt { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 22px; }
+  .node .nm { font-size: 12.5px; color: var(--soft); font-weight: 600; margin-top: 2px; }
+  @keyframes breathe { 50% { box-shadow: 0 0 34px -2px var(--c), inset 0 0 16px -6px var(--c); } }
+
+  /* agent activity */
+  .agents { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+  .ag { text-align: center; padding: 14px 6px 12px; border-radius: 14px; border: 1px solid var(--line); background: rgba(255,255,255,.02); transition: all .25s ease; }
+  .ag.lit { border-color: color-mix(in srgb, var(--c) 55%, transparent); background: color-mix(in srgb, var(--c) 8%, transparent); box-shadow: 0 0 26px -12px var(--c); }
+  .ag:hover { transform: translateY(-3px); }
+  .ag .ic { width: 36px; height: 36px; margin: 0 auto 8px; border-radius: 11px; display: grid; place-items: center;
+            background: color-mix(in srgb, var(--c) 14%, transparent); border: 1px solid color-mix(in srgb, var(--c) 45%, transparent); }
+  .ag .ic svg { width: 18px; height: 18px; stroke: var(--c); filter: drop-shadow(0 0 4px var(--c)); }
+  .ag .cnt { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 20px; }
+  .ag .nm { font-size: 11.5px; color: var(--soft); font-weight: 600; margin-top: 2px; line-height: 1.25; }
+  .note { color: var(--soft); font-size: 12.5px; margin-top: 12px; }
+
+  .empty { color: var(--soft); font-size: 13px; padding: 18px 4px; }
+  .tip { position: fixed; pointer-events: none; z-index: 9; padding: 8px 12px; border-radius: 10px; background: rgba(13,15,22,.96);
+         border: 1px solid var(--c, var(--cyan)); box-shadow: 0 0 24px -8px var(--c, var(--cyan)); font-size: 12.5px; font-weight: 600; opacity: 0; transition: opacity .12s ease; white-space: nowrap; }
+  .tip b { font-family: 'JetBrains Mono', monospace; color: var(--c, var(--cyan)); }
+
+  @media (max-width: 720px) {
+    .kpis { grid-template-columns: repeat(3, 1fr); }
+    .panel, .panel.w4, .panel.w8 { grid-column: span 12; }
+    .agents { grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (max-width: 520px) { .kpis { grid-template-columns: repeat(2, 1fr); } .hbar { grid-template-columns: 96px 1fr 64px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="filters">
+    <div class="fgroup" id="famChips"><span class="flabel">Category</span></div>
+    <div class="fgroup" id="sevChips"><span class="flabel">Priority</span></div>
+  </div>
+  <div class="kpis" id="kpis"></div>
+  <div class="grid">
+    <div class="panel" style="--c: var(--cyan); animation-delay: .05s">
+      <div class="ph"><div class="ic" data-i="donut"></div><div><h3>Breaks by category</h3><p>Click a slice or a row to focus the whole dashboard</p></div></div>
+      <div class="donut-wrap"><svg id="donut" width="190" height="190" viewBox="0 0 190 190"></svg><div class="dl" id="donutList"></div></div>
+    </div>
+    <div class="panel" style="--c: var(--red); animation-delay: .1s">
+      <div class="ph"><div class="ic" data-i="alert"></div><div><h3>Priority mix by category</h3><p>Critical, high and low breaks in each desk's queue</p></div></div>
+      <div id="sev"></div>
+      <div class="legend"><span style="--c: var(--red)"><i></i>Critical</span><span style="--c: var(--amber)"><i></i>High</span><span style="--c: var(--green)"><i></i>Low</span></div>
+    </div>
+    <div class="panel" style="--c: var(--amber); animation-delay: .15s">
+      <div class="ph"><div class="ic" data-i="coins"></div><div><h3>Exposure by category</h3><p>Trade value tied up in open breaks, ₹ crore</p></div></div>
+      <div id="exp"></div>
+    </div>
+    <div class="panel" style="--c: var(--magenta); animation-delay: .2s">
+      <div class="ph"><div class="ic" data-i="users"></div><div><h3>Top counterparties by exposure</h3><p>Where the money at risk is concentrated</p></div></div>
+      <div id="cps"></div>
+    </div>
+    <div class="panel w8" style="--c: var(--violet); animation-delay: .25s">
+      <div class="ph"><div class="ic" data-i="flow"></div><div><h3>Case pipeline</h3><p>Every break moves from arrival to a verified close</p></div></div>
+      <div class="flow" id="flow"><div class="rail"></div><div class="pk"></div><div class="pk b"></div><div class="pk c"></div></div>
+    </div>
+    <div class="panel w4" style="--c: var(--red); animation-delay: .3s">
+      <div class="ph"><div class="ic" data-i="gauge"></div><div><h3>Critical exposure</h3><p>Share of open exposure on critical breaks</p></div></div>
+      <div style="display:flex;justify-content:center"><svg id="gauge" width="230" height="160" viewBox="0 0 230 160"></svg></div>
+    </div>
+    <div class="panel w12" style="--c: var(--cyan); animation-delay: .35s">
+      <div class="ph"><div class="ic" data-i="cpu"></div><div><h3>Agent activity</h3><p>How many cases each agent has worked so far</p></div></div>
+      <div class="agents" id="agents"></div>
+      <div class="note" id="agentNote"></div>
+    </div>
+    <div class="panel" style="--c: var(--green); animation-delay: .4s">
+      <div class="ph"><div class="ic" data-i="clock"></div><div><h3>Ageing</h3><p>Days since each open break arrived</p></div></div>
+      <div class="cols" id="age"></div><div class="collbl" id="ageLbl"></div>
+    </div>
+    <div class="panel" style="--c: var(--violet); animation-delay: .45s">
+      <div class="ph"><div class="ic" data-i="target"></div><div><h3>Root causes diagnosed</h3><p>What the RCA agent has found so far</p></div></div>
+      <div id="causes"></div>
+    </div>
+  </div>
+</div>
+<div class="tip" id="tip"></div>
+
+<script>
+var DATA = __DATA__;
+var C = { cyan: '#4CE0FF', violet: '#A78BFA', magenta: '#FF7AC6', green: '#34E5A6', amber: '#FFB454', red: '#FF5C7A' };
+var FAM = [['POSITION', 'Position', C.cyan], ['CASH', 'Cash', C.green], ['SETTLEMENT', 'Settlement', C.amber], ['TRADE', 'Trade', C.violet]];
+var SEV = [['P0', 'Critical', C.red], ['P1', 'High', C.amber], ['P2', 'Low', C.green]];
+var PAL = [C.cyan, C.violet, C.magenta, C.green, C.amber, C.red, '#7FB2FF', '#5FF0D0'];
+var ICON = {
+  donut: '<circle cx="12" cy="12" r="9"/><path d="M12 3v9l6.4 6.4"/>',
+  alert: '<path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/>',
+  coins: '<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>',
+  users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.8c1.6.8 2.7 2.5 3 5.2"/>',
+  flow: '<circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.5 12h4l5-5M11.5 12l5 5"/>',
+  gauge: '<path d="M4 16a8 8 0 1 1 16 0"/><path d="M12 16l4-5"/>',
+  cpu: '<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>',
+  inbox: '<path d="M3 13l3-8h12l3 8v6H3z"/><path d="M3 13h5l1 3h6l1-3h5"/>',
+  zap: '<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>',
+  hand: '<path d="M7 11V6a1.5 1.5 0 0 1 3 0v4M10 10V4.5a1.5 1.5 0 0 1 3 0V10M13 10V5.5a1.5 1.5 0 0 1 3 0V12M16 9a1.5 1.5 0 0 1 3 0v4.5a7 7 0 0 1-7 7h-1a6 6 0 0 1-5-2.7L3.5 14a1.5 1.5 0 0 1 2.4-1.8L7 13.5"/>',
+  check: '<circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.7 2.7L16 9.8"/>',
+  shield: '<path d="M12 3 4 6v6c0 4.4 3.4 7.9 8 9 4.6-1.1 8-4.6 8-9V6l-8-3z"/><path d="m9 12 2 2 4-4"/>',
+  layers: '<path d="m12 3 9 5-9 5-9-5 9-5z"/><path d="m3 13 9 5 9-5"/>',
+  route: '<circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H16a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h7.5"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
+  brain: '<path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3h1V4H9zM15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3h-1V4h1z"/>',
+  scan: '<path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><circle cx="12" cy="12" r="3.5"/>',
+  wrench: '<path d="M14.7 6.3a4 4 0 0 0 5 5L13 18l-3 3-4-4 3-3 6.7-6.7a4 4 0 0 0-1-1z"/>',
+  lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  verify: '<path d="M12 3 4 6v6c0 4.4 3.4 7.9 8 9 4.6-1.1 8-4.6 8-9V6l-8-3z"/><path d="m9 12 2 2 4-4"/>'
+};
+function svg(name) { return '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + ICON[name] + '</svg>'; }
+document.querySelectorAll('[data-i]').forEach(function (el) { el.innerHTML = svg(el.getAttribute('data-i')); });
+
+var state = { fam: null, sev: null };
+var tip = document.getElementById('tip');
+function showTip(e, html, color) { tip.innerHTML = html; tip.style.setProperty('--c', color); tip.style.opacity = 1; moveTip(e); }
+function moveTip(e) { tip.style.left = (e.clientX + 14) + 'px'; tip.style.top = (e.clientY + 12) + 'px'; }
+function hideTip() { tip.style.opacity = 0; }
+function hover(el, html, color) { el.addEventListener('mouseenter', function (e) { showTip(e, html, color); }); el.addEventListener('mousemove', moveTip); el.addEventListener('mouseleave', hideTip); }
+function cr(v) { return '₹' + (v / 1e7).toLocaleString('en-IN', { maximumFractionDigits: 1, minimumFractionDigits: 1 }) + ' Cr'; }
+function n(v) { return v.toLocaleString('en-IN'); }
+
+// rows: [family, severity, exposure, statusGroup, counterparty, isCA, age]
+var ROWS = DATA.rows;
+function rows() { return ROWS.filter(function (r) { return (!state.fam || r[0] === state.fam) && (!state.sev || r[1] === state.sev); }); }
+function isOpen(r) { return r[3] !== 'resolved' && r[3] !== 'stopped'; }
+
+function chips(id, list, key) {
+  var box = document.getElementById(id);
+  var all = document.createElement('span'); all.className = 'chip on'; all.style.setProperty('--c', C.cyan); all.innerHTML = '<i></i>All';
+  all.onclick = function () { state[key] = null; render(); }; box.appendChild(all);
+  list.forEach(function (f) {
+    var c = document.createElement('span'); c.className = 'chip'; c.dataset.k = f[0]; c.style.setProperty('--c', f[2]); c.innerHTML = '<i></i>' + f[1];
+    c.onclick = function () { state[key] = state[key] === f[0] ? null : f[0]; render(); }; box.appendChild(c);
+  });
+}
+chips('famChips', FAM, 'fam'); chips('sevChips', SEV, 'sev');
+function syncChips() {
+  [['famChips', 'fam'], ['sevChips', 'sev']].forEach(function (p) {
+    document.querySelectorAll('#' + p[0] + ' .chip').forEach(function (c) { c.classList.toggle('on', (c.dataset.k || null) === state[p[1]]); });
+  });
+}
+
+function countUp(el, to, fmt) {
+  var start = performance.now(), from = 0;
+  function step(t) { var k = Math.min(1, (t - start) / 900); k = 1 - Math.pow(1 - k, 3); el.textContent = fmt(from + (to - from) * k); if (k < 1) requestAnimationFrame(step); }
+  requestAnimationFrame(step);
+}
+
+function kpis(R) {
+  var open = R.filter(isOpen);
+  var items = [
+    ['inbox', 'Open breaks', open.length, n, C.cyan],
+    ['zap', 'Critical', open.filter(function (r) { return r[1] === 'P0'; }).length, n, C.red],
+    ['coins', 'Exposure at risk', open.reduce(function (s, r) { return s + r[2]; }, 0), cr, C.amber],
+    ['hand', 'Waiting for a person', R.filter(function (r) { return r[3] === 'waiting'; }).length, n, C.violet],
+    ['check', 'Resolved', R.filter(function (r) { return r[3] === 'resolved'; }).length, n, C.green],
+    ['layers', 'Corporate actions', open.filter(function (r) { return r[5]; }).length, n, C.magenta]
+  ];
+  var box = document.getElementById('kpis'); box.innerHTML = '';
+  items.forEach(function (k, i) {
+    var d = document.createElement('div'); d.className = 'kpi'; d.style.setProperty('--c', k[4]);
+    d.innerHTML = '<div class="ic">' + svg(k[0]) + '</div><div class="v">0</div><div class="l">' + k[1] + '</div>';
+    box.appendChild(d);
+    countUp(d.querySelector('.v'), k[2], k[3]);
+  });
+}
+
+function donut(R) {
+  var g = document.getElementById('donut'), list = document.getElementById('donutList');
+  var counts = FAM.map(function (f) { return R.filter(function (r) { return r[0] === f[0]; }).length; });
+  var total = counts.reduce(function (a, b) { return a + b; }, 0) || 1;
+  var r = 72, cx = 95, cy = 95, circ = 2 * Math.PI * r, off = 0, html = '<defs><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>';
+  html += '<circle cx="95" cy="95" r="72" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="18"/>';
+  FAM.forEach(function (f, i) {
+    var len = circ * counts[i] / total, gap = counts[i] ? 4 : 0;
+    html += '<circle class="arc" data-k="' + f[0] + '" cx="' + cx + '" cy="' + cy + '" r="' + r + '" stroke="' + f[2] + '" stroke-width="18" filter="url(#glow)"' +
+            ' stroke-dasharray="0 ' + circ + '" data-len="' + Math.max(0, len - gap) + '" stroke-dashoffset="' + (-off) + '" transform="rotate(-90 95 95)" opacity="' + (state.fam && state.fam !== f[0] ? .25 : 1) + '"/>';
+    off += len;
+  });
+  html += '<text class="center-num" x="95" y="96" text-anchor="middle">' + n(R.length) + '</text><text class="center-lbl" x="95" y="116" text-anchor="middle">BREAKS</text>';
+  g.innerHTML = html;
+  g.querySelectorAll('.arc').forEach(function (a, i) {
+    requestAnimationFrame(function () { a.style.transition = 'stroke-dasharray 1.1s cubic-bezier(.2,.7,.3,1)'; a.setAttribute('stroke-dasharray', a.dataset.len + ' ' + circ); });
+    hover(a, FAM[i][1] + ' · <b>' + n(counts[i]) + '</b> (' + Math.round(100 * counts[i] / total) + '%)', FAM[i][2]);
+    a.onclick = function () { state.fam = state.fam === FAM[i][0] ? null : FAM[i][0]; render(); };
+  });
+  list.innerHTML = '';
+  FAM.forEach(function (f, i) {
+    var d = document.createElement('div'); d.style.setProperty('--c', f[2]); if (state.fam === f[0]) d.className = 'on';
+    d.innerHTML = '<b><i></i>' + f[1] + '</b><em>' + n(counts[i]) + ' · ' + Math.round(100 * counts[i] / total) + '%</em>';
+    d.onclick = function () { state.fam = state.fam === f[0] ? null : f[0]; render(); };
+    list.appendChild(d);
+  });
+}
+
+function hbars(id, items, fmt, color) {
+  var box = document.getElementById(id); box.innerHTML = '';
+  if (!items.length) { box.innerHTML = '<div class="empty">Nothing to show for this filter.</div>'; return; }
+  var max = Math.max.apply(null, items.map(function (x) { return x[1]; })) || 1;
+  items.forEach(function (it, i) {
+    var c = it[2] || color(i), d = document.createElement('div'); d.className = 'hbar'; d.style.setProperty('--c', c);
+    d.innerHTML = '<div class="n">' + it[0] + '</div><div class="t"><div class="f"></div></div><div class="val">' + fmt(it[1]) + '</div>';
+    box.appendChild(d); hover(d, it[0] + ' · <b>' + fmt(it[1]) + '</b>', c);
+    setTimeout(function () { d.querySelector('.f').style.width = (100 * it[1] / max) + '%'; }, 60 + i * 70);
+  });
+}
+
+function severity(R) {
+  var box = document.getElementById('sev'); box.innerHTML = '';
+  FAM.forEach(function (f, i) {
+    var fr = R.filter(function (r) { return r[0] === f[0]; }), tot = fr.length;
+    var d = document.createElement('div'); d.className = 'sbar';
+    d.innerHTML = '<div class="n" style="font-weight:700;font-size:13px">' + f[1] + '</div><div class="t"></div><div class="val" style="font-family:JetBrains Mono,monospace;font-size:12.5px;text-align:right">' + n(tot) + '</div>';
+    var t = d.querySelector('.t');
+    SEV.forEach(function (s) {
+      var k = fr.filter(function (r) { return r[1] === s[0]; }).length, seg = document.createElement('div');
+      seg.className = 'seg'; seg.style.setProperty('--c', s[2]); t.appendChild(seg);
+      hover(seg, f[1] + ' · ' + s[1] + ' <b>' + n(k) + '</b>', s[2]);
+      setTimeout(function () { seg.style.width = (tot ? 100 * k / tot : 0) + '%'; }, 80 + i * 90);
+    });
+    box.appendChild(d);
+  });
+}
+
+function pipeline(R) {
+  var box = document.getElementById('flow');
+  box.querySelectorAll('.node').forEach(function (x) { x.remove(); });
+  var stages = [['inbox', 'Not started', 'new', C.cyan], ['search', 'In progress', 'progress', C.violet], ['hand', 'Waiting for a person', 'waiting', C.amber], ['check', 'Resolved', 'resolved', C.green]];
+  stages.forEach(function (s) {
+    var k = R.filter(function (r) { return r[3] === s[2]; }).length, d = document.createElement('div');
+    d.className = 'node'; d.style.setProperty('--c', s[3]);
+    d.innerHTML = '<div class="ring">' + svg(s[0]) + '</div><div class="cnt">0</div><div class="nm">' + s[1] + '</div>';
+    box.appendChild(d); countUp(d.querySelector('.cnt'), k, n); hover(d, s[1] + ' · <b>' + n(k) + '</b>', s[3]);
+  });
+}
+
+function gauge(R) {
+  var open = R.filter(isOpen), tot = open.reduce(function (s, r) { return s + r[2]; }, 0), crit = open.filter(function (r) { return r[1] === 'P0'; }).reduce(function (s, r) { return s + r[2]; }, 0);
+  var p = tot ? crit / tot : 0, r = 88, cx = 115, cy = 120, len = Math.PI * r;
+  var g = document.getElementById('gauge');
+  g.innerHTML = '<defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="' + C.amber + '"/><stop offset="1" stop-color="' + C.red + '"/></linearGradient>' +
+    '<filter id="glow2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>' +
+    '<path d="M27 120 A88 88 0 0 1 203 120" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="16" stroke-linecap="round"/>' +
+    '<path id="garc" d="M27 120 A88 88 0 0 1 203 120" fill="none" stroke="url(#gg)" stroke-width="16" stroke-linecap="round" filter="url(#glow2)" stroke-dasharray="0 ' + len + '"/>' +
+    '<text class="center-num" x="115" y="108" text-anchor="middle" id="gp">0%</text><text class="center-lbl" x="115" y="152" text-anchor="middle">' + cr(crit) + ' OF ' + cr(tot) + '</text>';
+  var a = document.getElementById('garc');
+  requestAnimationFrame(function () { a.style.transition = 'stroke-dasharray 1.2s cubic-bezier(.2,.7,.3,1)'; a.setAttribute('stroke-dasharray', (len * p) + ' ' + len); });
+  countUp(document.getElementById('gp'), p * 100, function (v) { return Math.round(v) + '%'; });
+}
+
+function agents() {
+  var A = [['route', 'Triage', 'triage', C.cyan], ['search', 'Investigation', 'investigation', C.violet], ['brain', 'Root cause', 'rca', C.violet],
+           ['scan', 'Investigator', 'investigator', C.magenta], ['wrench', 'Resolution', 'proposal', C.magenta], ['lock', 'Control gate', 'gate', C.amber], ['verify', 'Validation', 'validation', C.green]];
+  var box = document.getElementById('agents'); box.innerHTML = '';
+  A.forEach(function (a) {
+    var k = DATA.agents[a[2]] || 0, d = document.createElement('div'); d.className = 'ag' + (k ? ' lit' : ''); d.style.setProperty('--c', a[3]);
+    d.innerHTML = '<div class="ic">' + svg(a[0]) + '</div><div class="cnt">0</div><div class="nm">' + a[1] + '</div>';
+    box.appendChild(d); countUp(d.querySelector('.cnt'), k, n); hover(d, a[1] + ' · <b>' + n(k) + '</b> cases', a[3]);
+  });
+  document.getElementById('agentNote').textContent = DATA.cases ? DATA.cases + ' cases opened so far. The Investigator only steps in when a case looks unusual.' : 'No cases opened yet. Start a case from the Break Queue and the agents light up here.';
+}
+
+function ageing(R) {
+  var open = R.filter(isOpen), B = ['0 days', '1 day', '2 days', '3 days', '4+ days'], cnt = [0, 0, 0, 0, 0];
+  open.forEach(function (r) { cnt[Math.min(4, r[6])]++; });
+  var max = Math.max.apply(null, cnt) || 1, cols = [C.green, C.cyan, C.violet, C.amber, C.red];
+  var box = document.getElementById('age'), lbl = document.getElementById('ageLbl'); box.innerHTML = ''; lbl.innerHTML = '';
+  B.forEach(function (b, i) {
+    var d = document.createElement('div'); d.className = 'col'; d.style.setProperty('--c', cols[i]);
+    d.innerHTML = '<div class="num">' + n(cnt[i]) + '</div><div class="bar"></div>'; box.appendChild(d);
+    lbl.insertAdjacentHTML('beforeend', '<span>' + b + '</span>'); hover(d, b + ' · <b>' + n(cnt[i]) + '</b> open', cols[i]);
+    setTimeout(function () { d.querySelector('.bar').style.height = Math.max(cnt[i] ? 4 : 0, 120 * cnt[i] / max) + 'px'; }, 80 + i * 80);
+  });
+}
+
+function render() {
+  syncChips(); hideTip();
+  var R = rows();
+  kpis(R); donut(R); severity(R); pipeline(R); gauge(R); ageing(R);
+  var exp = FAM.map(function (f) { return [f[1], R.filter(function (r) { return r[0] === f[0] && isOpen(r); }).reduce(function (s, r) { return s + r[2]; }, 0), f[2]]; })
+               .filter(function (x) { return x[1] > 0; }).sort(function (a, b) { return b[1] - a[1]; });
+  hbars('exp', exp, cr);
+  var by = {}; R.filter(isOpen).forEach(function (r) { by[r[4]] = (by[r[4]] || 0) + r[2]; });
+  hbars('cps', Object.keys(by).map(function (k) { return [k, by[k]]; }).sort(function (a, b) { return b[1] - a[1]; }).slice(0, 7), cr, function (i) { return PAL[i % PAL.length]; });
+}
+render(); agents();
+hbars('causes', DATA.causes, function (v) { return n(v) + (v === 1 ? ' case' : ' cases'); }, function (i) { return PAL[(i + 1) % PAL.length]; });
+if (!DATA.causes.length) document.getElementById('causes').innerHTML = '<div class="empty">No diagnoses yet. Each case the RCA agent works on shows up here.</div>';
+
+function fitFrame() {
+  try { if (window.frameElement) window.frameElement.style.height = (Math.ceil(document.querySelector('.wrap').getBoundingClientRect().height) + 30) + 'px'; } catch (e) {}
+}
+fitFrame(); window.addEventListener('resize', fitFrame); setInterval(fitFrame, 800);
+if (window.ResizeObserver) new ResizeObserver(fitFrame).observe(document.querySelector('.wrap'));
+</script>
+</body>
+</html>

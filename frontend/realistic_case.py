@@ -7,7 +7,7 @@ Choosing Manual never closes a case and never counts as approval.
 import streamlit as st
 import pandas as pd
 import backend_bridge as bb
-from theme import STATUS_LABEL, SEVERITY_LABEL, root_cause_label
+from theme import COLORS, STATUS_LABEL, SEVERITY_LABEL, page_header, root_cause_label
 
 
 def status_label(value):
@@ -74,8 +74,7 @@ def render_case():
         st.error("Break not found.")
         return
     case = bb.get_case(bid)
-    st.markdown(f'<div class="rc-title">{bid}</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="rc-sub">{bb.issue_label(row)} · {row.counterparty}</div>', unsafe_allow_html=True)
+    page_header("case", "Case Workspace", bid, f"{bb.issue_label(row)} · {row.counterparty}", COLORS["violet"])
 
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Priority", SEVERITY_LABEL.get(row.severity, row.severity))
@@ -243,8 +242,7 @@ def render_guide():
     default = getattr(views, "DEFAULT_PLAYBOOK")
     owner, escalation, reason, evidence, steps, do_not = playbooks.get(root, default)
 
-    st.markdown(f'<div class="rc-title">Resolution Guide · {bid}</div>', unsafe_allow_html=True)
-    st.markdown('<div class="rc-sub">Understand the correction first. Choose how to perform it only after reading this guide.</div>', unsafe_allow_html=True)
+    page_header("guide", "Manual Guide", f"Resolution Guide · {bid}", "Understand the correction first. Choose how to perform it only after reading this guide.", COLORS["accent"])
     st.markdown(f'<div class="rc-card"><div class="rc-label">Owner</div><h3>{owner}</h3><div class="rc-muted">Escalation: {escalation}</div><p>{reason}</p></div>', unsafe_allow_html=True)
     st.markdown("### Do this in order")
     for i, step in enumerate(steps, 1):
@@ -286,8 +284,7 @@ def render_resolution():
     operator = st.session_state.get("operator_id", "OPS-1047")
     status = case.get("status")
     choice = st.session_state.get("resolution_choice")
-    st.markdown(f'<div class="rc-title">Resolution · {bid}</div>', unsafe_allow_html=True)
-    st.markdown('<div class="rc-sub">Human action is recorded here. Closure is a separate verification step.</div>', unsafe_allow_html=True)
+    page_header("resolution", "Resolution", f"Resolution · {bid}", "Human action is recorded here. Closure is a separate verification step.", COLORS["magenta"])
 
     if status in {"CASE_CREATED", "IN_REVIEW", "AWAITING_APPROVAL"}:
         if choice == "Escalate":

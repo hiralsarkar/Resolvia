@@ -5,12 +5,14 @@ managers get a concise workload view, and auditors get an immediate case
 history. The UI uses plain operational language and keeps implementation
 details out of the working surface.
 """
-import streamlit as st
+import json
+import os
+
 import pandas as pd
-import altair as alt
+import streamlit as st
 
 import backend_bridge as bb
-from theme import COLORS, FAMILY_COLOR, STATUS_COLOR, STATUS_LABEL, SEVERITY_LABEL, root_cause_label
+from theme import COLORS, FAMILY_COLOR, STATUS_COLOR, STATUS_LABEL, page_header, pill_html, SEVERITY_LABEL, root_cause_label
 
 
 STAGES = [
@@ -91,9 +93,7 @@ def render_home():
     old = (df.age_days >= 3).sum()
     awaiting = df.status.isin(["AWAITING_APPROVAL", "IN_REVIEW"]).sum()
 
-    st.markdown('<span class="eyebrow">Resolvia Workbench</span>', unsafe_allow_html=True)
-    st.markdown('<div class="wb-title">Exception Operations</div>', unsafe_allow_html=True)
-    st.markdown('<div class="wb-sub">One place to find the next break, resolve it correctly, and prove what happened.</div>', unsafe_allow_html=True)
+    page_header("home", "Resolvia Workbench", "Exception Operations", "One place to find the next break, resolve it correctly, and prove what happened.", COLORS["forest"])
 
     c1,c2,c3,c4 = st.columns(4)
     for col,label,value in [(c1,"Open",open_count),(c2,"Critical",critical),(c3,"Age ≥ 3 days",old),(c4,"Waiting for approval",awaiting)]:
@@ -129,9 +129,7 @@ def render_home():
 
 def render_operations():
     _css()
-    st.markdown('<span class="eyebrow">Analyst Workspace</span>', unsafe_allow_html=True)
-    st.markdown('<div class="wb-title">Break Queue</div>', unsafe_allow_html=True)
-    st.markdown('<div class="wb-sub">Start with the break that needs your attention. The next action is shown after you open it.</div>', unsafe_allow_html=True)
+    page_header("queue", "Analyst Workspace", "Break Queue", "Start with the break that needs your attention. The next action is shown after you open it.", COLORS["amber"])
     df=bb.load_breaks_df().copy(); df["age_days"]=_age(df); statuses=bb.all_case_statuses(); df["status"]=df.break_id.map(lambda b:statuses.get(b,"NOT_STARTED"))
     f1,f2,f3,f4=st.columns([1.2,1.2,1.2,2])
     fam=f1.multiselect("Category",sorted(df.family.unique()),key="wb_family")
@@ -293,7 +291,7 @@ def render_playbook():
 
 
 def render_audit():
-    _css(); st.markdown('<span class="eyebrow">Governance</span>',unsafe_allow_html=True); st.markdown('<div class="wb-title">Audit Trail</div>',unsafe_allow_html=True); st.markdown('<div class="wb-sub">A chronological record of human and system activity.</div>',unsafe_allow_html=True)
+    _css(); page_header("audit", "Governance", "Audit Trail", "A chronological record of human and system activity.", COLORS["forest"])
     selected=st.session_state.get("audit_break_filter") or st.session_state.get("selected_break")
     events=bb.audit_events(limit=2000); df=pd.DataFrame(events)
     if df.empty:st.info("No audit events recorded yet.");return
@@ -312,42 +310,46 @@ def render_audit():
 
 
 
-PALETTE=[COLORS[k] for k in ("accent","violet","amber","forest","magenta","signal","slate","accent_deep")]
+MANAGER_HTML = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "manager.html")
+STATUS_GROUP = {"NOT_STARTED": "new", "AWAITING_APPROVAL": "waiting", "IN_REVIEW": "waiting", "CLOSED": "resolved",
+                "REJECTED": "stopped", "HALTED_DATA_QUALITY": "stopped"}
+AGENT_FIELDS = ("triage", "investigation", "rca", "further_investigation", "proposal", "gate_result", "validation")
 
 
-def _bar(series, x_title, colors=None):
-    """A fixed bar chart with value labels and a colour per bar. No zoom or pan,
-    so the page scrolls normally."""
-    d=pd.DataFrame({"label":series.index.astype(str),"count":series.values})
-    colors=colors or [PALETTE[i%len(PALETTE)] for i in range(len(d))]
-    base=alt.Chart(d).encode(x=alt.X("label:N",sort=None,title=x_title,axis=alt.Axis(labelAngle=0,labelColor=COLORS["ink_soft"],titleColor=COLORS["ink_soft"])),
-                              y=alt.Y("count:Q",title="Breaks",axis=alt.Axis(labelColor=COLORS["ink_soft"],titleColor=COLORS["ink_soft"],gridColor=COLORS["hairline"])))
-    bars=base.mark_bar(size=64,cornerRadiusTopLeft=4,cornerRadiusTopRight=4).encode(color=alt.Color("label:N",scale=alt.Scale(domain=list(d.label),range=colors),legend=None),tooltip=[alt.Tooltip("label:N",title=x_title),alt.Tooltip("count:Q",title="Breaks")])
-    text=base.mark_text(dy=-8,color=COLORS["ink"]).encode(text="count:Q")
-    st.altair_chart((bars+text).properties(height=280,background="transparent").configure_view(strokeWidth=0),width="stretch")
+def _manager_data(df, statuses):
+    """Everything the dashboard draws, as plain lists for the browser."""
+    rows = [[r.family, r.severity, round(float(r.exposure)), STATUS_GROUP.get(r.status, "progress"), r.counterparty,
+             bool(r.corporate_action), int(r.age_days)] for r in df.itertuples()]
+    agents, causes = dict.fromkeys(AGENT_FIELDS, 0), {}
+    for bid in statuses:
+        case = bb.orchestrator.get_case(bid) or {}
+        for f in AGENT_FIELDS:
+            agents[f] += bool(case.get(f))
+        cause = (case.get("rca") or {}).get("root_cause")
+        if cause:
+            causes[root_cause_label(cause)] = causes.get(root_cause_label(cause), 0) + 1
+    agents["investigator"] = agents.pop("further_investigation")
+    agents["gate"] = agents.pop("gate_result")
+    top = sorted(causes.items(), key=lambda x: -x[1])[:7]
+    return {"rows": rows, "agents": agents, "cases": len(statuses), "causes": [[k, v] for k, v in top]}
+
 
 def render_manager():
-    _css(); df=bb.load_breaks_df().copy();df["age_days"]=_age(df);statuses=bb.all_case_statuses();df["status"]=df.break_id.map(lambda b:statuses.get(b,"NOT_STARTED"))
-    st.markdown('<span class="eyebrow">Manager Workspace</span>',unsafe_allow_html=True);st.markdown('<div class="wb-title">Operations Overview</div>',unsafe_allow_html=True);st.markdown('<div class="wb-sub">A quick view of workload, ageing, exposure and work that needs attention.</div>',unsafe_allow_html=True)
-    vals=[("Arrived",len(df)),("Open",int((~df.status.isin(["CLOSED","REJECTED"])).sum())),("Resolved",int((df.status=="CLOSED").sum())),("Age ≥ 1 day",int((df.age_days>=1).sum())),("Age ≥ 3 days",int((df.age_days>=3).sum())),("Escalated",int((df.status=="ESCALATED").sum()))]
-    cols=st.columns(6)
-    for col,(label,val) in zip(cols,vals):
-        with col:st.markdown(f'<div class="wb-card-tight"><div class="wb-label">{label}</div><div class="wb-big">{val:,}</div></div>',unsafe_allow_html=True)
-    st.markdown("### Manager attention")
+    _css(); df=bb.load_breaks_df().copy(); df["age_days"]=_age(df); statuses=bb.all_case_statuses()
+    df["status"]=df.break_id.map(lambda b:statuses.get(b,"NOT_STARTED"))
+    page_header("manager", "Manager Workspace", "Operations Overview", "Workload, exposure, ageing and agent activity, live. Click any category or priority to focus.", COLORS["violet"])
+    with open(MANAGER_HTML, encoding="utf-8") as f:
+        html = f.read().replace("__DATA__", json.dumps(_manager_data(df, statuses)).replace("</", "<\\/"))
+    st.components.v1.html(html, height=1500, scrolling=False)
+
+    st.markdown('<div class="section-h" style="--c:#FF5C7A"><span class="section-dot"></span>Manager attention</div>', unsafe_allow_html=True)
     att=df[(df.severity=="P0")|(df.age_days>=3)|df.status.isin(["AWAITING_APPROVAL","ESCALATED"])].sort_values(["age_days","exposure"],ascending=False).head(12)
-    if att.empty:st.success("No items currently require manager attention.")
-    else:
-        for _,r in att.iterrows():
-            cols=st.columns([1.1,1.8,.6,1,.9,.9])
-            cols[0].markdown(f"**{r.break_id}**");cols[1].markdown(bb.issue_label(r));cols[2].markdown(f"{r.age_days}d");cols[3].markdown(f"₹{r.exposure:,.0f}");cols[4].markdown(_status(r.status));
-            if cols[5].button("Open",key=f"mgr_open_{r.break_id}"):_open_case(r.break_id)
-    st.markdown("### Ageing")
-    age=df.age_days.value_counts().sort_index(); age=age[age.index<=7]
-    age.index=[f"{int(i)} day" + ("" if int(i)==1 else "s") for i in age.index]; _bar(age,"Age")
-    st.markdown("### Breaks by category")
-    fam=df.family.value_counts(); _bar(fam,"Category",[FAMILY_COLOR.get(f,COLORS["slate"]) for f in fam.index])
-    st.markdown("### Work status")
-    stat=df.status.value_counts(); colors=[COLORS["slate"] if s=="NOT_STARTED" else STATUS_COLOR.get(s,(COLORS["violet"],))[0] for s in stat.index]
-    stat.index=[_status(s) for s in stat.index]; _bar(stat,"Status",colors)
-    st.markdown("### Exposure by category")
-    exp=df.groupby("family",as_index=False).exposure.sum().sort_values("exposure",ascending=False);exp["Exposure (₹ Cr)"]=exp.exposure/1e7;st.dataframe(exp[["family","Exposure (₹ Cr)"]].rename(columns={"family":"Category"}),hide_index=True,width="stretch")
+    if att.empty:
+        st.success("No items currently require manager attention.")
+        return
+    for _,r in att.iterrows():
+        cols=st.columns([1.1,1.8,.6,1,1.1,.8])
+        cols[0].markdown(f'<span class="mono glow-id">{r.break_id}</span>', unsafe_allow_html=True)
+        cols[1].markdown(bb.issue_label(r)); cols[2].markdown(f"{r.age_days}d"); cols[3].markdown(f"₹{r.exposure:,.0f}")
+        fg,bg=STATUS_COLOR.get(r.status,(COLORS["accent"],COLORS["accent_soft"])); cols[4].markdown(pill_html(_status(r.status),fg,bg), unsafe_allow_html=True)
+        if cols[5].button("Open",key=f"mgr_open_{r.break_id}"):_open_case(r.break_id)
