@@ -33,7 +33,7 @@ OUTCOMES = [("approve", 80), ("leave", 11), ("escalate", 5), ("reject", 4)]
 
 _started = False
 _lock = threading.Lock()
-progress = {"planned": 0, "done": 0}
+progress = {"planned": 0, "done": 0, "failed": 0, "last_error": ""}
 
 
 def age_days(break_id):
@@ -103,8 +103,9 @@ def _run(picks):
         try:
             if orchestrator.get_case(bid) is None:
                 _work(bid, outcome, rng)
-        except Exception:  # one bad case shouldn't stop the day
-            pass
+        except Exception as e:  # one bad case shouldn't stop the day
+            progress["failed"] += 1
+            progress["last_error"] = f"{bid}: {type(e).__name__}: {e}"[:300]
         progress["done"] += 1
 
 

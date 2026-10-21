@@ -338,6 +338,12 @@ def render_manager():
     _css(); df=bb.load_breaks_df().copy(); df["age_days"]=_age(df); statuses=bb.all_case_statuses()
     df["status"]=df.break_id.map(lambda b:statuses.get(b,"NOT_STARTED"))
     page_header("manager", "Manager Workspace", "Operations Overview", "Workload, exposure, ageing and agent activity, live. Click any category or priority to focus.", COLORS["violet"])
+    import demo_history
+    pr = demo_history.progress
+    if pr["planned"] and pr["done"] < pr["planned"]:
+        st.caption(f"Replaying today's desk activity in the background: {pr['done']} of {pr['planned']} cases worked. Refresh to see the numbers move.")
+    if pr["failed"]:
+        st.caption(f"{pr['failed']} cases could not be replayed. Last: {pr['last_error']}")
     with open(MANAGER_HTML, encoding="utf-8") as f:
         html = f.read().replace("__DATA__", json.dumps(_manager_data(df, statuses)).replace("</", "<\\/"))
     st.components.v1.html(html, height=1500, scrolling=False)
