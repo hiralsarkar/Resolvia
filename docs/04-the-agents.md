@@ -1,8 +1,8 @@
 # 4. The agents
 
-![The five agents](images/agents.svg)
+![The core agents](images/agents.svg)
 
-I built each agent as a Python module in [`backend/agents/`](../backend/agents) with one entry function, a fixed input and output, and a stated limit on what it's allowed to do. They're specialists rather than chatbots: each one uses the cheapest tool that does its job reliably, and the LLM is optional throughout.
+There are six agents. I built each agent as a Python module in [`backend/agents/`](../backend/agents) with one entry function, a fixed input and output, and a stated limit on what it's allowed to do. They're specialists: each one uses the cheapest tool that does its job reliably. Five of them follow a fixed procedure. The sixth, the Investigator, is an LLM agent that plans its own steps, and it's called in for the unusual cases. The [Orchestrator](05-control-and-audit.md) connects them as a LangGraph graph.
 
 ![How one break moves through Resolvia](images/architecture.svg)
 
@@ -32,6 +32,27 @@ It only sees what the reconciliation engine would hand over. The root-cause colu
 - Two fixed rules decide whether a person must review the diagnosis: any corporate action, or calibrated confidence below 0.80, a threshold I chose by cost ([stress tests](09-robustness.md)). Confidence never decides authority.
 - It looks up precedents for the cause it diagnosed: what happened on similar cases before.
 - An optional LLM step turns the record into a short paragraph for the analyst. It's told not to recommend anything.
+
+## Investigator
+
+`investigator.py` answers "what else should I look at?" Routine breaks are fully explained by the evidence Investigation already gathered, so they go straight to a proposal. After RCA, the graph checks three signals, and any one of them sends the case here first:
+
+- the model's confidence is below the review threshold
+- the corporate action notice contradicted the model
+- Triage's family differs from the family the reconciliation engine tagged
+
+The Investigator is its own small LangGraph loop of two nodes. `think` gives the LLM the case and six read-only tools; `act` runs whichever tools it asked for and hands back the results. It loops until the LLM writes its finding, with up to three rounds of tool calls:
+
+| Tool | What it returns |
+|---|---|
+| `find_trades` | trades matching any mix of ticker, counterparty, date and quantity, for when references don't line up |
+| `cash_entries` | cash ledger entries for a trade, or for an account on a value date |
+| `settlement_record` | the settlement instruction and status for a trade |
+| `search_documents` | the most similar confirmations, emails and notices |
+| `corporate_action_reference` | the closest corporate action definitions |
+| `similar_cases` | the closest past resolved cases |
+
+Every tool call is recorded with its arguments in the case. The finding goes into the case history and onto the proposal, and a case the Investigator has worked on always goes to a person. In the test set, 69 of the 607 breaks carry at least one of the signals.
 
 ## Resolution proposal
 

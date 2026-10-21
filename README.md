@@ -9,6 +9,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python"/>
   <img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=flat-square&logo=streamlit&logoColor=white" alt="Streamlit"/>
+  <img src="https://img.shields.io/badge/LangGraph-1C3C3C?style=flat-square&logo=langchain&logoColor=white" alt="LangGraph"/>
   <img src="https://img.shields.io/badge/scikit--learn-F7931E?style=flat-square&logo=scikit-learn&logoColor=white" alt="scikit-learn"/>
   <img src="https://img.shields.io/badge/Sentence--Transformers-6A5ACD?style=flat-square" alt="Sentence Transformers"/>
   <img src="https://img.shields.io/badge/EasyOCR-00A67E?style=flat-square" alt="EasyOCR"/>
@@ -17,7 +18,7 @@
 
 When two systems in a bank disagree about a trade, a reconciliation engine raises a break. Finding that break is a solved problem. Fixing it is not: it still means someone digging through trade records, settlement messages, custodian statements and emails, working out what went wrong, getting sign-off and then checking the fix actually worked.
 
-I built Resolvia to do that legwork for cash-equity breaks. Five agents gather the evidence, diagnose the root cause, propose a fix and check the result, and a hard-coded gate makes sure nothing that moves money happens without a named person approving it.
+I built Resolvia to do that legwork for cash-equity breaks. Six agents, wired together as a LangGraph state graph, gather the evidence, diagnose the root cause, dig further when a case looks unusual, propose a fix and check the result, and a hard-coded gate makes sure nothing that moves money happens without a named person approving it.
 
 The principle I designed it around:
 
@@ -30,9 +31,12 @@ The principle I designed it around:
 1. **Triage** checks the records exist, predicts the break family, sets a priority and routes it to the right desk.
 2. **Investigation** pulls the trade, position, cash and settlement records, reads the document (with OCR if it's a scan) and finds similar documents and corporate-action rules.
 3. **Root cause** runs a 20-class model, reads the corporate action notice where there is one, and decides whether a person needs to review the diagnosis.
+   - **Investigator** takes over when a case looks unusual (low confidence, a notice that contradicts the model, a family the engine tagged differently). It's an LLM with read-only tools that decides for itself what to check next, loops until it has a finding, and passes that finding to the reviewer.
 4. **Proposal** looks up the fix, sizes the exposure and sets whether the action needs approval.
 5. **The Control Gate** blocks anything consequential until a person approves it.
 6. **Validation** re-runs the check that raised the break. Closed means the field now matches; anything else reopens.
+
+Each step is a node in a [LangGraph](https://github.com/langchain-ai/langgraph) graph. Conditional edges route each case by what the agents found, and the approval step is a LangGraph interrupt: the graph pauses at the gate and resumes from that exact point once a person decides.
 
 ## The finding the project rests on
 
@@ -76,7 +80,7 @@ I've written the whole project up in [`docs`](docs), one picture at a time:
 1. [The problem](docs/01-the-problem.md): why matching is solved and resolution isn't
 2. [The data](docs/02-the-data.md): a synthetic bank where every fault is known
 3. [The models](docs/03-the-models.md): features, the target choice, and how 0.933 is made
-4. [The agents](docs/04-the-agents.md): five specialists and what each may do
+4. [The agents](docs/04-the-agents.md): six specialists and what each may do
 5. [Control and audit](docs/05-control-and-audit.md): the gate, case states and the trail
 6. [Results](docs/06-results.md): rules vs model vs the whole system
 7. [Limits and next steps](docs/07-limits-and-next-steps.md): what production would need
@@ -114,8 +118,8 @@ pytest -q tests
 ```
 data/                synthetic data generator, taxonomy, features, the five tables, documents, scans
 backend/
-  agents/            triage, investigation, rca, resolution, validation, ingestion
-  orchestrator.py    runs the stages and stops at the gate
+  agents/            triage, investigation, rca, investigator, resolution, validation, ingestion
+  orchestrator.py    the LangGraph graph: routing, the approval interrupt, checkpoints
   control_gate.py    the approval rule
   models/            training scripts and saved models
   embeddings/        the three search indexes
@@ -124,7 +128,7 @@ backend/
   api/               REST API
   store.py           SQLite storage for cases, decisions and the audit trail
 frontend/            the Streamlit workbench
-tests/               23 tests, run on every push
+tests/               28 tests, run on every push
 docs/                the tour, diagrams, model and stress-test reports, EDA notebook, proposal
 ```
 

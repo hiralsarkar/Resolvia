@@ -8,7 +8,7 @@ I've written Resolvia up as nine short stops, each built around a picture. Read 
 | 2 | [The data](02-the-data.md) | A synthetic bank where every fault is known |
 | 3 | [The models](03-the-models.md) | Features, the target choice, model comparison and the 0.933 |
 | 4 | [The agents](04-the-agents.md) | Five specialists, what each one may and may not do |
-| 5 | [Control and audit](05-control-and-audit.md) | The gate, the state machine and the trail |
+| 5 | [Control and audit](05-control-and-audit.md) | The gate, the LangGraph orchestrator and the trail |
 | 6 | [Results](06-results.md) | Rules vs model vs the full system |
 | 7 | [Limits and next steps](07-limits-and-next-steps.md) | What I'd add to take it to production |
 | 8 | [Responsible AI and governance](08-responsible-ai.md) | Oversight, accountability, transparency, and the model card |

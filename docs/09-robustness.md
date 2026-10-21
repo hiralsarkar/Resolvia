@@ -67,7 +67,7 @@ python eval/extraction_eval.py --llm --noise 0.05 --limit 150
 
 ## Engineering
 
-- **Tests.** 23 tests in [`tests/`](../tests) cover the gate rules, the notice parser, Validation, the end-to-end pipeline, persistence and the rules extractor. They run on every push through GitHub Actions.
+- **Tests.** 28 tests in [`tests/`](../tests) cover the gate rules, the notice parser, Validation, the end-to-end pipeline, the LangGraph routing and the Investigator loop, persistence and the rules extractor. They run on every push through GitHub Actions.
 - **Saved state.** Cases, approval decisions, the gate's log and the audit trail now live in SQLite ([`backend/store.py`](../backend/store.py)), so an open case and its history survive a restart.
 
 Back to [the tour](README.md)

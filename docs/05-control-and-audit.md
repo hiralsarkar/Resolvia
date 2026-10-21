@@ -12,7 +12,27 @@ I wrote [`backend/control_gate.py`](../backend/control_gate.py) as policy code, 
 
 ![Case states](images/lifecycle.svg)
 
-[`backend/orchestrator.py`](../backend/orchestrator.py) runs the agents in order and owns exactly one decision: given the gate's answer, stop or carry on. It works in two phases because software can't sit and wait for a person. `create_case()` runs every automatic stage and stops at the gate; `resume_case()` picks up from exactly where it stopped once someone has decided.
+[`backend/orchestrator.py`](../backend/orchestrator.py) is a [LangGraph](https://github.com/langchain-ai/langgraph) `StateGraph`. The case is the graph's state, each agent is a node, and conditional edges decide where the case goes next:
+
+```mermaid
+flowchart LR
+  S([start]) --> T[triage]
+  T -->|records missing| H([halted])
+  T --> I[investigate] --> R[rca]
+  R -->|unusual| X[investigator] --> P[propose]
+  R -->|routine| P
+  P --> G{gate}
+  G -->|needs a person| W[await_approval] -->|decision recorded| G
+  G -->|rejected| J([rejected])
+  G -->|authorised| E[execute] --> V[validate] --> D([closed / reopened / on hold])
+```
+
+- **Routing.** A routine case runs straight down the line. A case with unusual signals goes to the Investigator after RCA, and a case with missing records ends at Triage.
+- **Waiting for a person.** `await_approval` is a LangGraph interrupt. `create_case()` runs the graph until the gate blocks, and the graph pauses there with the case as AWAITING_APPROVAL. Once someone records a decision, `resume_case()` resumes the graph at the gate, which checks again: an approval runs the fix, a rejection ends the case.
+- **Checkpoints.** A checkpointer keeps each paused run, and every run is saved to SQLite. After a restart, the graph's entry router reads the saved case and sends it straight to the stage it had reached.
+- **One decision.** The Orchestrator only routes. Whether an action needs approval is the gate's call, and there is no edge to `execute` that doesn't come from the gate.
+
+`orchestrator.mermaid()` prints the compiled graph.
 
 The outcomes after execution:
 
