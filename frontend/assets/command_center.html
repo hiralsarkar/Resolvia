@@ -392,10 +392,10 @@
         <span id="inspectorToggleLabel">Inspect exception</span>&nbsp;&rarr;
       </button>
       <div class="inspector" id="inspector">
-        <div class="inspector-row"><span>Break ID</span><span id="insId">&mdash;</span></div>
-        <div class="inspector-row"><span>Type</span><span id="insType">&mdash;</span></div>
-        <div class="inspector-row"><span>Stage</span><span id="insStage">&mdash;</span></div>
-        <div class="inspector-row"><span>Authority</span><span id="insAuth">&mdash;</span></div>
+        <div class="inspector-row"><span>Break ID</span><span id="insId">...</span></div>
+        <div class="inspector-row"><span>Type</span><span id="insType">...</span></div>
+        <div class="inspector-row"><span>Stage</span><span id="insStage">...</span></div>
+        <div class="inspector-row"><span>Authority</span><span id="insAuth">...</span></div>
         <div class="inspector-checklist" id="insChecklist">
           <div class="ic-item" data-step="triage"><span class="ic-dot"><svg viewBox="0 0 10 10"><path d="M1.5 5.2L4 7.7L8.5 2.5" stroke="#08090d" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span>Triaged</div>
           <div class="ic-item" data-step="investigate"><span class="ic-dot"><svg viewBox="0 0 10 10"><path d="M1.5 5.2L4 7.7L8.5 2.5" stroke="#08090d" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span>Investigated</div>
@@ -435,7 +435,7 @@
           <div><div class="desk-role">Agent 1 &middot; Triage</div><div class="desk-name">Triage Agent</div></div>
         </div>
         <div class="desk-console" data-console="triage"></div>
-        <div class="desk-stat" data-stat="triage"><span class="desk-stat-label">Route</span><span class="desk-stat-value" data-stat-value="triage">&mdash;</span></div>
+        <div class="desk-stat" data-stat="triage"><span class="desk-stat-label">Route</span><span class="desk-stat-value" data-stat-value="triage">...</span></div>
       </div>
       <div class="mobile-orch" data-after="triage"><span class="mo-tag">Orchestrator</span><span class="mo-text">Routing&hellip;</span></div>
 
@@ -449,7 +449,7 @@
           <div><div class="desk-role">Agent 2 &middot; Investigate</div><div class="desk-name">Investigation Agent</div></div>
         </div>
         <div class="desk-console" data-console="investigate"></div>
-        <div class="desk-stat" data-stat="investigate"><span class="desk-stat-label">Evidence</span><span class="desk-stat-value" data-stat-value="investigate">&mdash;</span></div>
+        <div class="desk-stat" data-stat="investigate"><span class="desk-stat-label">Evidence</span><span class="desk-stat-value" data-stat-value="investigate">...</span></div>
       </div>
       <div class="mobile-orch" data-after="investigate"><span class="mo-tag">Orchestrator</span><span class="mo-text">Routing&hellip;</span></div>
 
@@ -460,7 +460,7 @@
           <div><div class="desk-role">Agent 3 &middot; Diagnose</div><div class="desk-name">Root Cause Agent</div></div>
         </div>
         <div class="desk-console" data-console="rca"></div>
-        <div class="desk-stat" data-stat="rca"><span class="desk-stat-label">Certainty</span><span class="desk-stat-value" data-stat-value="rca">&mdash;</span></div>
+        <div class="desk-stat" data-stat="rca"><span class="desk-stat-label">Certainty</span><span class="desk-stat-value" data-stat-value="rca">...</span></div>
       </div>
       <div class="mobile-orch" data-after="rca"><span class="mo-tag">Orchestrator</span><span class="mo-text">Routing&hellip;</span></div>
 
@@ -473,7 +473,7 @@
           <div><div class="desk-role">Agent 4 &middot; Propose</div><div class="desk-name">Resolution Proposal Agent</div></div>
         </div>
         <div class="desk-console" data-console="resolution"></div>
-        <div class="desk-stat" data-stat="resolution"><span class="desk-stat-label">Authority</span><span class="desk-stat-value" data-stat-value="resolution">&mdash;</span></div>
+        <div class="desk-stat" data-stat="resolution"><span class="desk-stat-label">Authority</span><span class="desk-stat-value" data-stat-value="resolution">...</span></div>
       </div>
       <div class="mobile-orch" data-after="resolution"><span class="mo-tag">Orchestrator</span><span class="mo-text">Checking control gate&hellip;</span></div>
 
@@ -489,7 +489,7 @@
           <div><div class="desk-role">Safety check &middot; Not AI</div><div class="desk-name">Control Gate</div></div>
         </div>
         <div class="desk-console" data-console="gate"></div>
-        <div class="desk-stat" data-stat="gate"><span class="desk-stat-label">Decision</span><span class="desk-stat-value" data-stat-value="gate">&mdash;</span></div>
+        <div class="desk-stat" data-stat="gate"><span class="desk-stat-label">Decision</span><span class="desk-stat-value" data-stat-value="gate">...</span></div>
       </div>
       <div class="mobile-orch" data-after="gate"><span class="mo-tag">Orchestrator</span><span class="mo-text">Executing&hellip;</span></div>
 
@@ -500,7 +500,7 @@
           <div><div class="desk-role">Agent 5 &middot; Verify</div><div class="desk-name">Validation Agent</div></div>
         </div>
         <div class="desk-console" data-console="validation"></div>
-        <div class="desk-stat" data-stat="validation"><span class="desk-stat-label">Status</span><span class="desk-stat-value" data-stat-value="validation">&mdash;</span></div>
+        <div class="desk-stat" data-stat="validation"><span class="desk-stat-label">Status</span><span class="desk-stat-value" data-stat-value="validation">...</span></div>
       </div>
 
       <div class="resolved-banner" id="resolvedBanner">
@@ -520,7 +520,7 @@
     </div>
   </div>
 
-  <footer class="hero-foot">Six real pipeline stages, one Orchestrator routing every transition &mdash; the same state machine that runs Resolvia's production cases, not a simplified demo.</footer>
+  <footer class="hero-foot">Six pipeline stages and one Orchestrator routing every transition, the same LangGraph graph that runs every Resolvia case.</footer>
 </div>
 
 <script>
