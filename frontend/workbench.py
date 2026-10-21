@@ -346,10 +346,10 @@ def render_manager():
         st.caption(f"{pr['failed']} cases could not be replayed. Last: {pr['last_error']}")
     with open(MANAGER_HTML, encoding="utf-8") as f:
         html = f.read().replace("__DATA__", json.dumps(_manager_data(df, statuses)).replace("</", "<\\/"))
-    st.components.v1.html(html, height=1500, scrolling=False)
+    st.components.v1.html(html, height=1850, scrolling=False)
 
     st.markdown('<div class="section-h" style="--c:#FF5C7A"><span class="section-dot"></span>Manager attention</div>', unsafe_allow_html=True)
-    att=df[(df.severity=="P0")|(df.age_days>=3)|df.status.isin(["AWAITING_APPROVAL","ESCALATED"])].sort_values(["age_days","exposure"],ascending=False).head(12)
+    att=df[~df.status.isin(["CLOSED","REJECTED"])&((df.severity=="P0")|(df.age_days>=3)|df.status.isin(["AWAITING_APPROVAL","ESCALATED"]))].sort_values(["age_days","exposure"],ascending=False).head(12)
     if att.empty:
         st.success("No items currently require manager attention.")
         return

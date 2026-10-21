@@ -395,7 +395,16 @@ hbars('causes', DATA.causes, function (v) { return n(v) + (v === 1 ? ' case' : '
 if (!DATA.causes.length) document.getElementById('causes').innerHTML = '<div class="empty">No diagnoses yet. Each case the RCA agent works on shows up here.</div>';
 
 function fitFrame() {
-  try { if (window.frameElement) window.frameElement.style.height = (Math.ceil(document.querySelector('.wrap').getBoundingClientRect().height) + 30) + 'px'; } catch (e) {}
+  try {
+    var f = window.frameElement; if (!f) return;
+    var h = (Math.ceil(document.querySelector('.wrap').getBoundingClientRect().height) + 30) + 'px';
+    f.style.height = h; f.setAttribute('height', parseInt(h));
+    // Streamlit sizes the iframe's wrappers too; grow them with it so nothing below overlaps
+    for (var p = f.parentElement, i = 0; p && i < 3; p = p.parentElement, i++) {
+      if (p.getAttribute('data-testid') === 'stVerticalBlock') break;
+      p.style.height = h; p.style.minHeight = h;
+    }
+  } catch (e) {}
 }
 fitFrame(); window.addEventListener('resize', fitFrame); setInterval(fitFrame, 800);
 if (window.ResizeObserver) new ResizeObserver(fitFrame).observe(document.querySelector('.wrap'));
