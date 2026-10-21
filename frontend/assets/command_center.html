@@ -114,8 +114,14 @@
     display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
     background: radial-gradient(circle at 50% 40%, rgba(238,240,255,0.10), rgba(238,240,255,0.02)), #0b0d14;
     border: 1px solid var(--hairline-bright);
-    box-shadow: 0 0 0 1px rgba(238,240,255,0.06), 0 0 44px -8px rgba(238,240,255,0.18);
+    box-shadow: 0 0 46px -8px rgba(76,224,255,0.55), 0 0 80px -12px rgba(167,139,250,0.5), 0 0 120px -20px rgba(255,122,198,0.45);
   }
+  .hub::before, .hub::after { content: ""; position: absolute; inset: -3px; border-radius: 50%; padding: 3px; pointer-events: none;
+    background: conic-gradient(#4CE0FF, #A78BFA, #FF7AC6, #FFB454, #34E5A6, #4CE0FF);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); animation: hub-spin 7s linear infinite; }
+  .hub::after { inset: -8px; padding: 8px; filter: blur(12px); opacity: 0.8; }
+  @keyframes hub-spin { to { transform: rotate(360deg); } }
   .hub.active { box-shadow: 0 0 0 1px rgba(238,240,255,0.35), 0 0 76px -6px rgba(238,240,255,0.55); animation: hub-pulse 0.9s ease-out; }
   @keyframes hub-pulse {
     0% { box-shadow: 0 0 0 0 rgba(238,240,255,0.5), 0 0 44px -8px rgba(238,240,255,0.3); }
@@ -144,7 +150,9 @@
                 0 20px 50px -18px color-mix(in srgb, var(--desk-accent, var(--cyan)) 60%, transparent);
     transform: translate(-50%,-50%) translateY(-2px);
   }
-  .desk.done { border-color: var(--hairline-bright); }
+  .desk.done { border-color: color-mix(in srgb, var(--desk-accent, var(--cyan)) 40%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--desk-accent, var(--cyan)) 22%, transparent), 0 0 34px -12px color-mix(in srgb, var(--desk-accent, var(--cyan)) 55%, transparent); }
+  .desk.done .desk-icon { color: var(--desk-accent, var(--cyan)); border-color: color-mix(in srgb, var(--desk-accent, var(--cyan)) 45%, transparent); box-shadow: 0 0 16px -6px var(--desk-accent, var(--cyan)); }
 
   .desk-head > div:not(.desk-icon) { min-width: 0; }
   .desk-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; position: relative; }
@@ -300,7 +308,7 @@
     opacity: 0; transform: translateY(4px); transition: opacity 0.4s ease, transform 0.4s ease;
   }
   .desk-stat.shown { opacity: 1; transform: translateY(0); }
-  .desk-stat-label { font-size: 0.72rem; color: var(--mist-dim); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+  .desk-stat-label { font-size: 0.72rem; color: #C3C8DA; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
   .desk-stat-value { font-family: 'Manrope', sans-serif; font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 800; color: var(--desk-accent, var(--cyan)); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   /* resolved center banner */
@@ -662,7 +670,7 @@
   function setActive(agent) {
     AGENTS.forEach(function (k) {
       desks[k].classList.toggle('active', k === agent);
-      if (k !== agent) desks[k].classList.add('done');
+      if (AGENTS.indexOf(agent) > AGENTS.indexOf(k)) desks[k].classList.add('done');
     });
   }
 
