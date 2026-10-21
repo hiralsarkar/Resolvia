@@ -357,7 +357,7 @@ function gauge(R) {
 
 function agents() {
   var A = [['route', 'Triage', 'triage', C.cyan], ['search', 'Investigation', 'investigation', C.violet], ['brain', 'Root cause', 'rca', C.violet],
-           ['scan', 'Investigator', 'investigator', C.magenta], ['wrench', 'Resolution', 'proposal', C.magenta], ['lock', 'Control gate', 'gate', C.amber], ['verify', 'Validation', 'validation', C.green]];
+           ['scan', 'Flagged unusual', 'investigator', C.magenta], ['wrench', 'Resolution', 'proposal', C.magenta], ['lock', 'Control gate', 'gate', C.amber], ['verify', 'Validation', 'validation', C.green]];
   var box = document.getElementById('agents'); box.innerHTML = '';
   A.forEach(function (a) {
     var k = DATA.agents[a[2]] || 0, d = document.createElement('div'); d.className = 'ag' + (k ? ' lit' : ''); d.style.setProperty('--c', a[3]);
