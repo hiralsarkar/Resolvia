@@ -169,7 +169,7 @@ def _nav_icon_css():
         c = COLORS[key]
         uri = quote(icon_svg(name, c, 24))
         rules.append(
-            f'section[data-testid="stSidebar"] [role="radiogroup"] label:nth-of-type({i}) [data-testid="stMarkdownContainer"] p::before '
+            f'section[data-testid="stSidebar"] [role="radiogroup"] > div:nth-child({i}) label [data-testid="stMarkdownContainer"] p::before '
             f'{{ background: url("data:image/svg+xml;utf8,{uri}") center/19px no-repeat, {c}1F; border-color: {c}66; box-shadow: 0 0 16px -5px {c}; }}')
     return "\n".join(rules)
 
@@ -444,7 +444,7 @@ section[data-testid="stSidebar"] [data-testid="stRadio"] label {{
   padding: 16px 18px !important; border-radius: 16px; border: 1px solid var(--hairline); width: 100%;
   background: rgba(255,255,255,0.03); transition: all 0.2s ease; cursor: pointer;
 }}
-section[data-testid="stSidebar"] [data-testid="stRadio"] label p {{ font-family: 'Manrope', sans-serif !important; font-size: 1.22rem !important; font-weight: 700 !important; color: #E6E8F2 !important; }}
+section[data-testid="stSidebar"] [data-testid="stRadio"] label p {{ font-family: 'Manrope', sans-serif !important; font-size: 1.08rem !important; white-space: nowrap; font-weight: 700 !important; color: #E6E8F2 !important; }}
 section[data-testid="stSidebar"] [data-testid="stRadio"] label:hover {{ border-color: var(--accent); background: rgba(76,224,255,0.08); transform: translateX(4px); }}
 section[data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked) {{
   background: linear-gradient(135deg, rgba(76,224,255,0.28), rgba(167,139,250,0.20)); border-color: var(--accent);
