@@ -342,11 +342,6 @@ def render_manager():
     pr = demo_history.progress
     if pr["planned"] and pr["done"] < pr["planned"]:
         st.caption(f"Replaying today's desk activity in the background: {pr['done']} of {pr['planned']} cases worked. Refresh to see the numbers move.")
-    if st.query_params.get("debug") == "replay":
-        import sys, threading, traceback
-        for t in threading.enumerate():
-            if t.name == "demo-history":
-                st.code("".join(traceback.format_stack(sys._current_frames()[t.ident])[-14:]))
     if pr["failed"]:
         st.caption(f"{pr['failed']} cases could not be replayed. Last: {pr['last_error']}")
     with open(MANAGER_HTML, encoding="utf-8") as f:

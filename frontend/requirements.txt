@@ -1,4 +1,5 @@
-# What the Streamlit app needs at runtime (this is the file Streamlit Cloud installs).
+# What the Streamlit app needs at runtime (this is the file Streamlit Cloud installs;
+# changing it makes Streamlit Cloud rebuild and restart the app).
 # scikit-learn is pinned to the version the saved models were trained with.
 streamlit
 plotly

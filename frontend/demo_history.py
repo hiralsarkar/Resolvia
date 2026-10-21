@@ -97,7 +97,10 @@ def _work(bid, outcome, rng):
 
 
 def _run(picks):
-    investigator.QUIET.on = True
+    try:
+        investigator.QUIET.on = True
+    except AttributeError as e:
+        progress["last_error"] = f"setup: {e}"
     rng = random.Random(SEED + 1)
     for bid, outcome in picks:
         try:
