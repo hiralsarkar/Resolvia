@@ -322,7 +322,7 @@ def _bar(series, x_title, colors=None):
     colors=colors or [PALETTE[i%len(PALETTE)] for i in range(len(d))]
     base=alt.Chart(d).encode(x=alt.X("label:N",sort=None,title=x_title,axis=alt.Axis(labelAngle=0,labelColor=COLORS["ink_soft"],titleColor=COLORS["ink_soft"])),
                               y=alt.Y("count:Q",title="Breaks",axis=alt.Axis(labelColor=COLORS["ink_soft"],titleColor=COLORS["ink_soft"],gridColor=COLORS["hairline"])))
-    bars=base.mark_bar(cornerRadiusTopLeft=4,cornerRadiusTopRight=4).encode(color=alt.Color("label:N",scale=alt.Scale(domain=list(d.label),range=colors),legend=None),tooltip=[alt.Tooltip("label:N",title=x_title),alt.Tooltip("count:Q",title="Breaks")])
+    bars=base.mark_bar(size=64,cornerRadiusTopLeft=4,cornerRadiusTopRight=4).encode(color=alt.Color("label:N",scale=alt.Scale(domain=list(d.label),range=colors),legend=None),tooltip=[alt.Tooltip("label:N",title=x_title),alt.Tooltip("count:Q",title="Breaks")])
     text=base.mark_text(dy=-8,color=COLORS["ink"]).encode(text="count:Q")
     st.altair_chart((bars+text).properties(height=280,background="transparent").configure_view(strokeWidth=0),width="stretch")
 
