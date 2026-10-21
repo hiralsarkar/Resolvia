@@ -7,6 +7,7 @@ import sys
 import numpy as np
 
 os.environ["RESOLVIA_DB"] = ":memory:"
+os.environ["RESOLVIA_INVESTIGATOR"] = "off"
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 for p in ("data", "backend", "backend/agents", "backend/embeddings", "backend/eval"):
     sys.path.insert(0, os.path.join(ROOT, p))

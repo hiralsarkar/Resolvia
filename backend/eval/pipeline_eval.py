@@ -25,6 +25,7 @@ from sklearn.metrics import f1_score
 
 # batch runs use a throwaway database, never the real audit trail
 os.environ.setdefault("RESOLVIA_DB", ":memory:")
+os.environ.setdefault("RESOLVIA_INVESTIGATOR", "off")
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
 sys.path.insert(0, os.path.join(HERE, "..", "agents"))
