@@ -30,21 +30,21 @@ def _css():
     st.markdown("""
     <style>
     .wb-title {font-size:2.15rem;font-weight:800;letter-spacing:-.04em;margin:0 0 .25rem 0;}
-    .wb-sub {color:#8B90A3;font-size:.92rem;margin-bottom:1.2rem;}
+    .wb-sub {color:#C2C6D6;font-size:.92rem;margin-bottom:1.2rem;}
     .wb-card {background:#12141D;border:1px solid #232733;border-radius:16px;padding:20px 22px;margin-bottom:14px;}
     .wb-card-tight {background:#12141D;border:1px solid #232733;border-radius:14px;padding:15px 18px;}
-    .wb-label {font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:#8B90A3;font-weight:700;}
+    .wb-label {font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:#C2C6D6;font-weight:700;}
     .wb-big {font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;color:#F2F3F8;line-height:1.15;}
     .wb-action {border:1px solid #2b3040;border-radius:12px;padding:14px 16px;background:#171A25;}
     .wb-action strong {font-size:1rem;}
-    .wb-muted {color:#8B90A3;font-size:.82rem;}
+    .wb-muted {color:#C2C6D6;font-size:.82rem;}
     .wb-status {font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
     .wb-timeline {border-left:2px solid #232733;margin-left:8px;padding-left:18px;}
     .wb-event {padding:0 0 16px 0;position:relative;}
     .wb-event:before {content:"";position:absolute;left:-25px;top:4px;width:8px;height:8px;border-radius:50%;background:#4CE0FF;box-shadow:0 0 8px rgba(76,224,255,.45);}
-    .wb-event-time {font-family:'JetBrains Mono',monospace;font-size:.68rem;color:#565B6E;}
+    .wb-event-time {font-family:'JetBrains Mono',monospace;font-size:.68rem;color:#9CA2B8;}
     .wb-event-title {font-weight:700;margin-top:2px;}
-    .wb-event-detail {color:#8B90A3;font-size:.8rem;margin-top:2px;}
+    .wb-event-detail {color:#C2C6D6;font-size:.8rem;margin-top:2px;}
     div[data-testid="stButton"] > button {min-height:44px;font-weight:700;border-radius:10px;}
     div[data-testid="stButton"] > button[kind="primary"] {box-shadow:0 7px 20px rgba(76,224,255,.12);}
     </style>
@@ -195,7 +195,7 @@ def render_case():
     bb.audit("CASE_VIEWED",bid,"Analyst viewed the case workspace",dedupe_key=f"case-view:{bid}:{st.session_state.get('nav_cycle',0)}")
     status=case.get("status","CASE_CREATED")
     parts=_case_progress(case)
-    progress="".join(f'<span style="display:inline-block;margin-right:6px;padding:7px 10px;border-radius:8px;background:{"rgba(52,229,166,.14)" if s=="done" else "rgba(76,224,255,.12)" if s=="active" else "#171A25"};color:{"#34E5A6" if s=="done" else "#4CE0FF" if s=="active" else "#565B6E"};font-size:.7rem;font-weight:700">{label}</span>' for label,s in parts)
+    progress="".join(f'<span style="display:inline-block;margin-right:6px;padding:7px 10px;border-radius:8px;background:{"rgba(52,229,166,.14)" if s=="done" else "rgba(76,224,255,.12)" if s=="active" else "#171A25"};color:{"#34E5A6" if s=="done" else "#4CE0FF" if s=="active" else "#9CA2B8"};font-size:.7rem;font-weight:700">{label}</span>' for label,s in parts)
     st.markdown(f'<div style="margin:8px 0 18px">{progress}</div>',unsafe_allow_html=True)
     left,right=st.columns([1.45,.8],gap="large")
     with left:

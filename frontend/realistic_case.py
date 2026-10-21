@@ -35,12 +35,12 @@ def audit(bid):
 def css():
     st.markdown("""<style>
     .rc-title{font-size:2.15rem;font-weight:800;letter-spacing:-.04em;margin:0}
-    .rc-sub{color:#8b90a3;margin:.25rem 0 1.2rem}
+    .rc-sub{color:#C2C6D6;margin:.25rem 0 1.2rem}
     .rc-card{background:#12141d;border:1px solid #272d3b;border-radius:16px;padding:20px;margin:0 0 14px}
     .rc-next{background:#151b25;border:1px solid #3a4b60;border-radius:16px;padding:22px;margin:14px 0}
-    .rc-label{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:#8b90a3;font-weight:800}
+    .rc-label{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:#C2C6D6;font-weight:800}
     .rc-big{font-size:1.8rem;font-weight:800}
-    .rc-muted{color:#8b90a3;font-size:.84rem}
+    .rc-muted{color:#C2C6D6;font-size:.84rem}
     .rc-step{border-left:3px solid #354052;padding:5px 0 5px 14px;margin:9px 0}
     .rc-step strong{display:block}
     div[data-testid="stButton"]>button{min-height:45px;border-radius:10px;font-weight:750}

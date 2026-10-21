@@ -25,6 +25,7 @@ import json
 import operator
 import os
 import sys
+import threading
 from typing import Annotated, TypedDict
 
 from langgraph.graph import END, START, StateGraph
@@ -39,6 +40,7 @@ import rca  # noqa: E402
 
 MAX_ROUNDS = 3        # rounds of tool calls before it has to conclude
 MAX_RESULT_CHARS = 3000
+QUIET = threading.local()  # set QUIET.on = True in a thread that runs cases in bulk
 
 SYSTEM = """You are the investigator in a post-trade break resolution system at an \
 investment bank. A break has unusual signals. Use the tools to check the evidence: \
@@ -238,7 +240,8 @@ def _brief(case, signals):
 def investigate_further(case, signals=None):
     """Runs the loop for one case and returns what it found."""
     signals = signals if signals is not None else unusual_signals(case)
-    if os.environ.get("RESOLVIA_INVESTIGATOR", "on") == "off" or not os.environ.get("OPENROUTER_API_KEY"):
+    if (os.environ.get("RESOLVIA_INVESTIGATOR", "on") == "off" or getattr(QUIET, "on", False)
+            or not os.environ.get("OPENROUTER_API_KEY")):
         return {"signals": signals, "status": "NOT_RUN", "steps": [], "finding": ""}
     out = GRAPH.invoke({"messages": [{"role": "user", "content": _brief(case, signals)}], "rounds": 0})
     return {"signals": signals, "status": out.get("status", "COMPLETE"),

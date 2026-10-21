@@ -13,8 +13,8 @@ COLORS = {
     "surface": "#12141D",        # raised card
     "surface_sunken": "#171A25", # recessed panel
     "ink": "#F2F3F8",            # primary text (near-white on dark)
-    "ink_soft": "#8B90A3",       # secondary text
-    "ink_faint": "#565B6E",      # tertiary text
+    "ink_soft": "#C2C6D6",       # secondary text
+    "ink_faint": "#9CA2B8",      # tertiary text
     "hairline": "#232733",
 
     "accent": "#4CE0FF",         # cyan, the default interactive colour
@@ -32,7 +32,7 @@ COLORS = {
     "amber_soft": "rgba(255,180,84,0.14)",
     "signal": "#FF5C7A",         # critical / rejected / reopened
     "signal_soft": "rgba(255,92,122,0.14)",
-    "slate": "#7A8296",
+    "slate": "#A3AABF",
     "slate_soft": "rgba(122,130,150,0.14)",
 }
 
@@ -247,7 +247,7 @@ div.st-key-home_brand_btn button:focus:not(:active) {{ box-shadow: none !importa
 .resolvia-mark .dot {{ color: var(--accent) !important; text-shadow: 0 0 12px var(--accent); }}
 .resolvia-tagline {{
   font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; font-weight: 500;
-  letter-spacing: 0.13em; text-transform: uppercase; color: #565E76 !important; margin-top: 5px;
+  letter-spacing: 0.13em; text-transform: uppercase; color: #9CA2B8 !important; margin-top: 5px;
 }}
 
 /* ---------- eyebrow / section labels ---------- */
@@ -438,7 +438,7 @@ section[data-testid="stSidebar"][aria-expanded="true"] {{ width: 340px !importan
 section[data-testid="stSidebar"] > div {{ padding-top: 1.4rem; }}
 div.st-key-home_brand_btn button, div.st-key-home_brand_btn button p {{ font-size: 2.3rem !important; }}
 div.st-key-home_brand_btn button {{ text-shadow: 0 0 24px rgba(76,224,255,0.35); }}
-.resolvia-tagline {{ font-family: 'Manrope', sans-serif !important; font-size: 0.82rem !important; font-weight: 700 !important; letter-spacing: 0.06em !important; color: #8B90A3 !important; text-transform: none !important; margin: 4px 0 6px 0 !important; }}
+.resolvia-tagline {{ font-family: 'Manrope', sans-serif !important; font-size: 0.82rem !important; font-weight: 700 !important; letter-spacing: 0.06em !important; color: #C2C6D6 !important; text-transform: none !important; margin: 4px 0 6px 0 !important; }}
 section[data-testid="stSidebar"] [data-testid="stRadio"] [role="radiogroup"] {{ gap: 10px; }}
 section[data-testid="stSidebar"] [data-testid="stRadio"] label {{
   padding: 16px 18px !important; border-radius: 16px; border: 1px solid var(--hairline); width: 100%;
@@ -451,7 +451,7 @@ section[data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked
   box-shadow: 0 0 26px -6px var(--accent), inset 0 0 0 1px rgba(76,224,255,0.35);
 }}
 section[data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked) p {{ color: #FFFFFF !important; }}
-section[data-testid="stSidebar"] [data-testid="stCaptionContainer"] p, section[data-testid="stSidebar"] .stCaption {{ font-size: 1.02rem !important; line-height: 1.5; color: #9AA0B6 !important; }}
+section[data-testid="stSidebar"] [data-testid="stCaptionContainer"] p, section[data-testid="stSidebar"] .stCaption {{ font-size: 1.02rem !important; line-height: 1.5; color: #C2C6D6 !important; }}
 
 /* readable text on the bright cyan buttons (was white on cyan) */
 .stButton > button p {{ color: inherit !important; }}
@@ -510,6 +510,11 @@ div[class*="st-key-rc_"] button {{ width: 100%; padding: 0.95rem 1rem !important
 .stTextInput input:focus, .stTextArea textarea:focus {{ border-color: var(--accent) !important; box-shadow: 0 0 0 1px var(--accent), 0 0 18px -6px var(--accent) !important; }}
 [data-testid="stFileUploaderDropzone"] {{ background: rgba(255,255,255,.02) !important; border: 1px dashed rgba(76,224,255,.35) !important; border-radius: 14px !important; }}
 .stButton > button {{ box-shadow: 0 0 16px -8px var(--accent); }}
+
+/* secondary text stays readable on the dark background */
+[data-testid="stCaptionContainer"], [data-testid="stCaptionContainer"] p, .stCaption {{ color: #C2C6D6 !important; }}
+[data-testid="stWidgetLabel"] p, [data-testid="stWidgetLabel"] label {{ color: #D5D8E4 !important; }}
+.stTextInput input::placeholder, .stTextArea textarea::placeholder {{ color: #9CA2B8 !important; }}
 
 /* sidebar navigation: an icon tile per page */
 section[data-testid="stSidebar"] [role="radiogroup"] label > div > div:first-child:not([data-testid]) {{ display: none !important; }}

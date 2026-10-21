@@ -61,13 +61,12 @@ def _breaks_df():
 
 
 def load_breaks_df():
-    """The queue as of today: every open break carries today's business date,
-    so the app shows a fresh day's work. Closed and rejected cases keep theirs."""
+    """The queue as of today. Each break arrived a fixed number of days ago:
+    most today or in the last day or two, very few older than four days."""
+    from demo_history import age_days
     df = _breaks_df().copy()
-    today = datetime.now(ZoneInfo("Asia/Kolkata")).date().isoformat()
-    statuses = orchestrator.case_statuses()
-    is_open = ~df.break_id.map(statuses).isin(["CLOSED", "REJECTED"])
-    df.loc[is_open, "business_date"] = today
+    today = pd.Timestamp(datetime.now(ZoneInfo("Asia/Kolkata")).date())
+    df["business_date"] = [(today - pd.Timedelta(days=age_days(b))).date().isoformat() for b in df.break_id]
     return df
 
 

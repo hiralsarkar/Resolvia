@@ -5,9 +5,11 @@ import realistic_case
 import command_center
 import operational_views
 import backend_bridge as bb
+import demo_history
 
 st.set_page_config(page_title="Resolvia", page_icon="◆", layout="wide", initial_sidebar_state="expanded")
 inject_global_css()
+demo_history.start()
 
 if "nav" not in st.session_state:
     st.session_state["nav"] = "Agent Architecture"
