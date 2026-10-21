@@ -19,17 +19,19 @@ record_decision() is the only way a human enters the loop here - there
 is no code path in this module that can set its own approval.
 """
 
-from datetime import datetime, timezone
+import case_store
+import clock
 
-_DECISIONS = {}  # break_id -> {"decision", "approver", "timestamp", "notes"}
-_AUDIT_LOG = []  # append-only list of {break_id, event, detail, timestamp}
+# Both are mirrored to the case store on every write and reloaded on import,
+# so an approval recorded before a restart still authorizes execution after it.
+_DECISIONS = case_store.load_decisions()  # break_id -> {"decision", "approver", "timestamp", "notes"}
+_AUDIT_LOG = case_store.load_gate_events()  # append-only list of {break_id, event, detail, timestamp}
 
 
 def _log(break_id, event, detail=""):
-    _AUDIT_LOG.append({
-        "break_id": break_id, "event": event, "detail": detail,
-        "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-    })
+    e = {"break_id": break_id, "event": event, "detail": detail, "timestamp": clock.now_iso()}
+    _AUDIT_LOG.append(e)
+    case_store.append_gate_event(e)
 
 
 def record_decision(break_id, decision, approver, notes=None):
@@ -38,8 +40,8 @@ def record_decision(break_id, decision, approver, notes=None):
     if decision not in ("APPROVE", "REJECT"):
         raise ValueError(f"decision must be APPROVE or REJECT, got {decision!r}")
     _DECISIONS[break_id] = {"decision": decision, "approver": approver,
-                             "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-                             "notes": notes}
+                             "timestamp": clock.now_iso(), "notes": notes}
+    case_store.save_decision(break_id, _DECISIONS[break_id])
     _log(break_id, f"HUMAN_DECISION:{decision}", f"by {approver}" + (f" - {notes}" if notes else ""))
     return _DECISIONS[break_id]
 
@@ -50,7 +52,12 @@ def check_gate(proposal):
     calling execution_simulator.execute()."""
     break_id = proposal["break_id"]
 
-    if proposal["authority_tier"] == "PROPOSAL":
+    # An administrative fix only skips sign-off when the diagnosis behind it is
+    # trustworthy. If RCA itself said a person must confirm the root cause
+    # (low model confidence, or a corporate action), the "it's only admin" shortcut
+    # would let a possibly-wrong diagnosis execute unseen - so it needs approval too.
+    needs_review = bool(proposal.get("rca_flagged_for_human_review"))
+    if proposal["authority_tier"] == "PROPOSAL" and not needs_review:
         result = {"authorized": True, "reason": "PROPOSAL tier - administrative action, "
                   "authorized by policy without requiring formal sign-off"}
         _log(break_id, "GATE_CHECK:AUTHORIZED", result["reason"])
@@ -58,8 +65,10 @@ def check_gate(proposal):
 
     decision = _DECISIONS.get(break_id)
     if decision is None:
+        why = ("CONTROLLED_ACTION requires" if proposal["authority_tier"] != "PROPOSAL" else
+               "the root-cause diagnosis was flagged for human review, so this administrative fix requires")
         result = {"authorized": False,
-                   "reason": "BLOCKED - CONTROLLED_ACTION requires an explicit human APPROVE "
+                   "reason": f"BLOCKED - {why} an explicit human APPROVE "
                              "decision before execution; none has been recorded"}
         _log(break_id, "GATE_CHECK:BLOCKED", result["reason"])
         return result
@@ -90,7 +99,16 @@ def audit_trail(break_id=None):
     return [e for e in _AUDIT_LOG if e["break_id"] == break_id]
 
 
+def reload():
+    """Re-read decisions and the gate log from the case store."""
+    _DECISIONS.clear()
+    _DECISIONS.update(case_store.load_decisions())
+    _AUDIT_LOG[:] = case_store.load_gate_events()
+
+
 def reset():
-    """Test/demo helper - clears all decisions and audit log."""
+    """Test/demo helper - clears all decisions and audit log. Detaches from the
+    saved database first, so smoke tests and evals never wipe real case history."""
+    case_store.use_memory()
     _DECISIONS.clear()
     _AUDIT_LOG.clear()

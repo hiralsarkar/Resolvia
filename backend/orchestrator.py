@@ -26,7 +26,6 @@ proposal itself), not just approval events.
 
 import os
 import sys
-from datetime import datetime, timezone
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "agents"))
@@ -39,15 +38,22 @@ import resolution  # noqa: E402
 import control_gate  # noqa: E402
 import execution_simulator  # noqa: E402
 from validation import validate  # noqa: E402
+import case_store  # noqa: E402
+import clock  # noqa: E402
 
-_CASES = {}  # break_id -> case state dict
+# break_id -> case state dict. Loaded from the case store on import and written
+# back on every change, so cases survive page reloads and server restarts.
+_CASES = case_store.load_cases()
+
+
+def save_case(case):
+    """Persist the case as it stands now. Called after every state change."""
+    case_store.save_case(case)
 
 
 def _log(case, event, detail=""):
-    case["history"].append({
-        "event": event, "detail": detail,
-        "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-    })
+    case["history"].append({"event": event, "detail": detail, "timestamp": clock.now_iso()})
+    save_case(case)
 
 
 def _new_case(break_id):
@@ -59,6 +65,13 @@ def _new_case(break_id):
 
 
 def _advance(case, on_event=None):
+    try:
+        return _advance_stages(case, on_event=on_event)
+    finally:
+        save_case(case)
+
+
+def _advance_stages(case, on_event=None):
     """Runs every stage the case hasn't completed yet, stopping at the
     first thing it can't get past on its own (a data-quality halt, or
     an unauthorized CONTROLLED_ACTION). Safe to call repeatedly - each
@@ -170,7 +183,16 @@ def get_case(break_id):
     return _CASES.get(break_id)
 
 
+def reload():
+    """Re-read every case from the case store (after a demo reset, for example)."""
+    _CASES.clear()
+    _CASES.update(case_store.load_cases())
+
+
 def reset():
+    """Test/demo helper. Detaches from the saved database first, so smoke tests
+    and evals run against a throwaway in-memory store."""
+    case_store.use_memory()
     _CASES.clear()
 
 

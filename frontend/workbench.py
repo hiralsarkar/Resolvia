@@ -85,19 +85,20 @@ def render_home():
     df["age_days"] = _age(df)
     statuses = bb.all_case_statuses()
     df["status"] = df.break_id.map(lambda b: statuses.get(b, "NOT_STARTED"))
-    open_count = (~df.status.isin(["CLOSED", "REJECTED"])).sum()
-    critical = (df.severity == "P0").sum()
-    old = (df.age_days >= 3).sum()
-    awaiting = df.status.isin(["AWAITING_APPROVAL", "IN_REVIEW"]).sum()
+    is_open = ~df.status.isin(["CLOSED", "REJECTED"])
+    open_count = is_open.sum()
+    resolved = (df.status == "CLOSED").sum()
+    critical = ((df.severity == "P0") & is_open).sum()
+    awaiting = df.status.isin(["AWAITING_APPROVAL", "IN_REVIEW", "AWAITING_VERIFICATION"]).sum()
 
     st.markdown('<span class="eyebrow">Resolvia Workbench</span>', unsafe_allow_html=True)
     st.markdown('<div class="wb-title">Exception Operations</div>', unsafe_allow_html=True)
     st.markdown('<div class="wb-sub">One place to find the next break, resolve it correctly, and prove what happened.</div>', unsafe_allow_html=True)
 
     c1,c2,c3,c4 = st.columns(4)
-    for col,label,value in [(c1,"Open",open_count),(c2,"Critical",critical),(c3,"Age ≥ 3 days",old),(c4,"Waiting for approval",awaiting)]:
+    for col,label,value,sub in [(c1,"Open",open_count,f"of {len(df):,} breaks"),(c2,"Resolved & verified",resolved,f"{resolved/len(df):.0%} of all breaks"),(c3,"Critical, still open",critical,"P0 priority"),(c4,"Waiting on a person",awaiting,"approval, review or verification")]:
         with col:
-            st.markdown(f'<div class="wb-card-tight"><div class="wb-label">{label}</div><div class="wb-big">{value:,}</div></div>',unsafe_allow_html=True)
+            st.markdown(f'<div class="wb-card-tight"><div class="wb-label">{label}</div><div class="wb-big">{value:,}</div><div class="wb-muted">{sub}</div></div>',unsafe_allow_html=True)
 
     st.markdown("### What do you need to do?")
     a,b,c = st.columns(3)
@@ -112,7 +113,7 @@ def render_home():
         if st.button("Open audit trail →",key="home_audit",use_container_width=True): st.session_state["nav"]="Audit Trail"; st.rerun()
 
     st.markdown("### Needs attention")
-    attention=df[(df.severity=="P0") | (df.age_days>=3) | df.status.isin(["AWAITING_APPROVAL","ESCALATED"])].copy().sort_values(["age_days","exposure"],ascending=False).head(6)
+    attention=df[is_open & ((df.severity=="P0") | (df.age_days>=3) | df.status.isin(["AWAITING_APPROVAL","ESCALATED","REOPENED"]))].copy().sort_values(["age_days","exposure"],ascending=False).head(6)
     if attention.empty:
         st.success("Nothing currently requires immediate attention.")
     else:
@@ -132,12 +133,19 @@ def render_operations():
     st.markdown('<div class="wb-title">Break Queue</div>', unsafe_allow_html=True)
     st.markdown('<div class="wb-sub">Start with the break that needs your attention. The next action is shown after you open it.</div>', unsafe_allow_html=True)
     df=bb.load_breaks_df().copy(); df["age_days"]=_age(df); statuses=bb.all_case_statuses(); df["status"]=df.break_id.map(lambda b:statuses.get(b,"NOT_STARTED"))
-    f1,f2,f3,f4=st.columns([1.2,1.2,1.2,2])
+    updates=bb.last_updates(); df["last_update"]=df.break_id.map(lambda b:updates.get(b,""))
+    n_res=int((df.status=="CLOSED").sum()); n_open=int((~df.status.isin(["CLOSED","REJECTED"])).sum())
+    st.markdown(f'<div class="wb-muted" style="margin-bottom:10px"><b style="color:#34E5A6">{n_res:,} resolved</b> ({n_res/len(df):.0%}) · <b>{n_open:,} open</b> · saved automatically, so this survives a reload</div>',unsafe_allow_html=True)
+    f0,f1,f2,f3,f4=st.columns([1.3,1.1,1.1,1,1.8])
+    show=f0.selectbox("Show",["All breaks","Open work","In progress","Resolved"],key="wb_show")
     fam=f1.multiselect("Category",sorted(df.family.unique()),key="wb_family")
     pri=f2.multiselect("Priority",["P0","P1","P2"],key="wb_priority")
     age=f3.selectbox("Age",["All","Today","1+ day","3+ days"],key="wb_age")
     search=f4.text_input("Search",placeholder="Break ID, security, counterparty",key="wb_search")
     view=df.copy()
+    if show=="Open work":view=view[~view.status.isin(["CLOSED","REJECTED"])]
+    elif show=="In progress":view=view[~view.status.isin(["CLOSED","REJECTED","NOT_STARTED"])]
+    elif show=="Resolved":view=view[view.status=="CLOSED"]
     if fam:view=view[view.family.isin(fam)]
     if pri:view=view[view.severity.isin(pri)]
     if age=="Today":view=view[view.age_days==0]
@@ -145,10 +153,13 @@ def render_operations():
     elif age=="3+ days":view=view[view.age_days>=3]
     if search:
         q=search.strip().upper(); view=view[view.apply(lambda r:q in str(r.break_id).upper() or q in str(r.security).upper() or q in str(r.counterparty).upper(),axis=1)]
-    view=view.sort_values(["severity","age_days","exposure"],ascending=[True,False,False]).head(150)
-    st.caption(f"{len(view):,} breaks shown")
-    display=view[["break_id","root_cause_key","family","severity","age_days","status","exposure","counterparty"]].rename(columns={"break_id":"Break","root_cause_key":"Issue","family":"Category","severity":"Priority","age_days":"Age","status":"Status","exposure":"Exposure","counterparty":"Counterparty"})
+    total_match=len(view)
+    if show=="Resolved":view=view.sort_values("last_update",ascending=False).head(300)
+    else:view=view.sort_values(["severity","age_days","exposure"],ascending=[True,False,False]).head(300)
+    st.caption(f"{len(view):,} of {total_match:,} matching breaks shown")
+    display=view[["break_id","root_cause_key","family","severity","age_days","status","last_update","exposure","counterparty"]].rename(columns={"break_id":"Break","root_cause_key":"Issue","family":"Category","severity":"Priority","age_days":"Age","status":"Status","last_update":"Last update","exposure":"Exposure","counterparty":"Counterparty"})
     display["Issue"]=display.Issue.map(root_cause_label); display["Priority"]=display.Priority.map(lambda x:SEVERITY_LABEL.get(x,x)); display["Status"]=display.Status.map(_status); display["Age"]=display.Age.astype(str)+"d"
+    display["Last update"]=pd.to_datetime(display["Last update"],utc=True,errors="coerce").dt.strftime("%d %b %H:%M").fillna("")
     event=st.dataframe(display,hide_index=True,width="stretch",height=470,on_select="rerun",selection_mode="single-row",key="wb_queue",column_config={"Exposure":st.column_config.NumberColumn(format="₹%d")})
     if event.selection and event.selection.get("rows"):
         bid=display.iloc[event.selection["rows"][0]]["Break"]
@@ -161,72 +172,6 @@ def render_operations():
         if z.button("Resolution guide",key="wb_guide_selected",use_container_width=True):st.session_state["nav"]="Resolution Playbook";st.rerun()
 
 
-def _case_progress(case):
-    parts=[]
-    for key,label in STAGES:
-        if key=="gate": done=bool(case.get("gate_result",{}).get("authorized")); active=case.get("status")=="AWAITING_APPROVAL"
-        else: done=case.get(key) is not None; active=False
-        parts.append((label,"done" if done else ("active" if active else "pending")))
-    return parts
-
-
-def render_case():
-    _css(); bid=st.session_state.get("selected_break")
-    if not bid:
-        st.info("Choose a break from the queue first.");
-        if st.button("Open break queue →",type="primary"):st.session_state["nav"]="Operations Desk";st.rerun()
-        return
-    row=_row_for(bid)
-    if row is None:st.error("Break not found.");return
-    st.markdown('<span class="eyebrow">Case Workspace</span>',unsafe_allow_html=True)
-    h1,h2=st.columns([3,1])
-    h1.markdown(f'<div class="wb-title">{bid}</div><div class="wb-sub">{root_cause_label(row.root_cause_key)} · {row.counterparty}</div>',unsafe_allow_html=True)
-    h2.markdown(f'<div class="wb-label">Exposure</div><div class="wb-big">₹{row.exposure:,.0f}</div>',unsafe_allow_html=True)
-    case=bb.get_case(bid)
-    if case is None:
-        st.markdown('<div class="wb-card"><div class="wb-label">Next step</div><div style="font-size:1.25rem;font-weight:800">Review this break</div><div class="wb-muted">The case will gather the available records, identify the cause, and prepare a resolution path.</div></div>',unsafe_allow_html=True)
-        if st.button("Start case review →",key="wb_start_case",type="primary",use_container_width=True):
-            with st.status("Reviewing case",expanded=True) as s:
-                def on_event(stage,label,detail): st.write(f"{label.replace(' Agent','')}: {detail}")
-                bb.get_or_create_case(bid,on_event=on_event)
-                s.update(label="Case review complete",state="complete")
-            st.rerun()
-        return
-    bb.audit("CASE_VIEWED",bid,"Analyst viewed the case workspace",dedupe_key=f"case-view:{bid}:{st.session_state.get('nav_cycle',0)}")
-    status=case.get("status","CASE_CREATED")
-    parts=_case_progress(case)
-    progress="".join(f'<span style="display:inline-block;margin-right:6px;padding:7px 10px;border-radius:8px;background:{"rgba(52,229,166,.14)" if s=="done" else "rgba(76,224,255,.12)" if s=="active" else "#171A25"};color:{"#34E5A6" if s=="done" else "#4CE0FF" if s=="active" else "#565B6E"};font-size:.7rem;font-weight:700">{label}</span>' for label,s in parts)
-    st.markdown(f'<div style="margin:8px 0 18px">{progress}</div>',unsafe_allow_html=True)
-    left,right=st.columns([1.45,.8],gap="large")
-    with left:
-        rca=case.get("rca") or {}; proposal=case.get("proposal") or {}; inv=case.get("investigation") or {}; triage=case.get("triage") or {}
-        st.markdown('<div class="wb-card"><div class="wb-label">What we know</div>',unsafe_allow_html=True)
-        c1,c2,c3=st.columns(3); c1.metric("Priority",SEVERITY_LABEL.get(row.severity,row.severity)); c2.metric("Owner",triage.get("route","Operations")); c3.metric("Status",_status(status))
-        if rca: st.markdown(f'**Cause:** {root_cause_label(rca.get("root_cause",row.root_cause_key))}<br><span class="wb-muted">Evidence-backed assessment. Certainty: {rca.get("confidence",0)*100:.0f}%</span>',unsafe_allow_html=True)
-        if proposal: st.markdown(f'**Recommended next step:** {proposal.get("recommended_action","Review the resolution guidance.")}')
-        st.markdown('</div>',unsafe_allow_html=True)
-        if inv:
-            st.markdown('<div class="wb-card"><div class="wb-label">Evidence</div>',unsafe_allow_html=True)
-            se=inv.get("structured_evidence",{})
-            for name,key in [("Trade","trade"),("Position","position"),("Settlement","settlement")]:
-                if se.get(key):
-                    with st.expander(name,expanded=(name=="Trade")):st.dataframe(pd.DataFrame([se[key]]).T.rename(columns={0:"Value"}),width="stretch")
-            doc=inv.get("document_evidence",{})
-            if doc.get("has_document"): st.markdown(f'**Document:** {doc.get("doc_id","")}\n\n{doc.get("text","")[:1600]}')
-            st.markdown('</div>',unsafe_allow_html=True)
-    with right:
-        st.markdown('<div class="wb-card"><div class="wb-label">What happens next?</div>',unsafe_allow_html=True)
-        if status=="AWAITING_APPROVAL": st.markdown('<div style="font-size:1.2rem;font-weight:800">Your approval is required</div><div class="wb-muted">Review the proposed action before anything is carried out.</div>',unsafe_allow_html=True)
-        elif status=="CLOSED": st.success("Resolved and verified.")
-        elif proposal: st.markdown('<div style="font-size:1.2rem;font-weight:800">Resolution is ready</div><div class="wb-muted">Open the resolution workspace to decide how the fix should be carried out.</div>',unsafe_allow_html=True)
-        else: st.markdown('<div style="font-size:1.2rem;font-weight:800">Continue the review</div>',unsafe_allow_html=True)
-        if st.button("Resolution workspace →",key="wb_case_resolution",type="primary",use_container_width=True):st.session_state["nav"]="Resolution Control";st.rerun()
-        if st.button("Manual resolution guide",key="wb_case_playbook",use_container_width=True):st.session_state["nav"]="Resolution Playbook";st.rerun()
-        if st.button("View audit for this break",key="wb_case_audit",use_container_width=True):_open_audit(bid)
-        st.markdown('</div>',unsafe_allow_html=True)
-    render_case_audit(bid,compact=True)
-
-
 def render_case_audit(bid,compact=False):
     events=bb.audit_events(break_id=bid,limit=100)
     if not events: st.caption("No activity has been recorded for this break yet.");return
@@ -237,74 +182,26 @@ def render_case_audit(bid,compact=False):
     st.dataframe(pd.DataFrame(rows),hide_index=True,width="stretch",height=300 if compact else 520)
 
 
-def render_resolution():
-    _css(); bid=st.session_state.get("selected_break")
-    if not bid:st.info("Choose a break first.");return
-    case=bb.get_case(bid)
-    if not case:st.warning("Review the case before opening the resolution workspace.");return
-    row=_row_for(bid); proposal=case.get("proposal") or {}; gate=case.get("gate_result") or {}
-    st.markdown('<span class="eyebrow">Decision Workspace</span>',unsafe_allow_html=True); st.markdown(f'<div class="wb-title">Resolve {bid}</div>',unsafe_allow_html=True); st.markdown('<div class="wb-sub">Choose the approved path. Nothing is carried out until the required human decision is recorded.</div>',unsafe_allow_html=True)
-    c1,c2,c3=st.columns(3); c1.metric("Issue",root_cause_label(row.root_cause_key)); c2.metric("Status",_status(case.get("status"))); c3.metric("Approval", "Required" if not gate.get("authorized") else "Not required")
-    st.markdown('<div class="wb-card">',unsafe_allow_html=True)
-    st.markdown("### Proposed resolution")
-    st.markdown(proposal.get("recommended_action","No resolution proposal is available yet."))
-    if proposal.get("reason"):st.caption(proposal["reason"])
-    st.markdown('</div>',unsafe_allow_html=True)
-    if case.get("status")=="AWAITING_APPROVAL":
-        st.markdown("### Your decision")
-        approver=st.text_input("Operations ID",value=st.session_state.get("operator_id","OPS-1047"),key="resolve_approver")
-        notes=st.text_area("Decision note",placeholder="What did you verify before approving or rejecting?",key="resolve_notes")
-        a,b,c=st.columns(3)
-        if a.button("Approve & continue",type="primary",use_container_width=True,key="resolve_approve"):
-            bb.approve(bid,approver,notes,mode="Manually by Analyst");st.rerun()
-        if b.button("Send to manager",use_container_width=True,key="resolve_escalate"):
-            bb.mark(bid,"ESCALATED",approver,notes);st.rerun()
-        if c.button("Reject",use_container_width=True,key="resolve_reject"):
-            bb.reject(bid,approver,notes);st.rerun()
-    elif case.get("status")=="CLOSED":
-        st.success("Resolution completed and verification passed.")
-    else:
-        st.info(f"Current status: {_status(case.get('status'))}")
-    if st.button("View this break's audit →",key="resolve_audit"): _open_audit(bid)
-
-
-def render_playbook():
-    _css(); bid=st.session_state.get("selected_break")
-    if not bid:st.info("Choose a break first.");return
-    case=bb.get_case(bid); row=_row_for(bid)
-    st.markdown('<span class="eyebrow">Analyst Guidance</span>',unsafe_allow_html=True); st.markdown(f'<div class="wb-title">Manual resolution · {bid}</div>',unsafe_allow_html=True)
-    st.markdown('<div class="wb-sub">A practical checklist for resolving the break when the correction is performed by an analyst.</div>',unsafe_allow_html=True)
-    if not case:st.warning("Complete the case review first.");return
-    root=(case.get("rca") or {}).get("root_cause",row.root_cause_key)
-    playbooks=getattr(__import__("operational_views"),"PLAYBOOKS",{})
-    default=getattr(__import__("operational_views"),"DEFAULT_PLAYBOOK")
-    owner,escalation,reason,evidence,steps,do_not=playbooks.get(root,default)
-    st.markdown(f'<div class="wb-card"><div class="wb-label">Owner</div><div style="font-size:1.2rem;font-weight:800">{owner}</div><div class="wb-muted">Escalation: {escalation}</div><br><strong>{reason}</strong></div>',unsafe_allow_html=True)
-    st.markdown("### Do this in order")
-    for i,step in enumerate(steps,1):
-        st.markdown(f'<div class="wb-card-tight" style="margin-bottom:8px"><b>{i}</b>&nbsp;&nbsp;{step}</div>',unsafe_allow_html=True)
-    st.markdown("### Evidence checklist")
-    for i,item in enumerate(evidence):st.checkbox(item,key=f"wb_ev_{bid}_{i}")
-    st.markdown("### Do not close until")
-    for item in do_not:st.warning(item)
-    if st.button("Back to case →",key="wb_playbook_back",use_container_width=True):st.session_state["nav"]="Case Investigation";st.rerun()
-
-
 def render_audit():
-    _css(); st.markdown('<span class="eyebrow">Governance</span>',unsafe_allow_html=True); st.markdown('<div class="wb-title">Audit Trail</div>',unsafe_allow_html=True); st.markdown('<div class="wb-sub">A chronological record of human and system activity.</div>',unsafe_allow_html=True)
+    _css(); st.markdown('<span class="eyebrow">Governance</span>',unsafe_allow_html=True); st.markdown('<div class="wb-title">Audit Trail</div>',unsafe_allow_html=True); st.markdown('<div class="wb-sub">A chronological, append-only record of human and system activity. Stored in the case database, so it survives reloads and restarts.</div>',unsafe_allow_html=True)
     selected=st.session_state.get("audit_break_filter") or st.session_state.get("selected_break")
-    events=bb.audit_events(limit=2000); df=pd.DataFrame(events)
-    if df.empty:st.info("No audit events recorded yet.");return
-    df["timestamp"]=pd.to_datetime(df.timestamp,utc=True)
-    f1,f2,f3=st.columns([1.4,1.4,2]);
-    operators=f1.multiselect("Operations ID",sorted(df.actor_id.dropna().unique())); actions=f2.multiselect("Action",sorted(df.action.dropna().unique()));
-    break_options=[x for x in sorted(df.break_id.fillna("").unique()) if x]; default=[selected] if selected in break_options else []
+    f1,f2,f3,f4=st.columns([1.3,1.6,1.6,1])
+    operators=f1.multiselect("Operations ID",bb.audit_distinct("actor_id"))
+    actions=f2.multiselect("Action",bb.audit_distinct("action"))
+    break_options=bb.audit_distinct("break_id"); default=[selected] if selected in break_options else []
     breaks=f3.multiselect("Break",break_options,default=default)
-    if operators:df=df[df.actor_id.isin(operators)]
-    if actions:df=df[df.action.isin(actions)]
-    if breaks:df=df[df.break_id.isin(breaks)]
-    c1,c2,c3,c4=st.columns(4);c1.metric("Events",len(df));c2.metric("Human actions",int((df.actor_id!="SYSTEM").sum()));c3.metric("Breaks represented",df.break_id.replace("",pd.NA).nunique());c4.metric("Approvals",int((df.action=="APPROVAL_GRANTED").sum()))
+    who=f4.selectbox("Actor",["Everyone","People only","System only"])
+    filters=dict(actor_ids=operators or None,actions=actions or None,break_ids=breaks or None)
+    s=bb.audit_summary(**filters)
+    c1,c2,c3,c4=st.columns(4);c1.metric("Events",f"{s['total']:,}");c2.metric("Human actions",f"{s['human']:,}");c3.metric("Breaks represented",f"{s['breaks']:,}");c4.metric("Approvals",f"{s['approvals']:,}")
+    events=bb.audit_events(limit=3000,**filters); df=pd.DataFrame(events)
+    if df.empty:st.info("No audit events match these filters.");return
+    if who=="People only":df=df[df.actor_id!="SYSTEM"]
+    elif who=="System only":df=df[df.actor_id=="SYSTEM"]
+    df["timestamp"]=pd.to_datetime(df.timestamp,utc=True)
     out=df.sort_values("timestamp",ascending=False).copy();out["Timestamp"]=out.timestamp.dt.strftime("%d %b %Y · %H:%M:%S UTC");out=out.rename(columns={"actor_id":"Operations ID","break_id":"Break ID","action":"Action","detail":"What was done","source":"Source"});st.dataframe(out[["Timestamp","Operations ID","Break ID","Action","What was done","Source"]],hide_index=True,width="stretch",height=540)
+    if s["total"]>len(events):st.caption(f"Showing the latest {len(events):,} of {s['total']:,} events. Filter by break or operator to narrow it down.")
+    st.download_button("Download these events (CSV)",out[["Timestamp","Operations ID","Break ID","Action","What was done","Source"]].to_csv(index=False).encode("utf-8"),file_name="resolvia_audit.csv",mime="text/csv")
     if selected:
         st.markdown(f"### Audit for {selected}");render_case_audit(selected)
 
@@ -312,12 +209,12 @@ def render_audit():
 def render_manager():
     _css(); df=bb.load_breaks_df().copy();df["age_days"]=_age(df);statuses=bb.all_case_statuses();df["status"]=df.break_id.map(lambda b:statuses.get(b,"NOT_STARTED"))
     st.markdown('<span class="eyebrow">Manager Workspace</span>',unsafe_allow_html=True);st.markdown('<div class="wb-title">Operations Overview</div>',unsafe_allow_html=True);st.markdown('<div class="wb-sub">A quick view of workload, ageing, exposure and work that needs attention.</div>',unsafe_allow_html=True)
-    vals=[("Arrived",len(df)),("Open",int((~df.status.isin(["CLOSED","REJECTED"])).sum())),("Resolved",int((df.status=="CLOSED").sum())),("Age ≥ 1 day",int((df.age_days>=1).sum())),("Age ≥ 3 days",int((df.age_days>=3).sum())),("Escalated",int((df.status=="ESCALATED").sum()))]
-    cols=st.columns(6)
+    vals=[("Arrived",len(df)),("Open",int((~df.status.isin(["CLOSED","REJECTED"])).sum())),("Resolved",int((df.status=="CLOSED").sum())),("Resolved %",f"{(df.status=='CLOSED').mean():.0%}"),("Age ≥ 1 day",int((df.age_days>=1).sum())),("Age ≥ 3 days",int((df.age_days>=3).sum())),("Escalated",int((df.status=="ESCALATED").sum()))]
+    cols=st.columns(len(vals))
     for col,(label,val) in zip(cols,vals):
-        with col:st.markdown(f'<div class="wb-card-tight"><div class="wb-label">{label}</div><div class="wb-big">{val:,}</div></div>',unsafe_allow_html=True)
+        with col:st.markdown(f'<div class="wb-card-tight"><div class="wb-label">{label}</div><div class="wb-big">{val if isinstance(val,str) else f"{val:,}"}</div></div>',unsafe_allow_html=True)
     st.markdown("### Manager attention")
-    att=df[(df.severity=="P0")|(df.age_days>=3)|df.status.isin(["AWAITING_APPROVAL","ESCALATED"])].sort_values(["age_days","exposure"],ascending=False).head(12)
+    att=df[~df.status.isin(["CLOSED","REJECTED"])&((df.severity=="P0")|(df.age_days>=3)|df.status.isin(["AWAITING_APPROVAL","ESCALATED","REOPENED"]))].sort_values(["age_days","exposure"],ascending=False).head(12)
     if att.empty:st.success("No items currently require manager attention.")
     else:
         for _,r in att.iterrows():

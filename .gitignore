@@ -26,3 +26,8 @@ Thumbs.db
 # local-only material
 archive/
 project_plan_resolvia.md
+
+# live case database (created from backend/db/seed/resolvia_seed.db on first run)
+backend/db/resolvia.db
+backend/db/resolvia.db-*
+backend/knowledge/operational_audit.json

@@ -105,17 +105,11 @@ def render_case():
         if investigation.get("document_evidence", {}).get("has_document"):
             st.write(investigation["document_evidence"].get("text", ""))
 
-    # Supplemental documents are scoped to this selected break and kept in
-    # Streamlit session state; they do not silently overwrite the original RCA.
+    # Supplemental documents are scoped to this break and saved in the case
+    # store, so they survive reloads; they never overwrite the original RCA.
     st.markdown("### Additional evidence")
     st.caption("Upload new documents for this break. RESOLVIA extracts their contents and creates a separate supplemental review; the original analysis and approval controls remain unchanged.")
     import document_evidence as de
-    evidence_key = f"supplemental_docs::{bid}"
-    reviews_key = f"supplemental_reviews::{bid}"
-    if evidence_key not in st.session_state:
-        st.session_state[evidence_key] = []
-    if reviews_key not in st.session_state:
-        st.session_state[reviews_key] = []
     uploaded = st.file_uploader(
         "Upload supporting files for this break",
         type=["pdf", "docx", "txt", "csv", "xlsx", "png", "jpg", "jpeg"],
@@ -124,7 +118,7 @@ def render_case():
         help="Maximum 8 MB per file. Scanned PDFs are not supported yet; use a text PDF or upload the extracted text."
     )
     if st.button("Process uploaded documents", key=f"process_supplemental_{bid}", use_container_width=True):
-        existing_hashes = {d["sha256"] for d in st.session_state[evidence_key]}
+        existing_hashes = {d["sha256"] for d in bb.supplemental_documents(bid)}
         added, errors = 0, []
         for file in uploaded or []:
             try:
@@ -136,9 +130,9 @@ def render_case():
                     "sha256": parsed["sha256"], "bytes": parsed["bytes"],
                     "truncated": parsed["truncated"],
                     "uploaded_by": st.session_state.get("operator_id", "OPS-1047"),
-                    "uploaded_at": pd.Timestamp.utcnow().isoformat(),
+                    "uploaded_at": bb.now_iso(),
                 }
-                st.session_state[evidence_key].append(record)
+                bb.add_supplemental_document(bid, record)
                 existing_hashes.add(parsed["sha256"])
                 added += 1
                 bb.audit("SUPPLEMENTAL_DOCUMENT_PROCESSED", bid,
@@ -156,7 +150,8 @@ def render_case():
             st.error(error)
         st.rerun()
 
-    documents = st.session_state[evidence_key]
+    documents = bb.supplemental_documents(bid)
+    reviews = bb.supplemental_reviews(bid)
     if documents:
         st.markdown(f"**Documents attached to this case: {len(documents)}**")
         for index, doc in enumerate(documents):
@@ -172,8 +167,8 @@ def render_case():
             with st.spinner("Reviewing supplemental evidence…"):
                 try:
                     review = de.review_supplemental_evidence(bid, row, case, documents)
-                    review["version"] = len(st.session_state[reviews_key]) + 1
-                    st.session_state[reviews_key].append(review)
+                    review["version"] = len(reviews) + 1
+                    bb.add_supplemental_review(bid, review)
                     bb.audit("SUPPLEMENTAL_EVIDENCE_REVIEWED", bid,
                              f"Supplemental review version {review['version']} using {len(documents)} document(s)",
                              metadata={"version": review["version"], "mode": review["mode"],
@@ -181,7 +176,7 @@ def render_case():
                     st.rerun()
                 except Exception as exc:
                     st.error(f"Supplemental review failed: {exc}")
-        for review in st.session_state[reviews_key]:
+        for review in reviews:
             with st.expander(f"Supplemental review v{review['version']} · {review['mode']}", expanded=True):
                 st.caption(f"Created: {review['created_at']}")
                 st.write(review["review"])
@@ -195,23 +190,29 @@ def render_case():
     if proposal:
         st.markdown(f'<div class="rc-card"><div class="rc-label">Recommended resolution</div><h3>{proposal.get("recommended_action", "")}</h3><div class="rc-muted">{proposal.get("reason", "")}</div><br><b>Owner:</b> {triage.get("route", "Operations")}</div>', unsafe_allow_html=True)
 
-    if status in {"CASE_CREATED", "IN_REVIEW", "AWAITING_APPROVAL"}:
+    if status in bb.DECISION_STATUSES:
+        if status == "ESCALATED":
+            st.warning("Escalated. The break stays open until the receiving owner approves a fix, resolves it manually or hands it back.")
         st.markdown('<div class="rc-next"><div class="rc-label">Next step</div><div class="rc-big">Read the Resolution Guide</div><div class="rc-muted">Before choosing a resolution method, review who owns the correction, what must be checked, which evidence is required, and when to escalate.</div></div>', unsafe_allow_html=True)
         if st.button("Read Resolution Guide →", type="primary", use_container_width=True, key="real_read_guide"):
             bb.audit("RESOLUTION_GUIDE_OPENED", bid, "Analyst opened the manual resolution guide")
             go("Resolution Playbook")
+    elif status == "REOPENED":
+        st.markdown('<div class="rc-next"><div class="rc-label">Reopened</div><div class="rc-big">The fix did not hold</div><div class="rc-muted">Validation found the records still disagree after the automated fix. Resolve it manually (with independent verification) or escalate it.</div></div>', unsafe_allow_html=True)
+        if st.button("Choose how to resolve →", type="primary", use_container_width=True, key="real_reopened"):
+            go("Resolution Control")
     elif status == "MANUAL_IN_PROGRESS":
         st.markdown('<div class="rc-next"><div class="rc-label">Manual action in progress</div><div class="rc-big">Break remains OPEN</div><div class="rc-muted">The analyst selected manual resolution. Perform the correction in the appropriate operational system, then return to record exactly what was done.</div></div>', unsafe_allow_html=True)
         if st.button("Record manual action →", type="primary", use_container_width=True, key="real_record_manual"):
             go("Resolution Control")
     elif status == "AWAITING_VERIFICATION":
-        st.markdown('<div class="rc-next"><div class="rc-label">Awaiting verification</div><div class="rc-big">Do not close yet</div><div class="rc-muted">The manual action is recorded. A separate verification step is required before closure.</div></div>', unsafe_allow_html=True)
+        st.markdown('<div class="rc-next"><div class="rc-label">Awaiting verification</div><div class="rc-big">Do not close yet</div><div class="rc-muted">The manual action is recorded. A different person must verify it before closure.</div></div>', unsafe_allow_html=True)
         if st.button("Verify manual resolution →", type="primary", use_container_width=True, key="real_verify"):
             go("Resolution Control")
     elif status == "CLOSED":
-        st.success("Resolved and verified. This case is closed.")
-    elif status == "ESCALATED":
-        st.warning("Escalated. The break remains open until the receiving owner resolves or reassigns it.")
+        resolution_card(case)
+    elif status == "REJECTED":
+        st.error("The proposed fix was rejected. Nothing was changed.")
 
     st.markdown("### Case history")
     case_audit(bid)
@@ -256,17 +257,40 @@ def render_guide():
     st.caption("This choice records intent. It does not close the break. Every path still requires action and verification.")
     a, b, c = st.columns(3)
     if a.button("Resolve Manually →", type="primary", use_container_width=True, key="guide_manual_real"):
-        st.session_state["resolution_choice"] = "Manual"
+        st.session_state[f"resolution_choice::{bid}"] = "Manual"
         bb.audit("MANUAL_RESOLUTION_CHOICE_VIEWED", bid, "Analyst chose the manual resolution path from the guide")
         go("Resolution Control")
     if b.button("Assisted Resolution →", use_container_width=True, key="guide_assisted_real"):
-        st.session_state["resolution_choice"] = "Assisted"
+        st.session_state[f"resolution_choice::{bid}"] = "Assisted"
         bb.audit("ASSISTED_RESOLUTION_CHOICE_VIEWED", bid, "Analyst chose the controlled assisted resolution path from the guide")
         go("Resolution Control")
     if c.button("Escalate →", use_container_width=True, key="guide_escalate_real"):
-        st.session_state["resolution_choice"] = "Escalate"
+        st.session_state[f"resolution_choice::{bid}"] = "Escalate"
         bb.audit("ESCALATION_CHOICE_VIEWED", bid, "Analyst chose escalation after reviewing the guide")
         go("Resolution Control")
+
+
+def resolution_card(case):
+    rec = bb.resolution_record(case)
+    if not rec:
+        return
+    when = pd.to_datetime(rec["closed_at"], utc=True).strftime("%d %b %Y · %H:%M UTC") if rec["closed_at"] else "-"
+    ref = f'<br><b>Evidence reference:</b> {rec["evidence_reference"]}' if rec.get("evidence_reference") else ""
+    st.markdown(f'<div class="rc-card" style="border-color:#1f6f55"><div class="rc-label" style="color:#34E5A6">Resolved &amp; verified</div>'
+                f'<h3>{rec["how"]}</h3><div class="rc-muted"><b>Closed:</b> {when}<br><b>By:</b> {rec["by"]}<br>'
+                f'<b>Verification:</b> {rec.get("validation") or "-"}{ref}</div></div>', unsafe_allow_html=True)
+
+
+def _choice_buttons(bid, allowed):
+    cols = st.columns(len(allowed))
+    labels = {"Manual": "Resolve manually", "Assisted": "Assisted (approve fix)", "Escalate": "Escalate"}
+    for col, opt in zip(cols, allowed):
+        if col.button(labels[opt], use_container_width=True, key=f"choose_{opt}_{bid}",
+                      type="primary" if opt == allowed[0] else "secondary"):
+            st.session_state[f"resolution_choice::{bid}"] = opt
+            bb.audit(f"{opt.upper()}_RESOLUTION_CHOICE_VIEWED" if opt != "Escalate" else "ESCALATION_CHOICE_VIEWED",
+                     bid, f"Analyst chose the {opt.lower()} path")
+            st.rerun()
 
 
 def render_resolution():
@@ -281,29 +305,77 @@ def render_resolution():
         return
     operator = st.session_state.get("operator_id", "OPS-1047")
     status = case.get("status")
-    choice = st.session_state.get("resolution_choice")
+    proposal = case.get("proposal") or {}
+    gate = case.get("gate_result") or {}
+    choice_key = f"resolution_choice::{bid}"
+    choice = st.session_state.get(choice_key)
     st.markdown(f'<div class="rc-title">Resolution · {bid}</div>', unsafe_allow_html=True)
-    st.markdown('<div class="rc-sub">Human action is recorded here. Closure is a separate verification step.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="rc-sub">Human action is recorded here. Closure is a separate verification step. Everything you do is saved and stays after a reload.</div>', unsafe_allow_html=True)
+    st.markdown(f"**Status:** {status_label(status)}")
 
-    if status in {"CASE_CREATED", "IN_REVIEW", "AWAITING_APPROVAL"}:
+    if status in bb.DECISION_STATUSES or status == "REOPENED":
+        allowed = ["Manual", "Escalate"] if status == "REOPENED" else (
+            ["Assisted", "Manual", "Escalate"] if not gate.get("authorized") else ["Manual", "Escalate"])
+        if status == "ESCALATED":
+            allowed = [a for a in allowed if a != "Escalate"]
+        if choice not in allowed:
+            choice = None
+        if proposal:
+            st.markdown(f'<div class="rc-card"><div class="rc-label">Proposed resolution</div><h3>{proposal.get("recommended_action", "")}</h3><div class="rc-muted">{proposal.get("reason", "")}</div></div>', unsafe_allow_html=True)
+        if status == "ESCALATED":
+            st.warning("This break was escalated. As the receiving owner you can approve the controlled fix or resolve it manually.")
+        if status == "REOPENED":
+            st.warning("Validation reopened this break after the automated fix. Resolve it manually or escalate it.")
+
+        if choice is None:
+            st.markdown("### How will you resolve this break?")
+            st.caption("Not sure? Read the Resolution Guide first.")
+            _choice_buttons(bid, allowed)
+            if st.button("Open Resolution Guide", use_container_width=True, key="back_guide"):
+                go("Resolution Playbook")
+            return
+
+        if st.button("← Choose a different path", key=f"rechoose_{bid}"):
+            st.session_state.pop(choice_key, None)
+            st.rerun()
+
         if choice == "Escalate":
             st.markdown('<div class="rc-next"><div class="rc-label">Escalation</div><div class="rc-big">Keep the break open</div><div class="rc-muted">Escalation transfers ownership. It is not a closure action.</div></div>', unsafe_allow_html=True)
-            notes = st.text_area("Why are you escalating?", key="esc_notes")
+            notes = st.text_area("Why are you escalating?", key=f"esc_notes_{bid}")
             if st.button("Record escalation →", type="primary", use_container_width=True, key="record_escalation"):
                 bb.mark(bid, "ESCALATED", operator, notes or "Analyst escalated after reviewing the guide.")
+                st.session_state.pop(choice_key, None)
                 st.rerun()
             return
+
         if choice == "Assisted":
-            st.markdown('<div class="rc-card"><div class="rc-label">Controlled assisted resolution</div><h3>Approval is required before the controlled action runs.</h3><div class="rc-muted">Review the proposal and evidence. This is the only path here that can invoke the controlled execution workflow.</div></div>', unsafe_allow_html=True)
-            notes = st.text_area("Approval note", key="assist_notes")
-            if st.button("Approve controlled action →", type="primary", use_container_width=True, key="assist_approve"):
-                bb.approve(bid, operator, notes, mode="Assisted")
+            st.markdown('<div class="rc-card"><div class="rc-label">Controlled assisted resolution</div><h3>Approval is required before the controlled action runs.</h3><div class="rc-muted">Review the proposal and evidence. Approving runs the controlled fix and then re-checks the records; the case closes only if validation passes.</div></div>', unsafe_allow_html=True)
+            notes = st.text_area("Approval note", placeholder="What did you verify before approving?", key=f"assist_notes_{bid}")
+            a, b = st.columns(2)
+            if a.button("Approve controlled action →", type="primary", use_container_width=True, key="assist_approve"):
+                with st.status("Carrying out the fix and re-checking it", expanded=True) as s:
+                    bb.approve(bid, operator, notes, mode="Assisted",
+                               on_event=lambda stage, label, detail: st.write(f"{label}: {detail}"))
+                    s.update(label="Done", state="complete")
+                st.session_state.pop(choice_key, None)
+                st.rerun()
+            if b.button("Reject the proposal", use_container_width=True, key="assist_reject"):
+                bb.reject(bid, operator, notes or "Rejected after review")
+                st.session_state.pop(choice_key, None)
                 st.rerun()
             return
-        st.markdown('<div class="rc-card"><div class="rc-label">Ready to choose</div><h3>How will you resolve this break?</h3><div class="rc-muted">If you have not read the Resolution Guide, go back first. Manual resolution does not execute anything inside Resolvia and does not close the break.</div></div>', unsafe_allow_html=True)
-        if st.button("Open Resolution Guide →", type="primary", use_container_width=True, key="back_guide"):
-            go("Resolution Playbook")
-        return
+
+        if choice == "Manual":
+            st.markdown('<div class="rc-next"><div class="rc-label">Manual resolution</div><div class="rc-big">You will make the correction yourself</div><div class="rc-muted">Resolvia does not execute anything on this path. The break stays open while you correct it in the owning system, then you record what you did and a different person verifies it.</div></div>', unsafe_allow_html=True)
+            notes = st.text_input("Note (optional)", placeholder="e.g. Correcting SSI in the settlement system", key=f"manual_start_note_{bid}")
+            if st.button("Start manual resolution →", type="primary", use_container_width=True, key="manual_start"):
+                try:
+                    bb.begin_manual(bid, operator, notes)
+                    st.session_state.pop(choice_key, None)
+                    st.rerun()
+                except Exception as exc:
+                    st.error(str(exc))
+            return
 
     if status == "MANUAL_IN_PROGRESS":
         st.markdown('<div class="rc-next"><div class="rc-label">Manual correction</div><div class="rc-big">Record what you actually did</div><div class="rc-muted">Perform the correction in the relevant operational system. Resolvia is recording the human action; it is not pretending to execute the manual correction.</div></div>', unsafe_allow_html=True)
@@ -323,8 +395,11 @@ def render_resolution():
         return
 
     if status == "AWAITING_VERIFICATION":
-        st.markdown('<div class="rc-next"><div class="rc-label">Independent verification</div><div class="rc-big">Verify before closure</div><div class="rc-muted">Check the correction against the relevant source record. The verifier records what was checked.</div></div>', unsafe_allow_html=True)
-        verifier = st.text_input("Verifier Operations ID", value=operator, key="real_verifier")
+        mr = case.get("manual_resolution") or {}
+        st.markdown('<div class="rc-next"><div class="rc-label">Independent verification</div><div class="rc-big">Verify before closure</div><div class="rc-muted">A different person checks the correction against the source record and records what was checked (four-eyes).</div></div>', unsafe_allow_html=True)
+        st.markdown(f"**Correction recorded by:** {mr.get('submitted_by', '-')}  \n**What was done:** {mr.get('action_taken', '-')}  \n**Reference:** {mr.get('evidence_reference', '-')}")
+        verifier = st.text_input("Verifier Operations ID", value="" if operator == mr.get("submitted_by") else operator,
+                                 placeholder="A different Operations ID, e.g. OPS-3051", key="real_verifier")
         notes = st.text_area("Verification notes", placeholder="What did you check and what confirms the break is resolved?", key="real_verification_notes")
         if st.button("Verify & close case →", type="primary", use_container_width=True, key="real_verify_close"):
             try:
@@ -335,8 +410,8 @@ def render_resolution():
         return
 
     if status == "CLOSED":
-        st.success("This case is closed after verification.")
-    elif status == "ESCALATED":
-        st.warning("This case is escalated and remains open.")
+        resolution_card(case)
+    elif status == "REJECTED":
+        st.error("The proposed fix was rejected. Nothing was changed.")
     if st.button("View this break's audit →", key="real_resolution_audit"):
         audit(bid)

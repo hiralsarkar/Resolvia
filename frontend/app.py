@@ -61,6 +61,19 @@ with st.sidebar:
 
     st.markdown("<hr/>", unsafe_allow_html=True)
     st.caption("Human-led operations. Every decision and action is recorded.")
+    info = bb.storage_info()
+    kp = bb.summary_kpis()
+    st.caption(f"{kp['n_closed']:,} of {kp['n_total']:,} breaks resolved ({kp['pct_closed']:.0%}). "
+               + ("Saved to the case database." if info["persistent"] else "Running without a saved database."))
+    with st.expander("Demo data"):
+        st.caption("Cases, approvals and the audit trail are saved automatically. "
+                   "Resetting discards everything done since the seed and restores the starting history.")
+        confirm = st.checkbox("I want to discard live changes", key="reset_confirm")
+        if st.button("Reset to starting data", disabled=not confirm, use_container_width=True, key="reset_demo"):
+            bb.reset_demo()
+            st.session_state.pop("reset_confirm", None)
+            st.session_state["selected_break"] = None
+            st.rerun()
 
 if nav == "Agent Architecture":
     command_center.render()

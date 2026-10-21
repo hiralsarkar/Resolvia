@@ -159,6 +159,28 @@ For the optional narrative layer, copy `.env.example` to `.env` and set `OPENROU
 
 ---
 
+## Saved state and starting history
+
+Cases, approvals, the control-gate log, the audit trail and uploaded evidence are
+saved to a SQLite case store (`backend/case_store.py`) the moment they happen. Reload
+the page or restart the app and every break is exactly where you left it.
+
+- `backend/db/seed/resolvia_seed.db` (committed) is the starting point: about **25% of
+  the 3,000 breaks already resolved** through the real pipeline, with a full audit
+  trail, plus a set of cases still in flight (waiting for approval, in review,
+  escalated, manual fix in progress, waiting for verification, reopened).
+- `backend/db/resolvia.db` (git-ignored) is the live database. It is copied from the
+  seed on first start. Set `RESOLVIA_DB` to keep it somewhere else.
+- **Demo data → Reset to starting data** in the sidebar throws away live changes.
+- Rebuild the seed with `python backend/db/seed_cases.py` (optionally `--resolved 0.22`).
+
+Closing a case takes one of three paths: a policy-authorized administrative fix that
+passes validation, a controlled action approved by a named person and validated, or a
+manual correction recorded with an evidence reference and verified by a **different**
+Operations ID (four-eyes).
+
+---
+
 ## Rebuilding the data and models
 
 Generators run from `data/`; model and retrieval builds run from `backend/`.
@@ -184,7 +206,7 @@ python eval/baseline_comparison.py
 
 ```
 data/       Synthetic data generation, taxonomy, validation, EDA
-backend/    Agents, orchestrator, control gate, models, OCR, retrieval, evaluation
+backend/    Agents, orchestrator, control gate, workflow, case store, models, OCR, retrieval, evaluation
 frontend/   Streamlit application, theme, workbench and interaction layer
 docs/       Proposal, project pitch, EDA, model comparison and workflow visual
 ```
@@ -193,7 +215,8 @@ docs/       Proposal, project pitch, EDA, model comparison and workflow visual
 
 ## Known limits
 
-- Application state is held in memory, so cases reset when the server restarts.
+- State is saved to a local SQLite file. On Streamlit Community Cloud the disk is reset when the app reboots or redeploys, so the live app returns to the seed state then; a hosted Postgres/Supabase store is the next step for durable cloud state.
+- Operations IDs are typed in, not tied to a login.
 - The repair step is simulated; no real settlement or trading system is modified.
 - The dataset is synthetic and designed for realistic workflow demonstration.
 - Production deployment would require persistent state, enterprise data controls, authentication, audit infrastructure and integration with real post-trade systems.

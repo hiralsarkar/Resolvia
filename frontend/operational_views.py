@@ -13,7 +13,7 @@ DEFAULT_PLAYBOOK = ("Operations / Middle Office", "Operations Manager", "Confirm
 
 def render_operator_context():
     st.sidebar.caption("OPERATOR ID")
-    value = st.sidebar.text_input("", value=st.session_state.get("operator_id", "OPS-1047"), key="operator_id_input", label_visibility="collapsed").strip().upper() or "OPS-1047"
+    value = st.sidebar.text_input("Operator ID", value=st.session_state.get("operator_id", "OPS-1047"), key="operator_id_input", label_visibility="collapsed").strip().upper() or "OPS-1047"
     if value != st.session_state.get("operator_id"):
         st.session_state["operator_id"] = value
         bb.audit("OPERATOR_SESSION", detail=f"Operator context set to {value}")

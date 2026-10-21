@@ -95,6 +95,7 @@ STATUS_LABEL = {
     "CLOSED": "Resolved", "REOPENED": "Needs another look", "AWAITING_APPROVAL": "Waiting for approval",
     "REJECTED": "Rejected", "OPEN": "Open", "NOT_STARTED": "Not started yet",
     "HALTED_DATA_QUALITY": "Stopped - data problem", "IN_REVIEW": "In review", "ESCALATED": "Escalated to senior", "CASE_CREATED": "Started",
+    "MANUAL_IN_PROGRESS": "Manual fix in progress", "AWAITING_VERIFICATION": "Waiting for verification",
 }
 SEVERITY_LABEL = {"P0": "Critical", "P1": "High", "P2": "Low"}
 TIER_LABEL = {"CONTROLLED_ACTION": "Needs approval", "PROPOSAL": "No approval needed"}
