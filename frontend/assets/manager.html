@@ -250,6 +250,7 @@ function countUp(el, to, fmt) {
   var start = performance.now(), from = 0;
   function step(t) { var k = Math.min(1, (t - start) / 900); k = 1 - Math.pow(1 - k, 3); el.textContent = fmt(from + (to - from) * k); if (k < 1) requestAnimationFrame(step); }
   requestAnimationFrame(step);
+  setTimeout(function () { el.textContent = fmt(to); }, 1100);  // lands even if the tab is in the background
 }
 
 function kpis(R) {
