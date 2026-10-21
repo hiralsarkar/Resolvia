@@ -10,7 +10,7 @@ import pandas as pd
 import altair as alt
 
 import backend_bridge as bb
-from theme import COLORS, STATUS_LABEL, SEVERITY_LABEL, root_cause_label
+from theme import COLORS, FAMILY_COLOR, STATUS_COLOR, STATUS_LABEL, SEVERITY_LABEL, root_cause_label
 
 
 STAGES = [
@@ -312,12 +312,17 @@ def render_audit():
 
 
 
-def _bar(series, x_title):
-    """A fixed bar chart with value labels. No zoom or pan, so the page scrolls normally."""
+PALETTE=[COLORS[k] for k in ("accent","violet","amber","forest","magenta","signal","slate","accent_deep")]
+
+
+def _bar(series, x_title, colors=None):
+    """A fixed bar chart with value labels and a colour per bar. No zoom or pan,
+    so the page scrolls normally."""
     d=pd.DataFrame({"label":series.index.astype(str),"count":series.values})
+    colors=colors or [PALETTE[i%len(PALETTE)] for i in range(len(d))]
     base=alt.Chart(d).encode(x=alt.X("label:N",sort=None,title=x_title,axis=alt.Axis(labelAngle=0,labelColor=COLORS["ink_soft"],titleColor=COLORS["ink_soft"])),
                               y=alt.Y("count:Q",title="Breaks",axis=alt.Axis(labelColor=COLORS["ink_soft"],titleColor=COLORS["ink_soft"],gridColor=COLORS["hairline"])))
-    bars=base.mark_bar(color=COLORS["accent_deep"],cornerRadiusTopLeft=4,cornerRadiusTopRight=4).encode(tooltip=[alt.Tooltip("label:N",title=x_title),alt.Tooltip("count:Q",title="Breaks")])
+    bars=base.mark_bar(cornerRadiusTopLeft=4,cornerRadiusTopRight=4).encode(color=alt.Color("label:N",scale=alt.Scale(domain=list(d.label),range=colors),legend=None),tooltip=[alt.Tooltip("label:N",title=x_title),alt.Tooltip("count:Q",title="Breaks")])
     text=base.mark_text(dy=-8,color=COLORS["ink"]).encode(text="count:Q")
     st.altair_chart((bars+text).properties(height=280,background="transparent").configure_view(strokeWidth=0),width="stretch")
 
@@ -340,8 +345,9 @@ def render_manager():
     age=df.age_days.value_counts().sort_index(); age=age[age.index<=7]
     age.index=[f"{int(i)} day" + ("" if int(i)==1 else "s") for i in age.index]; _bar(age,"Age")
     st.markdown("### Breaks by category")
-    _bar(df.family.value_counts(),"Category")
+    fam=df.family.value_counts(); _bar(fam,"Category",[FAMILY_COLOR.get(f,COLORS["slate"]) for f in fam.index])
     st.markdown("### Work status")
-    _bar(df.status.map(_status).value_counts(),"Status")
+    stat=df.status.value_counts(); colors=[COLORS["slate"] if s=="NOT_STARTED" else STATUS_COLOR.get(s,(COLORS["violet"],))[0] for s in stat.index]
+    stat.index=[_status(s) for s in stat.index]; _bar(stat,"Status",colors)
     st.markdown("### Exposure by category")
     exp=df.groupby("family",as_index=False).exposure.sum().sort_values("exposure",ascending=False);exp["Exposure (₹ Cr)"]=exp.exposure/1e7;st.dataframe(exp[["family","Exposure (₹ Cr)"]].rename(columns={"family":"Category"}),hide_index=True,width="stretch")

@@ -1,5 +1,7 @@
 import os
 import sys
+from datetime import datetime
+from zoneinfo import ZoneInfo
 import pandas as pd
 import streamlit as st
 
@@ -34,7 +36,7 @@ REPORTED_ISSUE = {
 
 
 @st.cache_data(show_spinner=False)
-def load_breaks_df():
+def _breaks_df():
     """The break queue as the reconciliation engine hands it over.
 
     The generator's root-cause label is left out on purpose. The app only
@@ -56,6 +58,17 @@ def load_breaks_df():
             "security": trade.get("security", ""), "business_date": b["business_date"],
         })
     return pd.DataFrame(rows)
+
+
+def load_breaks_df():
+    """The queue as of today: every open break carries today's business date,
+    so the app shows a fresh day's work. Closed and rejected cases keep theirs."""
+    df = _breaks_df().copy()
+    today = datetime.now(ZoneInfo("Asia/Kolkata")).date().isoformat()
+    statuses = orchestrator.case_statuses()
+    is_open = ~df.break_id.map(statuses).isin(["CLOSED", "REJECTED"])
+    df.loc[is_open, "business_date"] = today
+    return df
 
 
 def diagnosed_cause(break_id):

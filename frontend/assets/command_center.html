@@ -576,8 +576,9 @@
   AGENTS.forEach(function (a, i) { PHASES.push(a); if (i < AGENTS.length - 1) PHASES.push('travel-' + a); });
   PHASES.push('hold');
 
-  // paced for reading: 5.5 to 7 seconds per agent, lines 1.2s apart
-  var DUR = { triage: 5500, investigate: 6500, rca: 6500, resolution: 6800, gate: 7000, validation: 6500, hold: 5000 };
+  // each agent works for 6 seconds, then the case moves on. The pacing is the same
+  // with reduced motion switched on; that setting only turns off the movement effects.
+  var DUR = { triage: 6000, investigate: 6000, rca: 6000, resolution: 6000, gate: 6000, validation: 6000, hold: 5000 };
   var LINE_DELAY = 1200, TRAVEL_LEG = 1000, HUB_HOLD = 800;
 
   var caseIdx = 0, phaseIdx = 0, timer = null, lineTimers = [];
@@ -626,7 +627,7 @@
       var row = document.createElement('div');
       row.className = 'console-line'; row.textContent = text;
       el.appendChild(row);
-      var delay = reduced ? 0 : i * LINE_DELAY;
+      var delay = i * LINE_DELAY;
       lineTimers.push(setTimeout(function () {
         el.querySelectorAll('.console-line.fresh').forEach(function (l) { l.classList.remove('fresh'); });
         row.classList.add('shown', 'fresh');
@@ -658,7 +659,7 @@
         var vc = desks.validation.querySelector('.val-check');
         if (vc) { vc.classList.remove('drawn'); void desks.validation.offsetWidth; vc.classList.add('drawn'); }
       }
-    }, reduced ? 0 : data.lines.length * LINE_DELAY + 200));
+    }, data.lines.length * LINE_DELAY + 200));
   }
 
   function setActive(agent) {
@@ -755,7 +756,7 @@
     }
 
     var dur = phase === 'hold' ? DUR.hold : (AGENTS.indexOf(phase) !== -1 ? DUR[phase] : TRAVEL_LEG * 2 + HUB_HOLD + 350);
-    timer = setTimeout(advance, reduced ? Math.min(dur, 700) : dur);
+    timer = setTimeout(advance, dur);
   }
 
   function animateAlongSpoke(pathEl, fromT, toT, duration, onDone) {
