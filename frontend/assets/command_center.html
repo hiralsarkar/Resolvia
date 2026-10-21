@@ -576,9 +576,9 @@
   AGENTS.forEach(function (a, i) { PHASES.push(a); if (i < AGENTS.length - 1) PHASES.push('travel-' + a); });
   PHASES.push('hold');
 
-  // paced for reading: each line appears 2s apart and stays up about 3s after the last one
-  var DUR = { triage: 9200, investigate: 11200, rca: 11200, resolution: 11400, gate: 11600, validation: 11200, hold: 7000 };
-  var LINE_DELAY = 2000, TRAVEL_LEG = 1500, HUB_HOLD = 1200;
+  // paced for reading: 5.5 to 7 seconds per agent, lines 1.2s apart
+  var DUR = { triage: 5500, investigate: 6500, rca: 6500, resolution: 6800, gate: 7000, validation: 6500, hold: 5000 };
+  var LINE_DELAY = 1200, TRAVEL_LEG = 1000, HUB_HOLD = 800;
 
   var caseIdx = 0, phaseIdx = 0, timer = null, lineTimers = [];
   var desks = {};
