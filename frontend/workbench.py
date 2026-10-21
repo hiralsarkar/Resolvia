@@ -7,6 +7,7 @@ details out of the working surface.
 """
 import streamlit as st
 import pandas as pd
+import altair as alt
 
 import backend_bridge as bb
 from theme import COLORS, STATUS_LABEL, SEVERITY_LABEL, root_cause_label
@@ -310,6 +311,16 @@ def render_audit():
         st.markdown(f"### Audit for {selected}");render_case_audit(selected)
 
 
+
+def _bar(series, x_title):
+    """A fixed bar chart with value labels. No zoom or pan, so the page scrolls normally."""
+    d=pd.DataFrame({"label":series.index.astype(str),"count":series.values})
+    base=alt.Chart(d).encode(x=alt.X("label:N",sort=None,title=x_title,axis=alt.Axis(labelAngle=0,labelColor=COLORS["ink_soft"],titleColor=COLORS["ink_soft"])),
+                              y=alt.Y("count:Q",title="Breaks",axis=alt.Axis(labelColor=COLORS["ink_soft"],titleColor=COLORS["ink_soft"],gridColor=COLORS["hairline"])))
+    bars=base.mark_bar(color=COLORS["accent_deep"],cornerRadiusTopLeft=4,cornerRadiusTopRight=4).encode(tooltip=[alt.Tooltip("label:N",title=x_title),alt.Tooltip("count:Q",title="Breaks")])
+    text=base.mark_text(dy=-8,color=COLORS["ink"]).encode(text="count:Q")
+    st.altair_chart((bars+text).properties(height=280,background="transparent").configure_view(strokeWidth=0),width="stretch")
+
 def render_manager():
     _css(); df=bb.load_breaks_df().copy();df["age_days"]=_age(df);statuses=bb.all_case_statuses();df["status"]=df.break_id.map(lambda b:statuses.get(b,"NOT_STARTED"))
     st.markdown('<span class="eyebrow">Manager Workspace</span>',unsafe_allow_html=True);st.markdown('<div class="wb-title">Operations Overview</div>',unsafe_allow_html=True);st.markdown('<div class="wb-sub">A quick view of workload, ageing, exposure and work that needs attention.</div>',unsafe_allow_html=True)
@@ -327,10 +338,10 @@ def render_manager():
             if cols[5].button("Open",key=f"mgr_open_{r.break_id}"):_open_case(r.break_id)
     st.markdown("### Ageing")
     age=df.age_days.value_counts().sort_index(); age=age[age.index<=7]
-    st.bar_chart(age)
+    age.index=[f"{int(i)} day" + ("" if int(i)==1 else "s") for i in age.index]; _bar(age,"Age")
     st.markdown("### Breaks by category")
-    st.bar_chart(df.family.value_counts())
+    _bar(df.family.value_counts(),"Category")
     st.markdown("### Work status")
-    st.bar_chart(df.status.map(_status).value_counts())
+    _bar(df.status.map(_status).value_counts(),"Status")
     st.markdown("### Exposure by category")
     exp=df.groupby("family",as_index=False).exposure.sum().sort_values("exposure",ascending=False);exp["Exposure (₹ Cr)"]=exp.exposure/1e7;st.dataframe(exp[["family","Exposure (₹ Cr)"]].rename(columns={"family":"Category"}),hide_index=True,width="stretch")
