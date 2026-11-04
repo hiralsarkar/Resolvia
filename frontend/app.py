@@ -5,8 +5,6 @@ from theme import inject_global_css
 st.set_page_config(page_title="Resolvia", page_icon=os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "logo.png"), layout="wide", initial_sidebar_state="expanded")
 inject_global_css()
 
-import warmup
-warmup.page_started()
 
 if "nav" not in st.session_state:
     st.session_state["nav"] = "Agent Architecture"
@@ -86,8 +84,3 @@ elif nav in ("Case Investigation", "Resolution Control", "Resolution Playbook"):
         realistic_case.render_resolution()
     else:
         realistic_case.render_guide()
-
-# Everything heavy loads in the background, after this page has been sent,
-# and only while no page is being drawn.
-warmup.page_finished()
-warmup.start()
