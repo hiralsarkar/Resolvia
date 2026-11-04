@@ -114,9 +114,40 @@ def _closest(token, choices, max_distance=1):
     return near[0] if len(near) == 1 else None
 
 
+def notice_signals(text):
+    """Every signal the notice gives on mandatory vs voluntary, with the field it
+    came from and the value read, so the analyst can see what drove the call.
+    Each entry: {"signal", "field", "read", "points_to"} with points_to MAND or VOLU."""
+    if not text:
+        return []
+    norm = text.upper().translate(_DIGIT_TO_LETTER)
+    out = []
+    m = re.search(r"::CA[MN]V//(\S{4})", norm)
+    flag = _closest(m.group(1), FLAGS) if m else None
+    if flag:
+        out.append({"signal": "CAMV field", "field": ":22F::CAMV", "read": flag,
+                    "points_to": "MAND" if flag == "MAND" else "VOLU"})
+    m = re.search(r"::CA[EF]V//(\S{4})", norm)
+    event = _closest(m.group(1), MANDATORY_EVENTS | VOLUNTARY_EVENTS) if m else None
+    if event:
+        out.append({"signal": "event code", "field": ":22F::CAEV", "read": event,
+                    "points_to": "MAND" if event in MANDATORY_EVENTS else "VOLU"})
+    for phrase, verdict in (("NO ELECTION", "MAND"), ("MECHANICAL EVENT", "MAND"),
+                            ("ELECTION REQUIRED", "VOLU"), ("NOAC", "VOLU")):
+        if phrase in norm:
+            out.append({"signal": "narrative", "field": "narrative text", "read": phrase, "points_to": verdict})
+            break
+    return out
+
+
+def notice_verdict(signals):
+    """agreed (all readable signals point one way), conflict, or unreadable."""
+    votes = {s["points_to"] for s in signals}
+    return "unreadable" if not votes else ("agreed" if len(votes) == 1 else "conflict")
+
+
 def read_ca_notice(text):
     """Reads an MT564-style notice and decides whether it needs an election.
-
     Three independent signals, from most to least direct:
       1. the CAMV field (MAND, VOLU or CHOS)
       2. the event code in CAEV (a bonus is mandatory, a tender voluntary)
@@ -125,39 +156,22 @@ def read_ca_notice(text):
     read, it returns None and the break falls back to the model and a person."""
     if not text:
         return None
-    norm = text.upper().translate(_DIGIT_TO_LETTER)
-
     def raw_field(tag):
         m = re.search(rf":{tag}//([^\s]+)", text)
         return m.group(1) if m else None
-
-    signals = []
-    m = re.search(r"::CA[MN]V//(\S{4})", norm)
-    flag = _closest(m.group(1), FLAGS) if m else None
-    if flag:
-        signals.append(("CAMV field", "MAND" if flag == "MAND" else "VOLU"))
-
-    m = re.search(r"::CA[EF]V//(\S{4})", norm)
-    event = _closest(m.group(1), MANDATORY_EVENTS | VOLUNTARY_EVENTS) if m else None
-    if event:
-        signals.append(("event code", "MAND" if event in MANDATORY_EVENTS else "VOLU"))
-
-    if "NO ELECTION" in norm or "MECHANICAL EVENT" in norm:
-        signals.append(("narrative", "MAND"))
-    elif "ELECTION REQUIRED" in norm or "NOAC" in norm:
-        signals.append(("narrative", "VOLU"))
-
-    votes = {v for _, v in signals}
-    if len(votes) != 1:
+    detail = notice_signals(text)
+    if notice_verdict(detail) != "agreed":
         return None
-    decided = votes.pop()
+    decided = detail[0]["points_to"]
+    event = next((d["read"] for d in detail if d["signal"] == "event code"), None)
     return {
         "event": event or raw_field("22F::CAEV"),
         "mandatory_flag": decided,
         "ratio": raw_field("22F::CAON"),
         "effective_date": raw_field("98A::EFFD"),
         "election_required": decided != "MAND",
-        "signals": [s for s, _ in signals],
+        "signals": [d["signal"] for d in detail],
+        "signal_detail": detail,
     }
 
 
@@ -247,6 +261,8 @@ def analyze(break_id, evidence=None):
 
     classification = classify_root_cause(break_id)
     classification, notice = apply_document_check(classification, evidence)
+    is_ca = evidence["corporate_action_context"]["is_corporate_action"]
+    signals = notice_signals(evidence["document_evidence"].get("text")) if is_ca else []
     root_cause = classification["predicted_root_cause"]
 
     ea = expected_vs_actual(evidence)
@@ -263,6 +279,8 @@ def analyze(break_id, evidence=None):
         "confidence": classification["confidence"],
         "alternative_explanations": classification["alternatives"],
         "document_finding": notice,
+        "notice_signals": signals,
+        "notice_verdict": notice_verdict(signals) if is_ca else None,
         "explanation": explain(root_cause, ea, notice),
         "precedents": precedents.get("precedents", []),
         "evidence_cited": cite_evidence(evidence, precedents),

@@ -63,6 +63,41 @@ def case_audit(bid):
     st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch", height=300)
 
 
+_POINTS = {"MAND": "Mandatory", "VOLU": "Voluntary (election needed)"}
+_VERDICT = {
+    "agreed": "All readable signals agree, so the notice decided this case.",
+    "conflict": "The signals disagree, so the notice was not used. A person decides.",
+    "unreadable": "No signal could be read from the notice. A person decides.",
+}
+
+
+def _render_notice_signals(rca, investigation):
+    """Which fields on the corporate action notice drove the decision."""
+    doc = investigation.get("document_evidence") or {}
+    is_ca = (investigation.get("corporate_action_context") or {}).get("is_corporate_action")
+    if not is_ca:
+        return
+    signals = rca.get("notice_signals")
+    if signals is None:  # cases analysed before signals were recorded
+        import rca as rca_agent
+        signals = rca_agent.notice_signals(doc.get("text"))
+    verdict = rca.get("notice_verdict") or ("unreadable" if not signals else
+              ("agreed" if len({s["points_to"] for s in signals}) == 1 else "conflict"))
+    finding = rca.get("document_finding") or {}
+    note = _VERDICT[verdict]
+    if verdict == "agreed" and finding.get("changed"):
+        note += f" It overrode the model's first read ({root_cause_label(finding['model_said'])})."
+    rows = "".join(
+        f'<tr><td>{s["signal"][0].upper() + s["signal"][1:]}</td><td class="mono">{s["field"]}</td>'
+        f'<td class="mono">{s["read"]}</td><td>{_POINTS[s["points_to"]]}</td></tr>' for s in signals)
+    table = (f'<table style="width:100%;margin-top:10px;border-collapse:collapse;font-size:0.9rem">'
+             f'<tr style="text-align:left;opacity:.7"><th>Signal</th><th>Field</th><th>Value read</th><th>Points to</th></tr>{rows}</table>'
+             if rows else "")
+    src = f' Source: {doc["doc_id"]}.' if doc.get("doc_id") else ""
+    st.markdown(f'<div class="rc-card"><div class="rc-label">What drove the decision</div>'
+                f'<div class="rc-muted">{note}{src}</div>{table}</div>', unsafe_allow_html=True)
+
+
 def render_case():
     css()
     bid = st.session_state.get("selected_break")
@@ -98,6 +133,8 @@ def render_case():
     triage = case.get("triage") or {}
 
     st.markdown('<div class="rc-card"><div class="rc-label">What happened</div><h3>' + (root_cause_label(rca["root_cause"]) if rca.get("root_cause") else row.reported_issue) + '</h3><div class="rc-muted">' + str(rca.get("explanation", "")) + '</div></div>', unsafe_allow_html=True)
+
+    _render_notice_signals(rca, investigation)
 
     with st.expander("See evidence used for the analysis", expanded=False):
         st.json(investigation.get("structured_evidence", {}))
