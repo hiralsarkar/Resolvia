@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches: [feat/notice-signals]
-    paths: [backend/build_demo_day.py, .github/workflows/build-demo-day.yml]
+    paths: [backend/**, frontend/**, tests/e2e/**, .github/workflows/build-demo-day.yml]
 
 jobs:
   build:
@@ -26,3 +26,36 @@ jobs:
         with:
           name: demo-day
           path: backend/knowledge/demo_day.db
+
+  e2e:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/download-artifact@v4
+        with:
+          name: demo-day
+          path: backend/knowledge
+      - name: Install
+        run: |
+          pip install torch==2.9.0 torchvision==0.24.0 --index-url https://download.pytorch.org/whl/cpu
+          pip install -r frontend/requirements.txt playwright
+          python -m playwright install --with-deps chromium
+      - name: Start the app
+        run: |
+          nohup streamlit run frontend/app.py --server.port 8501 --server.headless true > app.log 2>&1 &
+          for i in $(seq 1 90); do curl -sf localhost:8501/_stcore/health && break; sleep 2; done
+      - name: Click through
+        run: python tests/e2e/smoke.py http://localhost:8501
+      - if: always()
+        run: tail -100 app.log
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-shots
+          path: e2e-shots
