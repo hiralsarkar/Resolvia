@@ -5,8 +5,8 @@ has been sent to the browser.
 The Agent Architecture page needs nothing from the backend, so it renders
 straight away. While the visitor watches it, this thread loads everything
 the working pages need, lightest first: the app modules, the data tables,
-the vector indexes, the two classifiers and finally the sentence-transformer
-model (the one real download, roughly 90 MB on a cold start).
+the vector indexes, the triage classifier and the shared features. The two
+memory-heavy models (RCA and sentence-transformer) still load on first use.
 
 It lives in its own module, not in app.py, because Streamlit re-executes
 app.py on every interaction; module state here survives reruns, so the work
@@ -72,10 +72,6 @@ def _run():
         import triage
         triage._model_bundle()
 
-    def rca_model():
-        import rca
-        rca._model_bundle()
-
     def features():
         import triage, rca
         triage._features_df(); rca._features_df()
@@ -85,15 +81,13 @@ def _run():
         for name in ("evidence_index", "ca_reference_index", "resolved_cases_index"):
             _index(name)
 
-    def embedding_model():
-        from embed_store import get_model
-        get_model()
-
-    # light first, then the heavy ones one at a time, each waiting for a quiet moment
+    # Light first, then the heavy ones one at a time, each waiting for a quiet moment.
+    # The RCA model (~650 MB in memory) and the sentence-transformer model (~400 MB
+    # with torch) are deliberately NOT preloaded: together they push the server past
+    # Streamlit Cloud's memory limit, which crashes the app. They load on first use.
     for name, fn, heavy in (("app modules", app_modules, False), ("data", data, False),
                             ("vector indexes", indexes, False), ("triage model", triage_model, True),
-                            ("rca model", rca_model, True), ("features", features, True),
-                            ("embedding model", embedding_model, True)):
+                            ("features", features, True)):
         _step(name, fn, heavy)
     status["step"] = None
     status["done"] = True
