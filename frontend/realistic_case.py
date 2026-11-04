@@ -64,13 +64,17 @@ def case_audit(bid):
         return
     rows = []
     for e in events:
+        actor = e.get("actor_id", "SYSTEM")
         rows.append({
             "Time": pd.to_datetime(e["timestamp"], utc=True).strftime("%d %b %Y · %H:%M UTC"),
-            "Operations ID": e.get("actor_id", "SYSTEM"),
+            "Type": "Human" if actor != "SYSTEM" else "System",
+            "Operations ID": actor,
             "Action": e.get("action", ""),
             "What was done": e.get("detail", ""),
         })
-    st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch", height=300)
+    audit_df = pd.DataFrame(rows)
+    st.dataframe(audit_df, hide_index=True, width="stretch", height=300)
+    st.download_button("Download case audit", audit_df.to_csv(index=False).encode("utf-8"), f"{bid}-audit.csv", "text/csv", key=f"case_audit_download_{bid}")
 
 
 _POINTS = {"MAND": "Mandatory", "VOLU": "Voluntary (election needed)"}
