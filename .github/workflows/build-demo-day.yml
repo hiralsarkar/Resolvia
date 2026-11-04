@@ -22,6 +22,9 @@ jobs:
           pip install -r frontend/requirements.txt
       - name: Build the day
         run: python backend/build_demo_day.py
+      - name: Print the day (base64, for fetching from the log)
+        run: |
+          echo "=====BEGIN DEMO DAY====="; base64 -w 76 backend/knowledge/demo_day.db; echo "=====END DEMO DAY====="
       - uses: actions/upload-artifact@v4
         with:
           name: demo-day
@@ -54,6 +57,11 @@ jobs:
         run: python tests/e2e/smoke.py http://localhost:8501
       - if: always()
         run: tail -100 app.log
+      - if: always()
+        name: Print screenshots (base64, for fetching from the log)
+        run: |
+          cd e2e-shots && for f in *.png; do python -c "from PIL import Image; im=Image.open('$f').convert('RGB'); im.thumbnail((1100, 6000)); im.save('${f%.png}.jpg', quality=60)"; done
+          tar czf ../shots.tgz *.jpg && cd .. && echo "=====BEGIN SHOTS====="; base64 -w 76 shots.tgz; echo "=====END SHOTS====="
       - if: always()
         uses: actions/upload-artifact@v4
         with:

@@ -6,6 +6,7 @@ import os
 import sys
 from playwright.sync_api import sync_playwright
 
+FRESH = sys.argv[2] if len(sys.argv) > 2 else "BRK02998"
 URL = sys.argv[1] if len(sys.argv) > 1 else "http://localhost:8501"
 OUT = "e2e-shots"
 os.makedirs(OUT, exist_ok=True)
@@ -64,12 +65,29 @@ with sync_playwright() as p:
     page.get_by_role("button", name="Open", exact=True).first.click()
     check(page, "11-case-from-needs-attention")
 
-    # a fresh break, worked end to end
+    # a fresh break, worked end to end: search, select the row, run the agents
     nav(page, "Break Queue"); settle(page)
-    for name in ("Start case review", "Review this break", "Open case"):
-        if page.get_by_role("button", name=name).count():
-            break
-    print("buttons on queue:", [b.inner_text() for b in page.get_by_role("button").all()][:30], flush=True)
+    page.get_by_label("Search").fill(FRESH); page.keyboard.press("Enter"); settle(page)
+    grid = page.locator('[data-testid="stDataFrame"]').first
+    box = grid.bounding_box()
+    page.mouse.click(box["x"] + 18, box["y"] + 52)  # row selector of the first row
+    check(page, "12-queue-selected")
+    for name in ("Open case", "Open the case", "Work this break", "Case workspace"):
+        btn = page.get_by_role("button", name=name)
+        if btn.count():
+            btn.last.click(); break
+    else:
+        nav(page, "Case Workspace")
+    check(page, "13-fresh-case")
+    if page.get_by_role("button", name="Start case review").count():
+        page.get_by_role("button", name="Start case review").first.click()
+        page.wait_for_timeout(5000)
+        check(page, "14-fresh-case-reviewed")
+    else:
+        problems.append("fresh case: no 'Start case review' button")
+    nav(page, "Resolution")
+    check(page, "15-fresh-resolution")
+    print("buttons on resolution:", [b.inner_text() for b in page.get_by_role("button").all()][:30], flush=True)
 
     page.context.browser.close()
 
