@@ -58,6 +58,7 @@ def css():
     .stApp .main .rc-big{font-family:Inter,ui-sans-serif,system-ui,sans-serif!important;font-size:1.55rem!important;letter-spacing:-.025em!important}
     .stApp .main .block-container{max-width:1360px;padding-top:2rem;padding-bottom:4rem}
     .stApp .main [data-testid="stHorizontalBlock"]{gap:1rem}
+    .stApp,.stAppViewContainer,[data-testid="stAppViewContainer"]{background:radial-gradient(900px 500px at 8% 0%,rgba(102,72,190,.32),transparent 62%),radial-gradient(800px 600px at 100% 70%,rgba(24,110,180,.22),transparent 65%),#080a12!important}
     .stApp .main .rc-card,.stApp .main .rc-next{background:linear-gradient(145deg,rgba(71,51,126,.26),rgba(16,18,30,.78))!important;border:1px solid rgba(184,164,255,.18)!important;border-radius:22px!important;box-shadow:0 18px 50px rgba(0,0,0,.18)!important;padding:24px 26px!important}
     .stApp .main .rc-card:hover,.stApp .main .rc-next:hover{transform:none!important;border-color:rgba(112,214,255,.55)!important}
     .case-stat{background:linear-gradient(145deg,rgba(75,55,137,.32),rgba(18,20,34,.78));border:1px solid rgba(185,170,255,.18);border-radius:18px;padding:16px 18px;min-height:82px}
