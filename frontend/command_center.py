@@ -18,7 +18,7 @@ HTML_PATH = os.path.join(HERE, "assets", "command_center.html")
 def render():
     with open(HTML_PATH, encoding="utf-8") as f:
         html = f.read()
-    st.components.v1.html(html, height=1560, scrolling=False)
+    st.components.v1.html(html, height=1400, scrolling=False)
 
     # the way in sits after the animation, not above it
     st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)

@@ -43,24 +43,9 @@ def load_frames():
             ("trades", "positions", "settlements", "cash_transactions", "breaks")}
 
 
-_DEFAULT_FEATURES = None
-
-
 def build_features(frames=None):
     """frames: optional dict of DataFrames (same shape as the CSVs), so the
-    stress tests can rebuild features from perturbed records.
-
-    Without frames the result is built once per process and shared (triage
-    and RCA both need it); callers get a copy so they can't disturb it."""
-    global _DEFAULT_FEATURES
-    if frames is None:
-        if _DEFAULT_FEATURES is None:
-            _DEFAULT_FEATURES = _build_features(None)
-        return _DEFAULT_FEATURES.copy()
-    return _build_features(frames)
-
-
-def _build_features(frames=None):
+    stress tests can rebuild features from perturbed records."""
     frames = frames or load_frames()
     trades = frames["trades"].set_index("trade_id")
     positions = frames["positions"].set_index("trade_id")
