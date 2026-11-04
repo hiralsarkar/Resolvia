@@ -71,6 +71,13 @@ def css():
     .stApp .main [data-testid="stExpander"] summary{padding:14px 18px!important;min-height:48px!important;font-family:Inter,ui-sans-serif,system-ui,sans-serif!important}
     .stApp .main [data-testid="stExpander"] summary p{font-size:.92rem!important;font-weight:650!important;margin:0!important}
     .stApp .main [data-testid="stExpander"] summary svg{width:18px!important;height:18px!important;display:block!important}
+    .stApp .main .rc-card,.stApp .main .rc-next{background:#fff!important;border:1px solid #e1e5ef!important;box-shadow:0 8px 24px rgba(49,63,104,.07)!important;color:#17213c!important}
+    .stApp .main .rc-label{color:#6352d9!important}
+    .stApp .main .rc-muted{color:#71809a!important}
+    .stApp .main .case-stat{background:#fff!important;border:1px solid #e1e5ef!important;box-shadow:0 8px 24px rgba(49,63,104,.07)!important}
+    .stApp .main .case-stat-label{color:#71809a!important}
+    .stApp .main .case-stat-value{color:#17213c!important}
+    .stApp .main .flow-bar{background:#f8f9fd!important;border-color:#e1e5ef!important}
     div[data-testid="stButton"]>button{min-height:45px;border-radius:10px;font-weight:750}
     </style>""", unsafe_allow_html=True)
 
@@ -224,7 +231,8 @@ def render_case():
             f'{escape(calculation["expected_quantity"])} vs custodian {escape(calculation["observed_quantity"])}; '
             f'delta {escape(calculation["delta"])}.</div></div>', unsafe_allow_html=True)
 
-    with st.expander("See evidence used for the analysis", expanded=False):
+    show_evidence = st.checkbox("Show evidence used for this analysis", value=False, key=f"show_evidence_{bid}")
+    if show_evidence:
         st.json(investigation.get("structured_evidence", {}))
         if investigation.get("document_evidence", {}).get("has_document"):
             st.write(investigation["document_evidence"].get("text", ""))
@@ -241,11 +249,12 @@ def render_case():
     if reviews_key not in st.session_state:
         st.session_state[reviews_key] = []
     uploaded = st.file_uploader(
-        "Upload supporting files for this break",
+        "Choose supporting files",
         type=["pdf", "docx", "txt", "csv", "xlsx", "png", "jpg", "jpeg"],
         accept_multiple_files=True,
         key=f"supplemental_uploader_{bid}",
-        help="Maximum 8 MB per file. Scanned PDFs are not supported yet; use a text PDF or upload the extracted text."
+        help="Up to 8 MB per file. Scanned PDFs are not supported yet; use a text PDF or upload the extracted text.",
+        label_visibility="visible",
     )
     if st.button("Process uploaded documents", key=f"process_supplemental_{bid}", use_container_width=True):
         existing_hashes = {d["sha256"] for d in st.session_state[evidence_key]}
