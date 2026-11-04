@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
   push:
     branches: [feat/notice-signals]
-    paths: [backend/**, frontend/**, tests/e2e/**, .github/workflows/build-demo-day.yml]
 
 jobs:
   build:
