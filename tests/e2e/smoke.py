@@ -67,7 +67,7 @@ with sync_playwright() as p:
 
     # a fresh break, worked end to end: search, select the row, run the agents
     nav(page, "Break Queue"); settle(page)
-    page.get_by_label("Search").fill(FRESH); page.keyboard.press("Enter"); settle(page)
+    page.locator('[data-testid="stMain"] input[aria-label="Search"], section.main input[aria-label="Search"]').first.fill(FRESH); page.keyboard.press("Enter"); settle(page)
     grid = page.locator('[data-testid="stDataFrame"]').first
     box = grid.bounding_box()
     page.mouse.click(box["x"] + 18, box["y"] + 52)  # row selector of the first row

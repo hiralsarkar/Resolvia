@@ -113,7 +113,11 @@ def render_home():
         if st.button("Open audit trail →",key="home_audit",use_container_width=True): st.session_state["nav"]="Audit Trail"; st.rerun()
 
     st.markdown("### Needs attention")
-    attention=df[(df.severity=="P0") | (df.age_days>=3) | df.status.isin(["AWAITING_APPROVAL","ESCALATED"])].copy().sort_values(["age_days","exposure"],ascending=False).head(6)
+    # finished work never needs attention; cases waiting on a person come first
+    live=df[~df.status.isin(["CLOSED","REJECTED","ON_HOLD"])]
+    attention=live[(live.severity=="P0") | (live.age_days>=3) | live.status.isin(["AWAITING_APPROVAL","ESCALATED","REOPENED"])].copy()
+    attention["_waiting"]=attention.status.isin(["REOPENED","ESCALATED","AWAITING_APPROVAL"])
+    attention=attention.sort_values(["_waiting","age_days","exposure"],ascending=False).head(6)
     if attention.empty:
         st.success("Nothing currently requires immediate attention.")
     else:
