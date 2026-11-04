@@ -50,7 +50,12 @@ def css():
     .flow-line{height:1px;background:#3a4050;flex:1;min-width:10px}
     .stApp .main, .stApp .main *{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
     .stApp .main h1,.stApp .main h2,.stApp .main h3,.stApp .main h4{font-family:Inter,ui-sans-serif,system-ui,sans-serif!important;letter-spacing:-.025em!important}
+    .stApp .main [data-testid="stMetricValue"]{font-family:Inter,ui-sans-serif,system-ui,sans-serif!important;font-size:1.55rem!important;line-height:1.1!important;letter-spacing:-.03em!important;white-space:normal!important;overflow-wrap:anywhere!important}
+    .stApp .main [data-testid="stMetricLabel"]{font-family:Inter,ui-sans-serif,system-ui,sans-serif!important;font-size:.78rem!important;font-weight:700!important;letter-spacing:.02em!important}
     .stApp .main .mono{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace!important}
+    .stApp .main .ph-title{font-family:Inter,ui-sans-serif,system-ui,sans-serif!important;font-size:2.45rem!important;letter-spacing:-.045em!important}
+    .stApp .main .ph-sub{font-family:Inter,ui-sans-serif,system-ui,sans-serif!important}
+    .stApp .main .rc-big{font-family:Inter,ui-sans-serif,system-ui,sans-serif!important;letter-spacing:-.035em!important}
     .stApp .main .block-container{max-width:1360px;padding-top:2rem;padding-bottom:4rem}
     .stApp .main [data-testid="stHorizontalBlock"]{gap:1rem}
     div[data-testid="stButton"]>button{min-height:45px;border-radius:10px;font-weight:750}
@@ -209,8 +214,8 @@ def render_case():
 
     # extra documents belong to this break only, live in the session, and
     # never overwrite the original RCA
-    st.markdown("### Additional evidence")
-    st.caption("Upload new documents for this break. RESOLVIA extracts their contents and creates a separate supplemental review; the original analysis and approval controls remain unchanged.")
+    st.markdown("### Optional supporting documents")
+    st.caption("Use this only when the original evidence needs context. Supplemental documents never replace the recorded analysis or approval controls.")
     import document_evidence as de
     evidence_key = f"supplemental_docs::{bid}"
     reviews_key = f"supplemental_reviews::{bid}"
