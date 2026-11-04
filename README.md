@@ -9,7 +9,6 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python"/>
   <img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=flat-square&logo=streamlit&logoColor=white" alt="Streamlit"/>
-  <img src="https://img.shields.io/badge/LangGraph-1C3C3C?style=flat-square&logo=langchain&logoColor=white" alt="LangGraph"/>
   <img src="https://img.shields.io/badge/scikit--learn-F7931E?style=flat-square&logo=scikit-learn&logoColor=white" alt="scikit-learn"/>
   <img src="https://img.shields.io/badge/Sentence--Transformers-6A5ACD?style=flat-square" alt="Sentence Transformers"/>
   <img src="https://img.shields.io/badge/EasyOCR-00A67E?style=flat-square" alt="EasyOCR"/>
@@ -18,11 +17,11 @@
 
 When two systems in a bank disagree about a trade, a reconciliation engine raises a break. Finding that break is a solved problem. Fixing it is not: it still means someone digging through trade records, settlement messages, custodian statements and emails, working out what went wrong, getting sign-off and then checking the fix actually worked.
 
-I built Resolvia to do that legwork for cash-equity breaks. Six agents, wired together as a LangGraph state graph, gather the evidence, diagnose the root cause, dig further when a case looks unusual, propose a fix and check the result, and a hard-coded gate makes sure nothing that moves money happens without a named person approving it.
+I built Resolvia to do that legwork for cash-equity breaks. A controlled workflow gathers evidence, diagnoses the root cause, investigates unusual cases, proposes a fix and checks the result, while a hard-coded gate makes sure nothing that moves money happens without a named person approving it.
 
 The principle I designed it around:
 
-> **AI investigates. Humans authorise. Systems execute. AI validates.**
+> **Records are reviewed. People authorise. Systems execute. Results are verified.**
 
 ## How a break moves through it
 
@@ -30,19 +29,19 @@ The principle I designed it around:
 
 1. **Triage** checks the records exist, predicts the break family, sets a priority and routes it to the right desk.
 2. **Investigation** pulls the trade, position, cash and settlement records, reads the document (with OCR if it's a scan) and finds similar documents and corporate-action rules.
-3. **Root cause** runs a 20-class model, reads the corporate action notice where there is one, and decides whether a person needs to review the diagnosis.
-   - **Investigator** takes over when a case looks unusual (low confidence, a notice that contradicts the model, a family the engine tagged differently). It's an LLM with read-only tools that decides for itself what to check next, loops until it has a finding, and passes that finding to the reviewer.
+3. **Root cause review** compares the break against the controlled cause catalogue, reads the corporate action notice where there is one, and decides whether a person needs to review the diagnosis.
+   - **Further review** takes over when a case looks unusual (uncertain result, a notice that contradicts the first assessment, or a family mismatch). It uses read-only checks and passes its finding to the reviewer.
 4. **Proposal** looks up the fix, sizes the exposure and sets whether the action needs approval.
 5. **The Control Gate** blocks anything consequential until a person approves it.
 6. **Validation** re-runs the check that raised the break. Closed means the field now matches; anything else reopens.
 
-Each step is a node in a [LangGraph](https://github.com/langchain-ai/langgraph) graph. Conditional edges route each case by what the agents found, and the approval step is a LangGraph interrupt: the graph pauses at the gate and resumes from that exact point once a person decides.
+Each step is a node in a persisted workflow. Conditional edges route each case by what the checks found, and the approval step pauses at the gate and resumes from that exact point once a person decides.
 
 ## The finding the project rests on
 
 ![The corporate-action trap](docs/images/ca-trap.svg)
 
-A mandatory corporate action that wasn't applied and a voluntary one waiting for the client's decision look identical in the data. The model can't tell them apart (it gets 18 of 20 root causes perfect and fails exactly here), a rules engine can't either, and the right actions are opposite. The difference is one field on the SWIFT notice. So I made the RCA agent read the notice, and I still send every corporate action to a person.
+A mandatory corporate action that wasn't applied and a voluntary one waiting for the client's decision look identical in the data. The source records alone can't tell them apart, and the right actions are opposite. The difference is one field on the SWIFT notice, so the workflow reads the notice and still sends every corporate action to a person.
 
 ![Results](docs/images/results.svg)
 
@@ -67,11 +66,11 @@ All of this is on synthetic data. I explain what that does and doesn't prove in 
 
 Clean data flatters any model, so I added noise to prices and cash, gave some trades a second fault, and damaged or removed the corporate action notices. Accuracy bends; safety doesn't. In every scenario, wrong diagnoses either reached a person or failed the re-check and reopened. Along the way I trained the production model on messy copies of the data, calibrated its confidence, chose the review threshold by cost, measured how much human review is really needed, and built a scored test for the LLM's document reading. The details are in [stress tests and modelling depth](docs/09-robustness.md).
 
-## Responsible AI
+## Responsible operations
 
-![Responsible AI, built into the workflow](docs/images/responsible-ai.svg)
+![Responsible operations, built into the workflow](docs/images/responsible-ai.svg)
 
-In operations a wrong automated action means a failed payment, so I built governance into the workflow rather than writing it up afterwards. I explain how each principle maps to the code, and to the NIST AI Risk Management Framework, in [Responsible AI and governance](docs/08-responsible-ai.md). The root-cause model has its own [model card](docs/model-card.md).
+In operations a wrong automated action means a failed payment, so I built governance into the workflow rather than writing it up afterwards. I explain how each principle maps to the code in [Responsible operations and governance](docs/08-responsible-ai.md).
 
 ## Take the tour
 
@@ -79,13 +78,13 @@ I've written the whole project up in [`docs`](docs), one picture at a time:
 
 1. [The problem](docs/01-the-problem.md): why matching is solved and resolution isn't
 2. [The data](docs/02-the-data.md): a synthetic bank where every fault is known
-3. [The models](docs/03-the-models.md): features, the target choice, and how 0.933 is made
-4. [The agents](docs/04-the-agents.md): six specialists and what each may do
+3. [The decision logic](docs/03-the-models.md): features, the target choice, and how 0.933 is made
+4. [The workflow stages](docs/04-the-agents.md): six specialists and what each may do
 5. [Control and audit](docs/05-control-and-audit.md): the gate, case states and the trail
 6. [Results](docs/06-results.md): rules vs model vs the whole system
 7. [Limits and next steps](docs/07-limits-and-next-steps.md): what production would need
-8. [Responsible AI and governance](docs/08-responsible-ai.md): oversight, accountability and the model card
-9. [Stress tests and modelling depth](docs/09-robustness.md): messy data, calibration, review policy and the LLM test
+8. [Responsible operations and governance](docs/08-responsible-ai.md): oversight and accountability
+9. [Stress tests and modelling depth](docs/09-robustness.md): messy data, calibration and review policy
 
 The [field guide](docs/field-guide.pdf) tells the same story on phone-sized pages.
 
