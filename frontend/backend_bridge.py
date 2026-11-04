@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.join(BACKEND_DIR, "agents"))
 import orchestrator  # noqa: E402
 import control_gate  # noqa: E402
 import auth  # noqa: E402
+import state_machine  # noqa: E402
 from investigation import _tables, break_feed  # noqa: E402
 from theme import root_cause_label  # noqa: E402
 from audit import record as _audit_record, list_events as _audit_events, summary as _audit_summary  # noqa: E402
@@ -123,6 +124,8 @@ def begin_manual(break_id,operator,notes=""):
     """
     case=orchestrator.get_case(break_id)
     if case is None: raise KeyError(f"no case exists for {break_id}")
+    auth.require_actor(operator, ("analyst", "approver"))
+    state_machine.require_transition(case.get("status"), "MANUAL_IN_PROGRESS")
     case["execution_mode"]="Manual"
     case["status"]="MANUAL_IN_PROGRESS"
     case["manual_resolution"]={"operator":operator,"started_at":pd.Timestamp.utcnow().isoformat(),"notes":notes,"actions":[],"evidence":[]}
@@ -141,10 +144,12 @@ def submit_manual(break_id,operator,action_taken,evidence_reference,checklist):
     case=orchestrator.get_case(break_id)
     if case is None: raise KeyError(f"no case exists for {break_id}")
     if case.get("status")!="MANUAL_IN_PROGRESS": raise ValueError("manual resolution has not been started")
+    auth.require_actor(operator, ("analyst", "approver"))
     if not action_taken.strip(): raise ValueError("describe the action performed before submitting")
     if not evidence_reference.strip(): raise ValueError("provide a confirmation or evidence reference")
     if not all(checklist): raise ValueError("complete every required evidence check before submitting")
     case["manual_resolution"].update({"submitted_by":operator,"submitted_at":pd.Timestamp.utcnow().isoformat(),"action_taken":action_taken,"evidence_reference":evidence_reference,"checklist":checklist})
+    state_machine.require_transition(case["status"], "AWAITING_VERIFICATION")
     case["status"]="AWAITING_VERIFICATION"
     orchestrator._log(case,"MANUAL_ACTION_SUBMITTED",f"by {operator}; evidence={evidence_reference}")
     audit("MANUAL_ACTION_SUBMITTED",break_id,f"Manual correction recorded by {operator}; evidence/reference: {evidence_reference}",actor_id=operator)
@@ -166,6 +171,7 @@ def verify_manual(break_id,verifier,verification_notes):
     case["manual_resolution"]["verified_by"]=verifier
     case["manual_resolution"]["verified_at"]=pd.Timestamp.utcnow().isoformat()
     case["manual_resolution"]["verification_notes"]=verification_notes
+    state_machine.require_transition(case["status"], "CLOSED")
     case["status"]="CLOSED"
     orchestrator._log(case,"MANUAL_RESOLUTION_VERIFIED",f"verified by {verifier}: {verification_notes}")
     orchestrator._log(case,"CASE_CLOSED","manual resolution verified")
@@ -176,8 +182,12 @@ def verify_manual(break_id,verifier,verification_notes):
     return case
 
 def mark(break_id,status,approver,notes=None):
+    auth.require_actor(approver, ("analyst", "approver"))
+    case=orchestrator.get_case(break_id)
+    if case is None: raise KeyError(f"no case exists for {break_id}")
+    state_machine.require_transition(case.get("status"), status)
     audit("CASE_ESCALATED" if status=="ESCALATED" else "CASE_REVIEWED",break_id,f"{status} by {approver}; notes: {notes or 'none'}")
-    case=orchestrator.get_case(break_id); case["status"]=status; orchestrator._log(case,"HUMAN_"+status,f"by {approver}: {notes or ''}".strip()); orchestrator.save(case); _sync_case_audit(case); return case
+    case["status"]=status; orchestrator._log(case,"HUMAN_"+status,f"by {approver}: {notes or ''}".strip()); orchestrator.save(case); _sync_case_audit(case); return case
 
 def reject(break_id,approver,notes=None):
     audit("APPROVAL_REJECTED",break_id,f"Rejected by {approver}; notes: {notes or 'none'}"); control_gate.record_decision(break_id,"REJECT",approver,notes); return resume_case(break_id)
