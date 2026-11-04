@@ -1,10 +1,5 @@
 import streamlit as st
 from theme import inject_global_css
-import workbench
-import realistic_case
-import command_center
-import operational_views
-import backend_bridge as bb
 
 st.set_page_config(page_title="Resolvia", page_icon="◆", layout="wide", initial_sidebar_state="expanded")
 inject_global_css()
@@ -23,7 +18,10 @@ with st.sidebar:
     st.markdown('<div class="resolvia-tagline">From Break to Verified Resolution</div>', unsafe_allow_html=True)
     st.markdown("<br/>", unsafe_allow_html=True)
 
-    operational_views.render_operator_context()
+    st.sidebar.caption("OPERATOR ID")
+    value = st.sidebar.text_input("", value=st.session_state.get("operator_id", "OPS-1047"), key="operator_id_input", label_visibility="collapsed").strip().upper() or "OPS-1047"
+    st.session_state["operator_id"] = value
+    st.sidebar.caption(f"Signed in as **{value}**")
     st.markdown("<hr/>", unsafe_allow_html=True)
 
     pages = ["Agent Architecture", "Home", "Operations Desk", "Case Investigation", "Resolution Control", "Resolution Playbook", "Audit Trail", "Manager Dashboard"]
@@ -54,6 +52,7 @@ with st.sidebar:
             if st.button("Audit", key="sidebar_audit", use_container_width=True):
                 st.session_state["audit_break_filter"] = sb
                 st.session_state["nav"] = "Audit Trail"
+                import backend_bridge as bb
                 bb.audit("CASE_AUDIT_OPENED", sb, "Operator opened the break audit from the active-case panel")
                 st.rerun()
     else:
@@ -63,18 +62,23 @@ with st.sidebar:
     st.caption("Human-led operations. Every decision and action is recorded.")
 
 if nav == "Agent Architecture":
+    import command_center
     command_center.render()
-elif nav == "Home":
-    workbench.render_home()
-elif nav == "Operations Desk":
-    workbench.render_operations()
-elif nav == "Case Investigation":
-    realistic_case.render_case()
-elif nav == "Resolution Control":
-    realistic_case.render_resolution()
-elif nav == "Resolution Playbook":
-    realistic_case.render_guide()
-elif nav == "Audit Trail":
-    workbench.render_audit()
-elif nav == "Manager Dashboard":
-    workbench.render_manager()
+elif nav in ("Home", "Operations Desk", "Audit Trail", "Manager Dashboard"):
+    import workbench
+    if nav == "Home":
+        workbench.render_home()
+    elif nav == "Operations Desk":
+        workbench.render_operations()
+    elif nav == "Audit Trail":
+        workbench.render_audit()
+    else:
+        workbench.render_manager()
+elif nav in ("Case Investigation", "Resolution Control", "Resolution Playbook"):
+    import realistic_case
+    if nav == "Case Investigation":
+        realistic_case.render_case()
+    elif nav == "Resolution Control":
+        realistic_case.render_resolution()
+    else:
+        realistic_case.render_guide()
