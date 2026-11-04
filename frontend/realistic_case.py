@@ -140,6 +140,17 @@ def render_case():
 
     _render_notice_signals(rca, investigation)
 
+    calculation = rca.get("entitlement_calculation")
+    if calculation and calculation.get("status") == "CALCULATED":
+        ratio = calculation["ratio"]
+        st.markdown(
+            f'<div class="rc-card"><div class="rc-label">Calculation used</div>'
+            f'<div class="rc-muted">Ratio definition: {escape(ratio["held"])} held → {escape(ratio["new"])} new '
+            f'(multiplier {escape(ratio["resulting_multiplier"])}).</div>'
+            f'<div class="mono">{escape(calculation["source_quantity"])} × {escape(ratio["resulting_multiplier"])} = '
+            f'{escape(calculation["expected_quantity"])} vs custodian {escape(calculation["observed_quantity"])}; '
+            f'delta {escape(calculation["delta"])}.</div></div>', unsafe_allow_html=True)
+
     with st.expander("See evidence used for the analysis", expanded=False):
         st.json(investigation.get("structured_evidence", {}))
         if investigation.get("document_evidence", {}).get("has_document"):

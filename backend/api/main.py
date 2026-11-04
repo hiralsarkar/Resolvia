@@ -41,6 +41,8 @@ def _summary(case):
         "root_cause": rca.get("root_cause"),
         "confidence": rca.get("confidence"),
         "explanation": rca.get("explanation"),
+        "calculation": rca.get("entitlement_calculation"),
+        "evidence_cited": rca.get("evidence_cited", []),
         "needs_person": rca.get("requires_human_decision"),
         "recommended_action": proposal.get("recommended_action"),
         "authority_tier": proposal.get("authority_tier"),
