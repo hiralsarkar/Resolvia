@@ -20,6 +20,8 @@ When two systems in a bank disagree about a trade, a reconciliation engine raise
 
 I built Resolvia to do that legwork for cash-equity breaks. Six agents, wired together as a LangGraph state graph, gather the evidence, diagnose the root cause, dig further when a case looks unusual, propose a fix and check the result, and a hard-coded gate makes sure nothing that moves money happens without a named person approving it.
 
+The workbench is organized around the operator’s next action: **Home**, **Break Queue**, **Case Workspace**, and **Audit Trail** are the primary destinations. Resolution and Manual Guide are contextual actions for the selected case, so the main navigation stays focused.
+
 The principle I designed it around:
 
 > **AI investigates. Humans authorise. Systems execute. AI validates.**
@@ -35,6 +37,8 @@ The principle I designed it around:
 4. **Proposal** looks up the fix, sizes the exposure and sets whether the action needs approval.
 5. **The Control Gate** blocks anything consequential until a person approves it.
 6. **Validation** re-runs the check that raised the break. Closed means the field now matches; anything else reopens.
+
+Every case record keeps the responsible field, expected and observed values, evidence citations, notice signals, calculation details where relevant, decision history, and an append-only operational audit trail. Manual resolution follows an explicit state path: action recorded → independent verification → closure.
 
 Each step is a node in a [LangGraph](https://github.com/langchain-ai/langgraph) graph. Conditional edges route each case by what the agents found, and the approval step is a LangGraph interrupt: the graph pauses at the gate and resumes from that exact point once a person decides.
 
@@ -73,6 +77,8 @@ Clean data flatters any model, so I added noise to prices and cash, gave some tr
 
 In operations a wrong automated action means a failed payment, so I built governance into the workflow rather than writing it up afterwards. I explain how each principle maps to the code, and to the NIST AI Risk Management Framework, in [Responsible AI and governance](docs/08-responsible-ai.md). The root-cause model has its own [model card](docs/model-card.md).
 
+The current control layer also includes a small backend roster for the local demo, role checks for approvers and verifiers, maker-checker separation, append-only decision history, and explicit case transition validation. Replace the demo roster with SSO or signed-token identity before production use.
+
 ## Take the tour
 
 I've written the whole project up in [`docs`](docs), one picture at a time:
@@ -104,6 +110,8 @@ The first case takes about 20 seconds while the models and indexes load. I usual
 
 To use the REST API, the training scripts or the notebook, install `backend/requirements.txt` instead, then from `backend/` run `uvicorn api.main:app --reload`.
 
+Decision requests must identify the acting operator and a separate authorized approver. For the local demo, the default roster is `OPS-1047` (analyst), `OPS-LEAD` (approver), and `OPS-VERIFY` (verifier). You can override it with `RESOLVIA_ROSTER`, using `ID:role` entries separated by commas. The decision endpoint expects an `X-Operator-ID` header.
+
 The LLM write-ups are optional. Copy `.env.example` to `.env` and add an OpenRouter key to switch them on.
 
 Cases, approvals and the audit trail are saved to a local SQLite file, so they survive a restart. To run the tests:
@@ -112,6 +120,8 @@ Cases, approvals and the audit trail are saved to a local SQLite file, so they s
 pip install -r tests/requirements.txt
 pytest -q tests
 ```
+
+The test suite covers the control gate, notice parsing, pipeline behavior, extraction, validation, security checks, and invalid state transitions.
 
 ## What's where
 
@@ -126,9 +136,11 @@ backend/
   knowledge/         corporate-action rules and precedent cases
   eval/              baselines, end-to-end and stress tests, approval policy, extraction
   api/               REST API
-  store.py           SQLite storage for cases, decisions and the audit trail
+  store.py           SQLite storage for cases, decisions, decision history and audit events
+  auth.py            Demo identity and role checks
+  state_machine.py   Allowed case-state transitions
 frontend/            the Streamlit workbench
-tests/               28 tests, run on every push
+tests/               unit and end-to-end coverage, run on every push
 docs/                the tour, diagrams, model and stress-test reports, EDA notebook, proposal
 ```
 
