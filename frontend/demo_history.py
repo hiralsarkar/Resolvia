@@ -115,7 +115,10 @@ def _run(picks):
 def start():
     """Starts the background day once per process, unless the store already has a day's work in it."""
     global _started
-    if os.environ.get("RESOLVIA_DEMO_HISTORY", "on") == "off":
+    # The day now ships prebuilt (backend/build_demo_day.py, copied in by store.py).
+    # Replaying it live ran hundreds of cases on the web server and starved it, so
+    # that only happens when asked for explicitly.
+    if os.environ.get("RESOLVIA_DEMO_HISTORY", "prebuilt") != "replay":
         return
     with _lock:
         if _started:

@@ -422,6 +422,7 @@ div[data-testid="stNotificationContentError"] {{ color: {c['signal']} !important
 
 /* ---------- metric widgets ---------- */
 [data-testid="stMetricValue"] {{ font-family: 'JetBrains Mono', monospace !important; color: var(--ink) !important; }}
+[data-testid="stMetricValue"], [data-testid="stMetricValue"] * {{ white-space: normal !important; overflow: visible !important; text-overflow: clip !important; overflow-wrap: anywhere; line-height: 1.15 !important; }}
 [data-testid="stMetricLabel"] {{ font-family: 'Manrope', sans-serif !important; color: var(--ink-soft) !important; }}
 
 /* ---------- text inputs / textareas / selects ---------- */

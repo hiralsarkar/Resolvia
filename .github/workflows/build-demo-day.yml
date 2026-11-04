@@ -1,0 +1,68 @@
+name: build demo day
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/notice-signals]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: |
+          pip install torch==2.9.0 torchvision==0.24.0 --index-url https://download.pytorch.org/whl/cpu
+          pip install -r frontend/requirements.txt
+      - name: Build the day
+        run: python backend/build_demo_day.py
+      - name: Print the day (base64, for fetching from the log)
+        run: |
+          echo "=====BEGIN DEMO DAY====="; base64 -w 76 backend/knowledge/demo_day.db; echo "=====END DEMO DAY====="
+      - uses: actions/upload-artifact@v4
+        with:
+          name: demo-day
+          path: backend/knowledge/demo_day.db
+
+  e2e:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/download-artifact@v4
+        with:
+          name: demo-day
+          path: backend/knowledge
+      - name: Install
+        run: |
+          pip install torch==2.9.0 torchvision==0.24.0 --index-url https://download.pytorch.org/whl/cpu
+          pip install -r frontend/requirements.txt playwright
+          python -m playwright install --with-deps chromium
+      - name: Start the app
+        run: |
+          nohup streamlit run frontend/app.py --server.port 8501 --server.headless true > app.log 2>&1 &
+          for i in $(seq 1 90); do curl -sf localhost:8501/_stcore/health && break; sleep 2; done
+      - name: Click through
+        run: python tests/e2e/smoke.py http://localhost:8501
+      - if: always()
+        run: tail -100 app.log
+      - if: always()
+        name: Print screenshots (base64, for fetching from the log)
+        run: |
+          cd e2e-shots && for f in *.png; do python -c "from PIL import Image; im=Image.open('$f').convert('RGB'); im.thumbnail((1100, 6000)); im.save('${f%.png}.jpg', quality=60)"; done
+          tar czf ../shots.tgz *.jpg && cd .. && echo "=====BEGIN SHOTS====="; base64 -w 76 shots.tgz; echo "=====END SHOTS====="
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-shots
+          path: e2e-shots
