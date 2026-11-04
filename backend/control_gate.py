@@ -20,15 +20,23 @@ restart.
 """
 
 import store
+import auth
 
 
 def _log(break_id, event, detail=""):
     store.log_gate(break_id, event, detail)
 
 
-def record_decision(break_id, decision, approver, notes=None):
+def record_decision(break_id, decision, approver, notes=None, actor_id=None):
     if decision not in ("APPROVE", "REJECT"):
         raise ValueError(f"decision must be APPROVE or REJECT, got {decision!r}")
+    if actor_id is not None:
+        try:
+            auth.require_actor(actor_id, ("analyst", "approver"))
+            auth.require_actor(approver, ("approver",))
+            auth.require_distinct(actor_id, approver, "approver")
+        except PermissionError as exc:
+            raise ValueError(str(exc)) from exc
     store.put_decision(break_id, decision, approver, store.now(), notes)
     _log(break_id, f"HUMAN_DECISION:{decision}", f"by {approver}" + (f" - {notes}" if notes else ""))
     return store.get_decision(break_id)
@@ -77,5 +85,9 @@ def audit_trail(break_id=None):
     return store.gate_events(break_id)
 
 
+def decision_history(break_id):
+    return store.decision_history(break_id)
+
+
 def reset():
-    store.reset("decisions", "gate_log")
+    store.reset("decisions", "decision_history", "gate_log")

@@ -47,6 +47,7 @@ from features import build_features  # noqa: E402
 from taxonomy import ROOT_CAUSES  # noqa: E402
 
 sys.path.insert(0, os.path.join(HERE, ".."))
+import store  # noqa: E402
 import llm  # noqa: E402
 
 # Fallback only. The production model carries its own threshold, chosen by
@@ -281,6 +282,7 @@ def analyze(break_id, evidence=None):
         "document_finding": notice,
         "notice_signals": signals,
         "notice_verdict": notice_verdict(signals) if is_ca else None,
+        "notice_signals_captured_at": store.now() if is_ca else None,
         "explanation": explain(root_cause, ea, notice),
         "precedents": precedents.get("precedents", []),
         "evidence_cited": cite_evidence(evidence, precedents),
