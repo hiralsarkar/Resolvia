@@ -58,6 +58,14 @@ def css():
     .stApp .main .rc-big{font-family:Inter,ui-sans-serif,system-ui,sans-serif!important;letter-spacing:-.035em!important}
     .stApp .main .block-container{max-width:1360px;padding-top:2rem;padding-bottom:4rem}
     .stApp .main [data-testid="stHorizontalBlock"]{gap:1rem}
+    .stApp,.stAppViewContainer,[data-testid="stAppViewContainer"]{background:radial-gradient(900px 500px at 8% 0%,rgba(102,72,190,.32),transparent 62%),radial-gradient(800px 600px at 100% 70%,rgba(24,110,180,.22),transparent 65%),#080a12!important}
+    .stApp .main .rc-card,.stApp .main .rc-next{background:linear-gradient(145deg,rgba(71,51,126,.26),rgba(16,18,30,.78))!important;border:1px solid rgba(184,164,255,.18)!important;border-radius:22px!important;box-shadow:0 18px 50px rgba(0,0,0,.18)!important;padding:24px 26px!important}
+    .stApp .main .rc-card:hover,.stApp .main .rc-next:hover{transform:none!important;border-color:rgba(112,214,255,.55)!important}
+    .case-stat{background:linear-gradient(145deg,rgba(75,55,137,.32),rgba(18,20,34,.78));border:1px solid rgba(185,170,255,.18);border-radius:18px;padding:16px 18px;min-height:82px}
+    .case-stat-label{color:#B8B4CC;font-size:.76rem;font-weight:700;letter-spacing:.04em}
+    .case-stat-value{color:#F7F5FF;font-size:1.7rem;font-weight:750;line-height:1.15;margin-top:8px;letter-spacing:-.035em;overflow-wrap:anywhere}
+    .case-stat-value.mono{font-family:Inter,ui-sans-serif,system-ui,sans-serif!important}
+    .stApp .main .rc-label{color:#77DDF5!important;letter-spacing:.14em!important}
     div[data-testid="stButton"]>button{min-height:45px;border-radius:10px;font-weight:750}
     </style>""", unsafe_allow_html=True)
 
@@ -159,10 +167,12 @@ def render_case():
     page_header("case", "Case Workspace", bid, f"{bb.issue_label(row)} · {row.counterparty}", COLORS["violet"])
 
     c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Priority", SEVERITY_LABEL.get(row.severity, row.severity))
-    c2.metric("Exposure", f"₹{row.exposure:,.0f}")
-    c3.metric("Status", status_label(case.get("status", "NOT_STARTED")) if case else "Not started")
-    c4.metric("Operations ID", st.session_state.get("operator_id", "OPS-1047"))
+    stats = [("Priority", SEVERITY_LABEL.get(row.severity, row.severity)),
+             ("Exposure", f"₹{row.exposure:,.0f}"),
+             ("Status", status_label(case.get("status", "NOT_STARTED")) if case else "Not started"),
+             ("Operations ID", st.session_state.get("operator_id", "OPS-1047"))]
+    for col, (label, value) in zip((c1, c2, c3, c4), stats):
+        col.markdown(f'<div class="case-stat"><div class="case-stat-label">{escape(label)}</div><div class="case-stat-value">{escape(str(value))}</div></div>', unsafe_allow_html=True)
 
     if case is None:
         st.markdown('<div class="rc-next"><div class="rc-label">First step</div><div class="rc-big">Understand the break</div><div class="rc-muted">Resolvia will review the available evidence and prepare the case. No correction is made during analysis.</div></div>', unsafe_allow_html=True)
