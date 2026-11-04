@@ -28,14 +28,14 @@ with st.sidebar:
     operational_views.render_operator_context()
     st.markdown("<hr/>", unsafe_allow_html=True)
 
-    pages = ["Agent Architecture", "Home", "Operations Desk", "Case Investigation", "Resolution Control", "Resolution Playbook", "Audit Trail", "Manager Dashboard"]
+    # Keep the sidebar focused on destinations. Resolution and Manual Guide
+    # remain contextual case actions rather than competing top-level tabs.
+    pages = ["Agent Architecture", "Home", "Operations Desk", "Case Investigation", "Audit Trail", "Manager Dashboard"]
     friendly = {
         "Agent Architecture": "Agent Architecture",
         "Home": "Home",
         "Operations Desk": "Break Queue",
         "Case Investigation": "Case Workspace",
-        "Resolution Control": "Resolution",
-        "Resolution Playbook": "Manual Guide",
         "Audit Trail": "Audit Trail",
         "Manager Dashboard": "Manager Overview",
     }
@@ -43,28 +43,36 @@ with st.sidebar:
     # can change page by setting "nav" and calling st.rerun().
     def _on_nav():
         st.session_state["nav"] = st.session_state["nav_radio"]
-    st.session_state["nav_radio"] = st.session_state["nav"]
+    radio_nav = st.session_state["nav"] if st.session_state["nav"] in pages else "Case Investigation"
+    st.session_state["nav_radio"] = radio_nav
+    st.markdown('<div class="nav-section-label">Workspace</div>', unsafe_allow_html=True)
     st.radio("Navigate", pages, key="nav_radio", on_change=_on_nav, format_func=lambda p: friendly[p], label_visibility="collapsed")
     nav = st.session_state["nav"]
 
     st.markdown("<hr/>", unsafe_allow_html=True)
     sb = st.session_state.get("selected_break")
     if sb:
+        st.markdown('<div class="nav-section-label">Active case</div>', unsafe_allow_html=True)
         st.caption("ACTIVE BREAK")
         st.markdown(f'<span class="mono" style="color:#4CE0FF; font-size:1.25rem; font-weight:700;">{sb}</span>', unsafe_allow_html=True)
+        if st.button("Case workspace", key="sidebar_case", use_container_width=True):
+            st.session_state["nav"] = "Case Investigation"; st.rerun()
         c1, c2 = st.columns(2)
         with c1:
-            if st.button("Open case", key="sidebar_case", use_container_width=True):
-                st.session_state["nav"] = "Case Investigation"
-                st.rerun()
+            if st.button("Resolution", key="sidebar_resolution", use_container_width=True):
+                st.session_state["nav"] = "Resolution Control"; st.rerun()
         with c2:
-            if st.button("Audit", key="sidebar_audit", use_container_width=True):
-                st.session_state["audit_break_filter"] = sb
-                st.session_state["nav"] = "Audit Trail"
-                bb.audit("CASE_AUDIT_OPENED", sb, "Operator opened the break audit from the active-case panel")
-                st.rerun()
+            if st.button("Guide", key="sidebar_guide", use_container_width=True):
+                st.session_state["nav"] = "Resolution Playbook"; st.rerun()
+        if st.button("Audit trail", key="sidebar_audit", use_container_width=True):
+            st.session_state["audit_break_filter"] = sb
+            st.session_state["nav"] = "Audit Trail"
+            bb.audit("CASE_AUDIT_OPENED", sb, "Operator opened the break audit from the active-case panel")
+            st.rerun()
     else:
         st.caption("No break selected")
+
+    st.markdown('<div class="nav-section-label">Oversight</div>', unsafe_allow_html=True)
 
     st.markdown("<hr/>", unsafe_allow_html=True)
     st.caption("Human-led operations. Every decision and action is recorded.")
