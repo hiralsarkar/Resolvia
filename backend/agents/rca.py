@@ -30,6 +30,7 @@ It needs OPENROUTER_API_KEY and is never used to make the decision.
 import os
 import re
 import sys
+from decimal import Decimal, InvalidOperation
 
 import joblib
 
@@ -47,6 +48,7 @@ from features import build_features  # noqa: E402
 from taxonomy import ROOT_CAUSES  # noqa: E402
 
 sys.path.insert(0, os.path.join(HERE, ".."))
+import store  # noqa: E402
 import llm  # noqa: E402
 
 # Fallback only. The production model carries its own threshold, chosen by
@@ -254,6 +256,36 @@ def explain(root_cause, ea, notice):
     return text
 
 
+def entitlement_calculation(evidence, notice):
+    """Return an auditable quantity calculation when a notice has a ratio."""
+    if not notice or not notice.get("ratio"):
+        return None
+    match = re.match(r"^\s*([0-9]+(?:\.[0-9]+)?)\s*:\s*([0-9]+(?:\.[0-9]+)?)\s*$", notice["ratio"])
+    if not match:
+        return {"ratio": {"held": None, "new": None, "resulting_multiplier": None},
+                "rounding_rule": "not stated", "status": "UNPARSED"}
+    held, new = (Decimal(x) for x in match.groups())
+    if held == 0:
+        return {"ratio": {"held": str(held), "new": str(new), "resulting_multiplier": None},
+                "rounding_rule": "not stated", "status": "INVALID"}
+    position = evidence.get("structured_evidence", {}).get("position") or {}
+    observed = evidence.get("reported", {}).get("actual")
+    try:
+        source_quantity = Decimal(str(position.get("expected_quantity")))
+        observed_quantity = Decimal(str(observed))
+    except (InvalidOperation, TypeError):
+        return {"ratio": {"held": str(held), "new": str(new), "resulting_multiplier": str(new / held)},
+                "rounding_rule": "not stated", "status": "NO_QUANTITY"}
+    multiplier = new / held
+    expected = source_quantity * multiplier
+    return {
+        "ratio": {"held": str(held), "new": str(new), "resulting_multiplier": str(multiplier)},
+        "source_quantity": str(source_quantity), "expected_quantity": str(expected),
+        "observed_quantity": str(observed_quantity), "delta": str(expected - observed_quantity),
+        "rounding_rule": "not stated", "status": "CALCULATED",
+    }
+
+
 def analyze(break_id, evidence=None):
     """RCA entry point. Reuses the Investigation bundle when the caller has one."""
     if evidence is None:
@@ -281,6 +313,8 @@ def analyze(break_id, evidence=None):
         "document_finding": notice,
         "notice_signals": signals,
         "notice_verdict": notice_verdict(signals) if is_ca else None,
+        "notice_signals_captured_at": store.now() if is_ca else None,
+        "entitlement_calculation": entitlement_calculation(evidence, notice),
         "explanation": explain(root_cause, ea, notice),
         "precedents": precedents.get("precedents", []),
         "evidence_cited": cite_evidence(evidence, precedents),

@@ -11,6 +11,7 @@ sys.path.insert(0, os.path.join(BACKEND_DIR, "agents"))
 
 import orchestrator  # noqa: E402
 import control_gate  # noqa: E402
+import auth  # noqa: E402
 from investigation import _tables, break_feed  # noqa: E402
 from theme import root_cause_label  # noqa: E402
 from audit import record as _audit_record, list_events as _audit_events, summary as _audit_summary  # noqa: E402
@@ -157,6 +158,11 @@ def verify_manual(break_id,verifier,verification_notes):
     if case is None: raise KeyError(f"no case exists for {break_id}")
     if case.get("status")!="AWAITING_VERIFICATION": raise ValueError("case is not awaiting verification")
     if not verification_notes.strip(): raise ValueError("verification notes are required")
+    try:
+        auth.require_actor(verifier, ("verifier", "approver"))
+        auth.require_distinct(verifier, case["manual_resolution"].get("submitted_by", ""), "action performer")
+    except PermissionError as exc:
+        raise ValueError(str(exc)) from exc
     case["manual_resolution"]["verified_by"]=verifier
     case["manual_resolution"]["verified_at"]=pd.Timestamp.utcnow().isoformat()
     case["manual_resolution"]["verification_notes"]=verification_notes

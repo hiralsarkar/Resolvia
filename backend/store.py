@@ -41,6 +41,14 @@ CREATE TABLE IF NOT EXISTS decisions (
     timestamp TEXT NOT NULL,
     notes     TEXT
 );
+CREATE TABLE IF NOT EXISTS decision_history (
+    id        INTEGER PRIMARY KEY AUTOINCREMENT,
+    break_id  TEXT NOT NULL,
+    decision  TEXT NOT NULL,
+    approver  TEXT NOT NULL,
+    timestamp TEXT NOT NULL,
+    notes     TEXT
+);
 CREATE TABLE IF NOT EXISTS gate_log (
     id        INTEGER PRIMARY KEY AUTOINCREMENT,
     break_id  TEXT,
@@ -112,6 +120,8 @@ def case_statuses():
 # approval decisions and the gate's log
 
 def put_decision(break_id, decision, approver, timestamp, notes):
+    _run("INSERT INTO decision_history (break_id, decision, approver, timestamp, notes) VALUES (?, ?, ?, ?, ?)",
+         (break_id, decision, approver, timestamp, notes))
     _run("INSERT INTO decisions VALUES (?, ?, ?, ?, ?) ON CONFLICT(break_id) DO UPDATE SET "
          "decision=excluded.decision, approver=excluded.approver, timestamp=excluded.timestamp, "
          "notes=excluded.notes", (break_id, decision, approver, timestamp, notes))
@@ -121,6 +131,11 @@ def get_decision(break_id):
     row = _run("SELECT decision, approver, timestamp, notes FROM decisions WHERE break_id = ?",
                (break_id,)).fetchone()
     return dict(row) if row else None
+
+
+def decision_history(break_id):
+    rows = _run("SELECT break_id, decision, approver, timestamp, notes FROM decision_history WHERE break_id = ? ORDER BY id", (break_id,))
+    return [dict(r) for r in rows]
 
 
 def log_gate(break_id, event, detail):
@@ -172,5 +187,5 @@ def list_events(break_id=None, actor_id=None, action=None, limit=500):
 def reset(*tables):
     """Clears the given tables, or all of them. For tests and offline scripts only."""
     with _LOCK:
-        for t in tables or ("cases", "decisions", "gate_log", "events"):
+        for t in tables or ("cases", "decisions", "decision_history", "gate_log", "events"):
             _conn().execute(f"DELETE FROM {t}")

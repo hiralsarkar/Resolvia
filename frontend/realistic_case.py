@@ -6,6 +6,7 @@ Choosing Manual never closes a case and never counts as approval.
 """
 import streamlit as st
 import pandas as pd
+from html import escape
 import backend_bridge as bb
 from theme import COLORS, STATUS_LABEL, SEVERITY_LABEL, page_header, root_cause_label
 
@@ -78,7 +79,8 @@ def _render_notice_signals(rca, investigation):
     if not is_ca:
         return
     signals = rca.get("notice_signals")
-    if signals is None:  # cases analysed before signals were recorded
+    reread_now = signals is None
+    if reread_now:  # cases analysed before signals were recorded
         import rca as rca_agent
         signals = rca_agent.notice_signals(doc.get("text"))
     verdict = rca.get("notice_verdict") or ("unreadable" if not signals else
@@ -88,14 +90,16 @@ def _render_notice_signals(rca, investigation):
     if verdict == "agreed" and finding.get("changed"):
         note += f" It overrode the model's first read ({root_cause_label(finding['model_said'])})."
     rows = "".join(
-        f'<tr><td>{s["signal"][0].upper() + s["signal"][1:]}</td><td class="mono">{s["field"]}</td>'
-        f'<td class="mono">{s["read"]}</td><td>{_POINTS[s["points_to"]]}</td></tr>' for s in signals)
+        f'<tr><td>{escape(s["signal"].capitalize())}</td><td class="mono">{escape(s["field"])}</td>'
+        f'<td class="mono">{escape(s["read"])}</td><td>{escape(_POINTS.get(s["points_to"], "Unknown"))}</td></tr>' for s in signals)
     table = (f'<table style="width:100%;margin-top:10px;border-collapse:collapse;font-size:0.9rem">'
              f'<tr style="text-align:left;opacity:.7"><th>Signal</th><th>Field</th><th>Value read</th><th>Points to</th></tr>{rows}</table>'
              if rows else "")
-    src = f' Source: {doc["doc_id"]}.' if doc.get("doc_id") else ""
+    src = f' Source: {escape(doc["doc_id"])}.' if doc.get("doc_id") else ""
+    if reread_now:
+        note = "Re-read now: this notice was not captured in the original decision record. " + note
     st.markdown(f'<div class="rc-card"><div class="rc-label">What drove the decision</div>'
-                f'<div class="rc-muted">{note}{src}</div>{table}</div>', unsafe_allow_html=True)
+                f'<div class="rc-muted">{escape(note)}{src}</div>{table}</div>', unsafe_allow_html=True)
 
 
 def render_case():
@@ -132,9 +136,20 @@ def render_case():
     investigation = case.get("investigation") or {}
     triage = case.get("triage") or {}
 
-    st.markdown('<div class="rc-card"><div class="rc-label">What happened</div><h3>' + (root_cause_label(rca["root_cause"]) if rca.get("root_cause") else row.reported_issue) + '</h3><div class="rc-muted">' + str(rca.get("explanation", "")) + '</div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="rc-card"><div class="rc-label">What happened</div><h3>' + escape(root_cause_label(rca["root_cause"]) if rca.get("root_cause") else str(row.reported_issue)) + '</h3><div class="rc-muted">' + escape(str(rca.get("explanation", ""))) + '</div></div>', unsafe_allow_html=True)
 
     _render_notice_signals(rca, investigation)
+
+    calculation = rca.get("entitlement_calculation")
+    if calculation and calculation.get("status") == "CALCULATED":
+        ratio = calculation["ratio"]
+        st.markdown(
+            f'<div class="rc-card"><div class="rc-label">Calculation used</div>'
+            f'<div class="rc-muted">Ratio definition: {escape(ratio["held"])} held → {escape(ratio["new"])} new '
+            f'(multiplier {escape(ratio["resulting_multiplier"])}).</div>'
+            f'<div class="mono">{escape(calculation["source_quantity"])} × {escape(ratio["resulting_multiplier"])} = '
+            f'{escape(calculation["expected_quantity"])} vs custodian {escape(calculation["observed_quantity"])}; '
+            f'delta {escape(calculation["delta"])}.</div></div>', unsafe_allow_html=True)
 
     with st.expander("See evidence used for the analysis", expanded=False):
         st.json(investigation.get("structured_evidence", {}))
@@ -362,7 +377,7 @@ def render_resolution():
 
     if status == "AWAITING_VERIFICATION":
         st.markdown('<div class="rc-next"><div class="rc-label">Independent verification</div><div class="rc-big">Verify before closure</div><div class="rc-muted">Check the correction against the relevant source record. The verifier records what was checked.</div></div>', unsafe_allow_html=True)
-        verifier = st.text_input("Verifier Operations ID", value=operator, key="real_verifier")
+        verifier = st.text_input("Verifier Operations ID", value="", key="real_verifier", help="Must be a different, authorized verifier from the person who performed the action.")
         notes = st.text_area("Verification notes", placeholder="What did you check and what confirms the break is resolved?", key="real_verification_notes")
         if st.button("Verify & close case →", type="primary", use_container_width=True, key="real_verify_close"):
             try:
