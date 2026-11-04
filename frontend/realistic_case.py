@@ -48,6 +48,11 @@ def css():
     .flow-step{font-size:.72rem;font-weight:800;display:flex;gap:6px;align-items:center}
     .flow-dot{border:1px solid currentColor;border-radius:50%;width:21px;height:21px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem}
     .flow-line{height:1px;background:#3a4050;flex:1;min-width:10px}
+    .stApp .main, .stApp .main *{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    .stApp .main h1,.stApp .main h2,.stApp .main h3,.stApp .main h4{font-family:Inter,ui-sans-serif,system-ui,sans-serif!important;letter-spacing:-.025em!important}
+    .stApp .main .mono{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace!important}
+    .stApp .main .block-container{max-width:1360px;padding-top:2rem;padding-bottom:4rem}
+    .stApp .main [data-testid="stHorizontalBlock"]{gap:1rem}
     div[data-testid="stButton"]>button{min-height:45px;border-radius:10px;font-weight:750}
     </style>""", unsafe_allow_html=True)
 

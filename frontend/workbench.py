@@ -51,6 +51,19 @@ def _css():
     """, unsafe_allow_html=True)
 
 
+def _operational_style():
+    st.markdown("""
+    <style>
+    .stApp .main, .stApp .main * { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .stApp .main h1, .stApp .main h2, .stApp .main h3, .stApp .main h4 { font-family: Inter, ui-sans-serif, system-ui, sans-serif !important; letter-spacing: -0.025em !important; }
+    .stApp .main .mono, .stApp .main .num, .stApp .main [data-testid="stMetricValue"] { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace !important; }
+    .stApp .main .block-container { max-width: 1360px; padding-top: 2rem; padding-bottom: 4rem; }
+    .stApp .main [data-testid="stDataFrame"] { margin-top: 0.5rem; }
+    .stApp .main [data-testid="stHorizontalBlock"] { gap: 1rem; }
+    </style>
+    """, unsafe_allow_html=True)
+
+
 def _status(status):
     return STATUS_LABEL.get(status, str(status).replace("_", " ").title())
 
@@ -91,7 +104,7 @@ def _open_audit(bid):
 
 
 def render_home():
-    _css()
+    _css(); _operational_style()
     df = bb.load_breaks_df().copy()
     df["age_days"] = _age(df)
     statuses = bb.all_case_statuses()
@@ -140,7 +153,7 @@ def render_home():
 
 
 def render_operations():
-    _css()
+    _css(); _operational_style()
     page_header("queue", "Analyst Workspace", "Break Queue", "Start with the break that needs your attention. The next action is shown after you open it.", COLORS["amber"])
     df=bb.load_breaks_df().copy(); df["age_days"]=_age(df); statuses=bb.all_case_statuses(); df["status"]=df.break_id.map(lambda b:statuses.get(b,"NOT_STARTED"))
     f1,f2,f3,f4,f5=st.columns([1.15,1.15,1.15,1.35,2])
@@ -187,7 +200,7 @@ def _case_progress(case):
 
 
 def render_case():
-    _css(); bid=st.session_state.get("selected_break")
+    _css(); _operational_style(); bid=st.session_state.get("selected_break")
     if not bid:
         st.info("Choose a break from the queue first.");
         if st.button("Open break queue →",type="primary"):st.session_state["nav"]="Operations Desk";st.rerun()
@@ -255,7 +268,7 @@ def render_case_audit(bid,compact=False):
 
 
 def render_resolution():
-    _css(); bid=st.session_state.get("selected_break")
+    _css(); _operational_style(); bid=st.session_state.get("selected_break")
     if not bid:st.info("Choose a break first.");return
     case=bb.get_case(bid)
     if not case:st.warning("Review the case before opening the resolution workspace.");return
@@ -286,7 +299,7 @@ def render_resolution():
 
 
 def render_playbook():
-    _css(); bid=st.session_state.get("selected_break")
+    _css(); _operational_style(); bid=st.session_state.get("selected_break")
     if not bid:st.info("Choose a break first.");return
     case=bb.get_case(bid); row=_row_for(bid)
     st.markdown('<span class="eyebrow">Analyst Guidance</span>',unsafe_allow_html=True); st.markdown(f'<div class="wb-title">Manual resolution · {bid}</div>',unsafe_allow_html=True)
@@ -308,7 +321,7 @@ def render_playbook():
 
 
 def render_audit():
-    _css(); page_header("audit", "Governance", "Audit Trail", "A chronological record of human and system activity.", COLORS["forest"])
+    _css(); _operational_style(); page_header("audit", "Governance", "Audit Trail", "A chronological record of human and system activity.", COLORS["forest"])
     selected=st.session_state.get("audit_break_filter") or st.session_state.get("selected_break")
     events=bb.audit_events(limit=2000); df=pd.DataFrame(events)
     if df.empty:st.info("No audit events recorded yet.");return
