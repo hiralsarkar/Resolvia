@@ -31,13 +31,13 @@ def _css():
     <style>
     .wb-title {font-size:2.15rem;font-weight:800;letter-spacing:-.04em;margin:0 0 .25rem 0;}
     .wb-sub {color:#C2C6D6;font-size:.92rem;margin-bottom:1.2rem;}
-    .wb-card {background:#12141D;border:1px solid #232733;border-radius:16px;padding:20px 22px;margin-bottom:14px;}
-    .wb-card-tight {background:#12141D;border:1px solid #232733;border-radius:14px;padding:15px 18px;}
-    .wb-label {font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:#C2C6D6;font-weight:700;}
-    .wb-big {font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;color:#F2F3F8;line-height:1.15;}
-    .wb-action {border:1px solid #2b3040;border-radius:12px;padding:14px 16px;background:#171A25;}
+    .wb-card {background:#fff;border:1px solid #e1e5ef;border-radius:18px;padding:20px 22px;margin-bottom:14px;box-shadow:0 8px 24px rgba(49,63,104,.07);}
+    .wb-card-tight {background:#fff;border:1px solid #e1e5ef;border-radius:16px;padding:15px 18px;box-shadow:0 6px 18px rgba(49,63,104,.05);}
+    .wb-label {font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#6352d9;font-weight:750;}
+    .wb-big {font-family:Inter,ui-sans-serif,system-ui,sans-serif;font-size:1.65rem;font-weight:750;color:#17213c;line-height:1.15;}
+    .wb-action {border:1px solid #e1e5ef;border-radius:16px;padding:18px 20px;background:#fff;box-shadow:0 6px 18px rgba(49,63,104,.05);}
     .wb-action strong {font-size:1rem;}
-    .wb-muted {color:#C2C6D6;font-size:.82rem;}
+    .wb-muted {color:#71809a;font-size:.9rem;line-height:1.5;}
     .wb-status {font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
     .wb-timeline {border-left:2px solid #232733;margin-left:8px;padding-left:18px;}
     .wb-event {padding:0 0 16px 0;position:relative;}

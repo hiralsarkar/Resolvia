@@ -546,6 +546,37 @@ section[data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked
 [data-testid="stDataFrame"], [data-testid="stExpander"], [data-testid="stFileUploaderDropzone"] {{ border-radius: 16px !important; }}
 [data-testid="stMetricValue"] {{ font-family: Inter, ui-sans-serif, sans-serif !important; font-weight: 750 !important; letter-spacing: -.035em !important; }}
 .ph-title {{ font-family: Inter, ui-sans-serif, sans-serif !important; letter-spacing: -.045em !important; }}
+
+/* ---------- clean dashboard treatment ---------- */
+.stApp, [data-testid="stAppViewContainer"] {{
+  background: #eef0f7 !important; color: #17213c !important;
+}}
+.stApp, .stApp * {{ color: #17213c; }}
+.stApp .main .block-container {{ max-width: 1440px !important; padding: 2.4rem 3rem 4rem !important; }}
+.stApp h1, .stApp h2, .stApp h3, .stApp h4, .ph-title {{ color: #17213c !important; background: none !important; -webkit-text-fill-color: #17213c !important; }}
+.stApp p, .stApp .stCaption, [data-testid="stCaptionContainer"] p {{ color: #71809a !important; }}
+section[data-testid="stSidebar"] {{ background: #f8f9fd !important; border-right: 1px solid #e3e7f1 !important; box-shadow: 8px 0 30px rgba(55,68,110,.06); }}
+section[data-testid="stSidebar"] * {{ color: #28334f !important; }}
+section[data-testid="stSidebar"] [data-testid="stRadio"] label {{ background: transparent !important; border: 1px solid transparent !important; box-shadow: none !important; border-radius: 14px !important; }}
+section[data-testid="stSidebar"] [data-testid="stRadio"] label:hover {{ background: #eef0ff !important; border-color: #ddd8ff !important; transform: none !important; }}
+section[data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked) {{ background: #e9e5ff !important; border-color: #c8bcff !important; box-shadow: none !important; }}
+.resolvia-tagline {{ color: #7c6bd8 !important; }}
+.stButton > button {{ color: #4d3cc7 !important; background: #fff !important; border: 1px solid #d9dcec !important; box-shadow: 0 2px 8px rgba(55,68,110,.06) !important; }}
+.stButton > button:hover {{ background: #f2efff !important; border-color: #9887ef !important; box-shadow: 0 5px 14px rgba(86,72,190,.12) !important; }}
+.stButton > button[kind="primary"] {{ color: #fff !important; background: #6352d9 !important; border-color: #6352d9 !important; box-shadow: 0 6px 16px rgba(99,82,217,.2) !important; }}
+.stApp .wb-card, .stApp .wb-card-tight, .stApp .wb-action, .stApp .rc-card, .stApp .rc-next, .stApp .rc-step, .stApp .rv-card, .stApp .kpi-tile {{
+  background: #fff !important; border: 1px solid #e1e5ef !important; box-shadow: 0 8px 24px rgba(49,63,104,.07) !important; border-radius: 18px !important; color: #17213c !important;
+}}
+.stApp .wb-card:hover, .stApp .wb-card-tight:hover, .stApp .wb-action:hover, .stApp .rc-card:hover, .stApp .rc-next:hover, .stApp .rv-card:hover {{ transform: none !important; border-color: #c8bcff !important; box-shadow: 0 12px 28px rgba(86,72,190,.1) !important; }}
+.stApp .wb-label, .stApp .rc-label, .eyebrow {{ color: #6352d9 !important; }}
+.stApp .wb-muted, .stApp .rc-muted {{ color: #71809a !important; }}
+.stApp .rc-big, .stApp .wb-big {{ color: #17213c !important; text-shadow: none !important; }}
+[data-testid="stDataFrame"], [data-testid="stExpander"], [data-testid="stFileUploaderDropzone"] {{ background: #fff !important; border-color: #e1e5ef !important; box-shadow: 0 5px 18px rgba(49,63,104,.05) !important; }}
+[data-testid="stMetricLabel"], [data-testid="stWidgetLabel"] p {{ color: #71809a !important; }}
+[data-testid="stMetricValue"] {{ color: #17213c !important; }}
+.stTextInput input, .stTextArea textarea, [data-baseweb="select"] > div {{ background: #fff !important; color: #17213c !important; border-color: #d9ddec !important; }}
+.stApp .flow-bar {{ background: #f8f9fd !important; border-color: #e1e5ef !important; }}
+.stApp .flow-step {{ color: #6352d9 !important; }}
 </style>
 """, unsafe_allow_html=True)
 
