@@ -54,6 +54,9 @@
   }
   @keyframes dot-pulse { 0%,100%{opacity:1;} 50%{opacity:.35;} }
 
+  .hero-logo { display:flex; align-items:center; justify-content:center; gap:18px; margin:18px auto 8px; }
+  .hero-logo svg { width:78px; height:78px; flex:0 0 auto; filter:drop-shadow(0 0 18px rgba(76,224,255,.42)); }
+  .hero-logo-wordmark { font-family:'Bricolage Grotesque','Manrope',sans-serif; font-size:clamp(2.8rem,6vw,4.2rem); font-weight:800; letter-spacing:-.05em; color:#F7FBFF; text-shadow:0 0 24px rgba(76,224,255,.42); }
   h1.brand {
     font-family: 'Bricolage Grotesque', 'Manrope', sans-serif;
     font-weight: 800; font-size: clamp(2.6rem, 6.4vw, 4.2rem);
@@ -385,6 +388,18 @@
 <div class="wrap">
   <div class="hero-head">
     <span class="hero-eyebrow"><span class="live-dot"></span> Live exception journey</span>
+    <div class="hero-logo" aria-label="Resolvia logo">
+      <svg viewBox="0 0 100 100" role="img">
+        <defs><linearGradient id="resolvia-logo-gradient" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4CE0FF"/><stop offset=".52" stop-color="#A78BFA"/><stop offset="1" stop-color="#34E5A6"/></linearGradient></defs>
+        <circle cx="50" cy="50" r="39" fill="#101827" stroke="url(#resolvia-logo-gradient)" stroke-width="7"/>
+        <circle cx="50" cy="50" r="27" fill="#EAFBFF"/>
+        <path d="M34 51l11 11 22-25" fill="none" stroke="#071522" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="20" cy="25" r="7" fill="#4CE0FF" stroke="#EAFBFF" stroke-width="3"/>
+        <circle cx="80" cy="25" r="7" fill="#A78BFA" stroke="#EAFBFF" stroke-width="3"/>
+        <circle cx="80" cy="75" r="7" fill="#34E5A6" stroke="#EAFBFF" stroke-width="3"/>
+      </svg>
+      <span class="hero-logo-wordmark">Resolvia</span>
+    </div>
     <h1 class="brand">Resolvia</h1>
     <p class="hero-sub">AI-powered exception intelligence for investment banking, from break to verified resolution.</p>
     <p class="hero-principle"><b>AI investigates.</b> <b>Humans authorize.</b> <b>Systems execute.</b> <b>AI validates.</b></p>
