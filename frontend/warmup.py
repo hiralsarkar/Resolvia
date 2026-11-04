@@ -5,8 +5,8 @@ has been sent to the browser.
 The Agent Architecture page needs nothing from the backend, so it renders
 straight away. While the visitor watches it, this thread loads everything
 the working pages need, lightest first: the app modules, the data tables,
-the two classifiers, the vector indexes and finally the sentence-transformer
-model (the one real download, roughly 90 MB on a cold start).
+the vector indexes, the triage classifier and the shared features. The two
+memory-heavy models (RCA and sentence-transformer) still load on first use.
 
 It lives in its own module, not in app.py, because Streamlit re-executes
 app.py on every interaction; module state here survives reruns, so the work
@@ -14,18 +14,49 @@ happens exactly once.
 """
 
 import threading
+import time
 
 _lock = threading.Lock()
 _started = False
-status = {"done": False, "step": None, "errors": []}
+status = {"done": False, "step": None, "errors": [], "timings": {}}
+
+# Streamlit runs scripts on worker threads that share one Python interpreter,
+# so CPU-heavy loading here would slow down whatever page is rendering. The
+# heavy steps therefore only run while no page is being drawn.
+_last_start = 0.0
+_last_end = 0.0
 
 
-def _step(name, fn):
+def page_started():
+    global _last_start
+    _last_start = time.time()
+
+
+def page_finished():
+    global _last_end
+    _last_end = time.time()
+
+
+def _wait_until_idle(quiet=2.0):
+    while True:
+        now = time.time()
+        rendering = _last_start > _last_end and now - _last_start < 20  # 20s guards a run that never finished
+        if not rendering and now - max(_last_end, _last_start) >= quiet:
+            return
+        time.sleep(0.5)
+
+
+def _step(name, fn, heavy=False):
+    if heavy:
+        _wait_until_idle()
     status["step"] = name
+    t = time.time()
     try:
         fn()
     except Exception as e:  # warm-up must never break the app
         status["errors"].append(f"{name}: {type(e).__name__}: {e}"[:200])
+    status["timings"][name] = round(time.time() - t, 2)
+    print(f"[resolvia-warmup] {name}: {status['timings'][name]}s", flush=True)
 
 
 def _run():
@@ -37,9 +68,12 @@ def _run():
         from investigation import _tables
         _tables()
 
-    def classifiers():
+    def triage_model():
+        import triage
+        triage._model_bundle()
+
+    def features():
         import triage, rca
-        triage._model_bundle(); rca._model_bundle()
         triage._features_df(); rca._features_df()
 
     def indexes():
@@ -47,13 +81,14 @@ def _run():
         for name in ("evidence_index", "ca_reference_index", "resolved_cases_index"):
             _index(name)
 
-    def embedding_model():
-        from embed_store import get_model
-        get_model()
-
-    for name, fn in (("app modules", app_modules), ("data", data), ("classifiers", classifiers),
-                     ("vector indexes", indexes), ("embedding model", embedding_model)):
-        _step(name, fn)
+    # Light first, then the heavy ones one at a time, each waiting for a quiet moment.
+    # The RCA model (~650 MB in memory) and the sentence-transformer model (~400 MB
+    # with torch) are deliberately NOT preloaded: together they push the server past
+    # Streamlit Cloud's memory limit, which crashes the app. They load on first use.
+    for name, fn, heavy in (("app modules", app_modules, False), ("data", data, False),
+                            ("vector indexes", indexes, False), ("triage model", triage_model, True),
+                            ("features", features, True)):
+        _step(name, fn, heavy)
     status["step"] = None
     status["done"] = True
 
