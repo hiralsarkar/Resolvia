@@ -51,8 +51,29 @@ def _css():
     """, unsafe_allow_html=True)
 
 
+def _operational_style():
+    st.markdown("""
+    <style>
+    .stApp .main, .stApp .main * { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .stApp .main h1, .stApp .main h2, .stApp .main h3, .stApp .main h4 { font-family: Inter, ui-sans-serif, system-ui, sans-serif !important; letter-spacing: -0.025em !important; }
+    .stApp .main .mono, .stApp .main .num, .stApp .main [data-testid="stMetricValue"] { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace !important; }
+    .stApp .main .block-container { max-width: 1360px; padding-top: 2rem; padding-bottom: 4rem; }
+    .stApp .main [data-testid="stDataFrame"] { margin-top: 0.5rem; }
+    .stApp .main [data-testid="stHorizontalBlock"] { gap: 1rem; }
+    </style>
+    """, unsafe_allow_html=True)
+
+
 def _status(status):
     return STATUS_LABEL.get(status, str(status).replace("_", " ").title())
+
+
+def _next_action(status):
+    return {"NOT_STARTED": "Start review", "CASE_CREATED": "Review evidence",
+            "IN_REVIEW": "Read resolution guide", "AWAITING_APPROVAL": "Approve or reject",
+            "MANUAL_IN_PROGRESS": "Record manual action", "AWAITING_VERIFICATION": "Verify correction",
+            "ESCALATED": "Manager follow-up", "REOPENED": "Investigate again",
+            "CLOSED": "No action", "REJECTED": "No action", "ON_HOLD": "Await election"}.get(status, "Open case")
 
 
 def _age(df):
@@ -83,7 +104,7 @@ def _open_audit(bid):
 
 
 def render_home():
-    _css()
+    _css(); _operational_style()
     df = bb.load_breaks_df().copy()
     df["age_days"] = _age(df)
     statuses = bb.all_case_statuses()
@@ -132,26 +153,30 @@ def render_home():
 
 
 def render_operations():
-    _css()
+    _css(); _operational_style()
     page_header("queue", "Analyst Workspace", "Break Queue", "Start with the break that needs your attention. The next action is shown after you open it.", COLORS["amber"])
     df=bb.load_breaks_df().copy(); df["age_days"]=_age(df); statuses=bb.all_case_statuses(); df["status"]=df.break_id.map(lambda b:statuses.get(b,"NOT_STARTED"))
-    f1,f2,f3,f4=st.columns([1.2,1.2,1.2,2])
+    f1,f2,f3,f4,f5=st.columns([1.15,1.15,1.15,1.35,2])
     fam=f1.multiselect("Category",sorted(df.family.unique()),key="wb_family")
     pri=f2.multiselect("Priority",["P0","P1","P2"],key="wb_priority")
     age=f3.selectbox("Age",["All","Today","1+ day","3+ days"],key="wb_age")
-    search=f4.text_input("Search",placeholder="Break ID, security, counterparty",key="wb_search")
+    states=sorted(df.status.unique())
+    selected_states=f4.multiselect("Status",states,format_func=_status,key="wb_status")
+    search=f5.text_input("Search",placeholder="Break ID, security, counterparty",key="wb_search")
     view=df.copy()
     if fam:view=view[view.family.isin(fam)]
     if pri:view=view[view.severity.isin(pri)]
     if age=="Today":view=view[view.age_days==0]
     elif age=="1+ day":view=view[view.age_days>=1]
     elif age=="3+ days":view=view[view.age_days>=3]
+    if selected_states:view=view[view.status.isin(selected_states)]
     if search:
         q=search.strip().upper(); view=view[view.apply(lambda r:q in str(r.break_id).upper() or q in str(r.security).upper() or q in str(r.counterparty).upper(),axis=1)]
     view=view.sort_values(["severity","age_days","exposure"],ascending=[True,False,False]).head(150)
     st.caption(f"{len(view):,} breaks shown")
     view["issue"]=view.apply(bb.issue_label,axis=1)
-    display=view[["break_id","issue","family","severity","age_days","status","exposure","counterparty"]].rename(columns={"break_id":"Break","issue":"Issue","family":"Category","severity":"Priority","age_days":"Age","status":"Status","exposure":"Exposure","counterparty":"Counterparty"})
+    view["next_action"]=view.status.map(_next_action)
+    display=view[["break_id","issue","family","severity","age_days","status","next_action","exposure","counterparty"]].rename(columns={"break_id":"Break","issue":"Issue","family":"Category","severity":"Priority","age_days":"Age","status":"Status","next_action":"Next action","exposure":"Exposure","counterparty":"Counterparty"})
     display["Priority"]=display.Priority.map(lambda x:SEVERITY_LABEL.get(x,x)); display["Status"]=display.Status.map(_status); display["Age"]=display.Age.astype(str)+"d"
     event=st.dataframe(display,hide_index=True,width="stretch",height=470,on_select="rerun",selection_mode="single-row",key="wb_queue",column_config={"Exposure":st.column_config.NumberColumn(format="₹%d")})
     if event.selection and event.selection.get("rows"):
@@ -175,7 +200,7 @@ def _case_progress(case):
 
 
 def render_case():
-    _css(); bid=st.session_state.get("selected_break")
+    _css(); _operational_style(); bid=st.session_state.get("selected_break")
     if not bid:
         st.info("Choose a break from the queue first.");
         if st.button("Open break queue →",type="primary"):st.session_state["nav"]="Operations Desk";st.rerun()
@@ -237,12 +262,13 @@ def render_case_audit(bid,compact=False):
     st.markdown("### Case history" if compact else "### Break audit history")
     rows=[]
     for e in events:
-        rows.append({"Time":pd.to_datetime(e["timestamp"],utc=True).strftime("%d %b %Y · %H:%M UTC"),"Operations ID":e.get("actor_id","SYSTEM"),"Action":e.get("action",""),"What was done":e.get("detail","")})
+        actor=e.get("actor_id","SYSTEM")
+        rows.append({"Time":pd.to_datetime(e["timestamp"],utc=True).strftime("%d %b %Y · %H:%M UTC"),"Type":"Human" if actor != "SYSTEM" else "System","Operations ID":actor,"Action":e.get("action",""),"What was done":e.get("detail","")})
     st.dataframe(pd.DataFrame(rows),hide_index=True,width="stretch",height=300 if compact else 520)
 
 
 def render_resolution():
-    _css(); bid=st.session_state.get("selected_break")
+    _css(); _operational_style(); bid=st.session_state.get("selected_break")
     if not bid:st.info("Choose a break first.");return
     case=bb.get_case(bid)
     if not case:st.warning("Review the case before opening the resolution workspace.");return
@@ -273,7 +299,7 @@ def render_resolution():
 
 
 def render_playbook():
-    _css(); bid=st.session_state.get("selected_break")
+    _css(); _operational_style(); bid=st.session_state.get("selected_break")
     if not bid:st.info("Choose a break first.");return
     case=bb.get_case(bid); row=_row_for(bid)
     st.markdown('<span class="eyebrow">Analyst Guidance</span>',unsafe_allow_html=True); st.markdown(f'<div class="wb-title">Manual resolution · {bid}</div>',unsafe_allow_html=True)
@@ -295,7 +321,7 @@ def render_playbook():
 
 
 def render_audit():
-    _css(); page_header("audit", "Governance", "Audit Trail", "A chronological record of human and system activity.", COLORS["forest"])
+    _css(); _operational_style(); page_header("audit", "Governance", "Audit Trail", "A chronological record of human and system activity.", COLORS["forest"])
     selected=st.session_state.get("audit_break_filter") or st.session_state.get("selected_break")
     events=bb.audit_events(limit=2000); df=pd.DataFrame(events)
     if df.empty:st.info("No audit events recorded yet.");return
