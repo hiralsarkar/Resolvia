@@ -1,34 +1,9 @@
 import os
-import threading
 import streamlit as st
 from theme import inject_global_css
 
 st.set_page_config(page_title="Resolvia", page_icon=os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "logo.png"), layout="wide", initial_sidebar_state="expanded")
 inject_global_css()
-
-_warmup_started = False
-_warmup_lock = threading.Lock()
-
-def _warmup_operations_stack():
-    """Import heavy operational modules after the first page has rendered."""
-    global _warmup_started
-    with _warmup_lock:
-        if _warmup_started:
-            return
-        _warmup_started = True
-    try:
-        import workbench  # noqa: F401
-        import realistic_case  # noqa: F401
-    except Exception:
-        # The real navigation path will surface any import error normally.
-        pass
-
-def _start_background_warmup():
-    threading.Thread(
-        target=_warmup_operations_stack,
-        name="resolvia-operations-warmup",
-        daemon=True,
-    ).start()
 
 if "nav" not in st.session_state:
     st.session_state["nav"] = "Agent Architecture"
@@ -90,7 +65,6 @@ with st.sidebar:
 if nav == "Agent Architecture":
     import command_center
     command_center.render()
-    _start_background_warmup()
 elif nav in ("Home", "Operations Desk", "Audit Trail", "Manager Dashboard"):
     import workbench
     if nav == "Home":
@@ -109,3 +83,7 @@ elif nav in ("Case Investigation", "Resolution Control", "Resolution Playbook"):
         realistic_case.render_resolution()
     else:
         realistic_case.render_guide()
+
+# Everything heavy loads in the background, after this page has been sent.
+import warmup
+warmup.start()
