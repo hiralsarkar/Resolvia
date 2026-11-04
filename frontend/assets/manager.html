@@ -167,7 +167,7 @@
       <div style="display:flex;justify-content:center"><svg id="gauge" width="230" height="160" viewBox="0 0 230 160"></svg></div>
     </div>
     <div class="panel w12" style="--c: var(--cyan); animation-delay: .35s">
-        <div class="ph"><div class="ic" data-i="cpu"></div><div><h3>Workflow activity</h3><p>How many cases each workflow stage has handled so far</p></div></div>
+      <div class="ph"><div class="ic" data-i="cpu"></div><div><h3>Agent activity</h3><p>How many cases each agent has worked so far</p></div></div>
       <div class="agents" id="agents"></div>
       <div class="note" id="agentNote"></div>
     </div>
@@ -176,7 +176,7 @@
       <div class="cols" id="age"></div><div class="collbl" id="ageLbl"></div>
     </div>
     <div class="panel" style="--c: var(--violet); animation-delay: .45s">
-        <div class="ph"><div class="ic" data-i="target"></div><div><h3>Root causes diagnosed</h3><p>What the root-cause review has found so far</p></div></div>
+      <div class="ph"><div class="ic" data-i="target"></div><div><h3>Root causes diagnosed</h3><p>What the RCA agent has found so far</p></div></div>
       <div id="causes"></div>
     </div>
   </div>
@@ -364,7 +364,7 @@ function agents() {
     d.innerHTML = '<div class="ic">' + svg(a[0]) + '</div><div class="cnt">0</div><div class="nm">' + a[1] + '</div>';
     box.appendChild(d); countUp(d.querySelector('.cnt'), k, n); hover(d, a[1] + ' · <b>' + n(k) + '</b> cases', a[3]);
   });
-  document.getElementById('agentNote').textContent = DATA.cases ? DATA.cases + ' cases opened so far. Further review only steps in when a case looks unusual.' : 'No cases opened yet. Start a case from the Break Queue and the workflow stages light up here.';
+  document.getElementById('agentNote').textContent = DATA.cases ? DATA.cases + ' cases opened so far. The Investigator only steps in when a case looks unusual.' : 'No cases opened yet. Start a case from the Break Queue and the agents light up here.';
 }
 
 function ageing(R) {
