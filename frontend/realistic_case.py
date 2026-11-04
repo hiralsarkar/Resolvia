@@ -374,6 +374,7 @@ def render_resolution():
 
     if status == "CLOSED":
         st.success("This case is closed after verification.")
+        _render_notice_signals(case.get("rca") or {}, case.get("investigation") or {})
     elif status == "ESCALATED":
         st.warning("This case is escalated and remains open.")
     elif status == "ON_HOLD":
