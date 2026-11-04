@@ -10,7 +10,7 @@ st.set_page_config(page_title="Resolvia", page_icon="◆", layout="wide", initia
 inject_global_css()
 
 if "nav" not in st.session_state:
-    st.session_state["nav"] = "Home"
+    st.session_state["nav"] = "Agent Architecture"
 if "selected_break" not in st.session_state:
     st.session_state["selected_break"] = None
 if "operator_id" not in st.session_state:
