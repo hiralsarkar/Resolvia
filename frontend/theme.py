@@ -223,6 +223,10 @@ section[data-testid="stSidebar"] {{
 section[data-testid="stSidebar"] * {{ color: #C9CCDA !important; }}
 section[data-testid="stSidebar"] .stRadio label {{ font-family: 'Manrope', sans-serif; font-weight: 500; font-size: 0.92rem; }}
 section[data-testid="stSidebar"] hr {{ border-color: var(--hairline); }}
+.nav-section-label {{
+  margin: 18px 0 8px; color: #8F96AD !important; font-family: Inter, ui-sans-serif, sans-serif;
+  font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+}}
 
 /* ---------- brand mark (a real button styled to look like the wordmark,
    so clicking "Resolvia" in the sidebar opens the Command Center) -
