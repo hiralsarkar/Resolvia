@@ -39,8 +39,13 @@ with st.sidebar:
         "Audit Trail": "Audit Trail",
         "Manager Dashboard": "Manager Overview",
     }
-    nav = st.radio("Navigate", pages, index=pages.index(st.session_state["nav"]), format_func=lambda p: friendly[p], label_visibility="collapsed")
-    st.session_state["nav"] = nav
+    # The radio follows st.session_state["nav"], so buttons anywhere in the app
+    # can change page by setting "nav" and calling st.rerun().
+    def _on_nav():
+        st.session_state["nav"] = st.session_state["nav_radio"]
+    st.session_state["nav_radio"] = st.session_state["nav"]
+    st.radio("Navigate", pages, key="nav_radio", on_change=_on_nav, format_func=lambda p: friendly[p], label_visibility="collapsed")
+    nav = st.session_state["nav"]
 
     st.markdown("<hr/>", unsafe_allow_html=True)
     sb = st.session_state.get("selected_break")

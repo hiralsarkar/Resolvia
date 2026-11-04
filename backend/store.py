@@ -14,11 +14,14 @@ offline scripts call.
 import json
 import os
 import sqlite3
+import shutil
 import threading
 from datetime import datetime, timezone
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_PATH = os.path.join(HERE, "knowledge", "resolvia.db")
+# a ready-made working day (build_demo_day.py), copied in when the app starts fresh
+DEMO_DAY_PATH = os.path.join(HERE, "knowledge", "demo_day.db")
 
 _LOCK = threading.RLock()
 _CONN = None
@@ -74,6 +77,8 @@ def _conn():
                 _CONN.close()
             if path != ":memory:":
                 os.makedirs(os.path.dirname(path), exist_ok=True)
+                if path == DEFAULT_PATH and not os.path.exists(path) and os.path.exists(DEMO_DAY_PATH):
+                    shutil.copyfile(DEMO_DAY_PATH, path)
             _CONN = sqlite3.connect(path, check_same_thread=False, isolation_level=None)
             _CONN.row_factory = sqlite3.Row
             _CONN.executescript(SCHEMA)
