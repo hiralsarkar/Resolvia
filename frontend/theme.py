@@ -528,6 +528,24 @@ section[data-testid="stSidebar"] [role="radiogroup"] label [data-testid="stMarkd
   content: ""; width: 38px; height: 38px; flex-shrink: 0; border-radius: 11px; border: 1px solid transparent; }}
 section[data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) [data-testid="stMarkdownContainer"] p::before {{ animation: icon-breathe 2.6s ease-in-out infinite; --c: var(--accent); }}
 {_nav_icon_css()}
+
+/* ---------- unified product surface ---------- */
+.stApp, [data-testid="stAppViewContainer"] {{
+  background: radial-gradient(900px 520px at 5% -5%, rgba(96,70,190,.28), transparent 62%),
+              radial-gradient(850px 620px at 100% 70%, rgba(24,105,180,.18), transparent 65%),
+              #080a12 !important;
+}}
+.stApp, .stApp * {{ font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }}
+.stApp h1, .stApp h2, .stApp h3, .stApp h4 {{ font-family: Inter, ui-sans-serif, system-ui, sans-serif !important; letter-spacing: -.03em !important; }}
+.block-container {{ max-width: 1380px !important; padding-top: 2.1rem !important; padding-bottom: 4rem !important; }}
+section[data-testid="stSidebar"] {{ background: linear-gradient(180deg, rgba(24,21,50,.96), rgba(8,10,18,.98)) !important; border-right: 1px solid rgba(184,164,255,.18) !important; }}
+section[data-testid="stSidebar"] [data-testid="stRadio"] label {{ background: rgba(255,255,255,.035) !important; border: 1px solid rgba(184,164,255,.14) !important; border-radius: 18px !important; padding: 13px 15px !important; }}
+section[data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked) {{ background: linear-gradient(135deg, rgba(99,73,174,.55), rgba(24,78,145,.38)) !important; border-color: rgba(118,219,255,.7) !important; box-shadow: 0 12px 32px rgba(41,120,190,.24) !important; transform: none !important; }}
+.stButton > button {{ border-radius: 13px !important; font-family: Inter, ui-sans-serif, sans-serif !important; box-shadow: none !important; }}
+.stButton > button[kind="primary"] {{ background: linear-gradient(135deg, #77dfff, #8c78ff) !important; color: #0b1020 !important; border: 0 !important; }}
+[data-testid="stDataFrame"], [data-testid="stExpander"], [data-testid="stFileUploaderDropzone"] {{ border-radius: 16px !important; }}
+[data-testid="stMetricValue"] {{ font-family: Inter, ui-sans-serif, sans-serif !important; font-weight: 750 !important; letter-spacing: -.035em !important; }}
+.ph-title {{ font-family: Inter, ui-sans-serif, sans-serif !important; letter-spacing: -.045em !important; }}
 </style>
 """, unsafe_allow_html=True)
 
