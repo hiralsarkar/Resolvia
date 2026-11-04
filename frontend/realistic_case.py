@@ -224,7 +224,8 @@ def render_case():
             f'{escape(calculation["expected_quantity"])} vs custodian {escape(calculation["observed_quantity"])}; '
             f'delta {escape(calculation["delta"])}.</div></div>', unsafe_allow_html=True)
 
-    with st.expander("See evidence used for the analysis", expanded=False):
+    show_evidence = st.checkbox("Show evidence used for this analysis", value=False, key=f"show_evidence_{bid}")
+    if show_evidence:
         st.json(investigation.get("structured_evidence", {}))
         if investigation.get("document_evidence", {}).get("has_document"):
             st.write(investigation["document_evidence"].get("text", ""))
@@ -241,11 +242,12 @@ def render_case():
     if reviews_key not in st.session_state:
         st.session_state[reviews_key] = []
     uploaded = st.file_uploader(
-        "Upload supporting files for this break",
+        "Choose supporting files",
         type=["pdf", "docx", "txt", "csv", "xlsx", "png", "jpg", "jpeg"],
         accept_multiple_files=True,
         key=f"supplemental_uploader_{bid}",
-        help="Maximum 8 MB per file. Scanned PDFs are not supported yet; use a text PDF or upload the extracted text."
+        help="Up to 8 MB per file. Scanned PDFs are not supported yet; use a text PDF or upload the extracted text.",
+        label_visibility="visible",
     )
     if st.button("Process uploaded documents", key=f"process_supplemental_{bid}", use_container_width=True):
         existing_hashes = {d["sha256"] for d in st.session_state[evidence_key]}
