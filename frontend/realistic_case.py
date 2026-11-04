@@ -136,6 +136,17 @@ def render_case():
     investigation = case.get("investigation") or {}
     triage = case.get("triage") or {}
 
+    reported = investigation.get("reported") or {}
+    field = str(rca.get("field") or reported.get("field") or row.breaking_fields or "Not yet diagnosed")
+    expected = str(rca.get("expected") or reported.get("expected") or "Not available")
+    observed = str(rca.get("actual") or reported.get("actual") or "Not available")
+    st.markdown(
+        f'<div class="rc-card"><div class="rc-label">Responsible field</div>'
+        f'<div class="rc-big mono">{escape(field)}</div>'
+        f'<div class="rc-muted">Expected: {escape(expected)} &nbsp; · &nbsp; Observed: {escape(observed)}</div></div>',
+        unsafe_allow_html=True,
+    )
+
     st.markdown('<div class="rc-card"><div class="rc-label">What happened</div><h3>' + escape(root_cause_label(rca["root_cause"]) if rca.get("root_cause") else str(row.reported_issue)) + '</h3><div class="rc-muted">' + escape(str(rca.get("explanation", ""))) + '</div></div>', unsafe_allow_html=True)
 
     _render_notice_signals(rca, investigation)
