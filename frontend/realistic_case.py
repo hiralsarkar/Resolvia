@@ -55,7 +55,7 @@ def css():
     .stApp .main .mono{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace!important}
     .stApp .main .ph-title{font-family:Inter,ui-sans-serif,system-ui,sans-serif!important;font-size:2.45rem!important;letter-spacing:-.045em!important}
     .stApp .main .ph-sub{font-family:Inter,ui-sans-serif,system-ui,sans-serif!important}
-    .stApp .main .rc-big{font-family:Inter,ui-sans-serif,system-ui,sans-serif!important;letter-spacing:-.035em!important}
+    .stApp .main .rc-big{font-family:Inter,ui-sans-serif,system-ui,sans-serif!important;font-size:1.55rem!important;letter-spacing:-.025em!important}
     .stApp .main .block-container{max-width:1360px;padding-top:2rem;padding-bottom:4rem}
     .stApp .main [data-testid="stHorizontalBlock"]{gap:1rem}
     .stApp,.stAppViewContainer,[data-testid="stAppViewContainer"]{background:radial-gradient(900px 500px at 8% 0%,rgba(102,72,190,.32),transparent 62%),radial-gradient(800px 600px at 100% 70%,rgba(24,110,180,.22),transparent 65%),#080a12!important}
@@ -63,9 +63,14 @@ def css():
     .stApp .main .rc-card:hover,.stApp .main .rc-next:hover{transform:none!important;border-color:rgba(112,214,255,.55)!important}
     .case-stat{background:linear-gradient(145deg,rgba(75,55,137,.32),rgba(18,20,34,.78));border:1px solid rgba(185,170,255,.18);border-radius:18px;padding:16px 18px;min-height:82px}
     .case-stat-label{color:#B8B4CC;font-size:.76rem;font-weight:700;letter-spacing:.04em}
-    .case-stat-value{color:#F7F5FF;font-size:1.7rem;font-weight:750;line-height:1.15;margin-top:8px;letter-spacing:-.035em;overflow-wrap:anywhere}
+    .case-stat-value{color:#F7F5FF;font-size:1.48rem;font-weight:750;line-height:1.15;margin-top:8px;letter-spacing:-.025em;overflow-wrap:anywhere}
     .case-stat-value.mono{font-family:Inter,ui-sans-serif,system-ui,sans-serif!important}
     .stApp .main .rc-label{color:#77DDF5!important;letter-spacing:.14em!important}
+    .stApp .main .rc-muted{font-size:.92rem!important;line-height:1.5!important}
+    .stApp .main .rc-card h3{font-size:1.28rem!important;margin:.65rem 0!important}
+    .stApp .main [data-testid="stExpander"] summary{padding:14px 18px!important;min-height:48px!important;font-family:Inter,ui-sans-serif,system-ui,sans-serif!important}
+    .stApp .main [data-testid="stExpander"] summary p{font-size:.92rem!important;font-weight:650!important;margin:0!important}
+    .stApp .main [data-testid="stExpander"] summary svg{width:18px!important;height:18px!important;display:block!important}
     div[data-testid="stButton"]>button{min-height:45px;border-radius:10px;font-weight:750}
     </style>""", unsafe_allow_html=True)
 
@@ -195,14 +200,16 @@ def render_case():
     field = str(rca.get("field") or reported.get("field") or row.breaking_fields or "Not yet diagnosed")
     expected = str(rca.get("expected") or reported.get("expected") or "Not available")
     observed = str(rca.get("actual") or reported.get("actual") or "Not available")
-    st.markdown(
-        f'<div class="rc-card"><div class="rc-label">Responsible field</div>'
-        f'<div class="rc-big mono">{escape(field)}</div>'
-        f'<div class="rc-muted">Expected: {escape(expected)} &nbsp; · &nbsp; Observed: {escape(observed)}</div></div>',
-        unsafe_allow_html=True,
-    )
-
-    st.markdown('<div class="rc-card"><div class="rc-label">What happened</div><h3>' + escape(root_cause_label(rca["root_cause"]) if rca.get("root_cause") else str(row.reported_issue)) + '</h3><div class="rc-muted">' + escape(str(rca.get("explanation", ""))) + '</div></div>', unsafe_allow_html=True)
+    summary_left, summary_right = st.columns(2, gap="medium")
+    with summary_left:
+        st.markdown(
+            f'<div class="rc-card"><div class="rc-label">Responsible field</div>'
+            f'<div class="rc-big mono">{escape(field)}</div>'
+            f'<div class="rc-muted">Expected: {escape(expected)} &nbsp; · &nbsp; Observed: {escape(observed)}</div></div>',
+            unsafe_allow_html=True,
+        )
+    with summary_right:
+        st.markdown('<div class="rc-card"><div class="rc-label">What happened</div><h3>' + escape(root_cause_label(rca["root_cause"]) if rca.get("root_cause") else str(row.reported_issue)) + '</h3><div class="rc-muted">' + escape(str(rca.get("explanation", ""))) + '</div></div>', unsafe_allow_html=True)
 
     _render_notice_signals(rca, investigation)
 
