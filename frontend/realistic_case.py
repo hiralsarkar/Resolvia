@@ -44,6 +44,10 @@ def css():
     .rc-muted{color:#C2C6D6;font-size:.84rem}
     .rc-step{border-left:3px solid #354052;padding:5px 0 5px 14px;margin:9px 0}
     .rc-step strong{display:block}
+    .flow-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 20px;padding:12px 14px;background:#12141d;border:1px solid #272d3b;border-radius:14px}
+    .flow-step{font-size:.72rem;font-weight:800;display:flex;gap:6px;align-items:center}
+    .flow-dot{border:1px solid currentColor;border-radius:50%;width:21px;height:21px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem}
+    .flow-line{height:1px;background:#3a4050;flex:1;min-width:10px}
     div[data-testid="stButton"]>button{min-height:45px;border-radius:10px;font-weight:750}
     </style>""", unsafe_allow_html=True)
 
@@ -70,6 +74,31 @@ _VERDICT = {
     "conflict": "The signals disagree, so the notice was not used. A person decides.",
     "unreadable": "No signal could be read from the notice. A person decides.",
 }
+
+_FLOW = ["Review", "Understand", "Guide", "Choose", "Act", "Verify", "Audit"]
+
+def _flow_step(status, case):
+    if not case:
+        return 0
+    if status in {"CLOSED", "REOPENED"}:
+        return 6
+    if status == "AWAITING_VERIFICATION":
+        return 5
+    if status == "MANUAL_IN_PROGRESS":
+        return 4
+    if case.get("proposal"):
+        return 3
+    if case.get("rca"):
+        return 2
+    return 1
+
+def _render_flow(status, case):
+    current = _flow_step(status, case)
+    cells = []
+    for i, label in enumerate(_FLOW):
+        colour = "#34E5A6" if i < current else ("#4CE0FF" if i == current else "#9CA2B8")
+        cells.append(f'<span class="flow-step" style="color:{colour}"><span class="flow-dot">{i + 1}</span>{label}</span>')
+    st.markdown('<div class="flow-bar">' + '<span class="flow-line"></span>'.join(cells) + '</div>', unsafe_allow_html=True)
 
 
 def _render_notice_signals(rca, investigation):
@@ -135,6 +164,8 @@ def render_case():
     proposal = case.get("proposal") or {}
     investigation = case.get("investigation") or {}
     triage = case.get("triage") or {}
+
+    _render_flow(status, case)
 
     reported = investigation.get("reported") or {}
     field = str(rca.get("field") or reported.get("field") or row.breaking_fields or "Not yet diagnosed")
@@ -311,8 +342,7 @@ def render_guide():
     for i, step in enumerate(steps, 1):
         st.markdown(f'<div class="rc-step"><strong>{i}. {step}</strong></div>', unsafe_allow_html=True)
     st.markdown("### Evidence to retain")
-    for i, item in enumerate(evidence):
-        st.checkbox(item, key=f"real_guide_{bid}_{i}")
+    checked = [st.checkbox(item, key=f"real_guide_{bid}_{i}") for i, item in enumerate(evidence)]
     st.markdown("### Do not close until")
     for item in do_not:
         st.warning(item)
@@ -320,15 +350,17 @@ def render_guide():
     st.markdown("### Choose the resolution method")
     st.caption("This choice records intent. It does not close the break. Every path still requires action and verification.")
     a, b, c = st.columns(3)
-    if a.button("Resolve Manually →", type="primary", use_container_width=True, key="guide_manual_real"):
+    if not all(checked):
+        st.caption("Complete the evidence checklist before choosing a resolution path.")
+    if a.button("Resolve Manually →", type="primary", use_container_width=True, key="guide_manual_real", disabled=not all(checked)):
         st.session_state["resolution_choice"] = "Manual"
         bb.audit("MANUAL_RESOLUTION_CHOICE_VIEWED", bid, "Analyst chose the manual resolution path from the guide")
         go("Resolution Control")
-    if b.button("Assisted Resolution →", use_container_width=True, key="guide_assisted_real"):
+    if b.button("Assisted Resolution →", use_container_width=True, key="guide_assisted_real", disabled=not all(checked)):
         st.session_state["resolution_choice"] = "Assisted"
         bb.audit("ASSISTED_RESOLUTION_CHOICE_VIEWED", bid, "Analyst chose the controlled assisted resolution path from the guide")
         go("Resolution Control")
-    if c.button("Escalate →", use_container_width=True, key="guide_escalate_real"):
+    if c.button("Escalate →", use_container_width=True, key="guide_escalate_real", disabled=not all(checked)):
         st.session_state["resolution_choice"] = "Escalate"
         bb.audit("ESCALATION_CHOICE_VIEWED", bid, "Analyst chose escalation after reviewing the guide")
         go("Resolution Control")

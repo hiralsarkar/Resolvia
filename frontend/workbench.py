@@ -309,6 +309,7 @@ def render_audit():
     if breaks:df=df[df.break_id.isin(breaks)]
     c1,c2,c3,c4=st.columns(4);c1.metric("Events",len(df));c2.metric("Human actions",int((df.actor_id!="SYSTEM").sum()));c3.metric("Breaks represented",df.break_id.replace("",pd.NA).nunique());c4.metric("Approvals",int((df.action=="APPROVAL_GRANTED").sum()))
     out=df.sort_values("timestamp",ascending=False).copy();out["Timestamp"]=out.timestamp.dt.strftime("%d %b %Y · %H:%M:%S UTC");out=out.rename(columns={"actor_id":"Operations ID","break_id":"Break ID","action":"Action","detail":"What was done","source":"Source"});st.dataframe(out[["Timestamp","Operations ID","Break ID","Action","What was done","Source"]],hide_index=True,width="stretch",height=540)
+    st.download_button("Download filtered audit CSV", out.to_csv(index=False).encode("utf-8"), "resolvia-audit.csv", "text/csv", key="audit_download")
     if selected:
         st.markdown(f"### Audit for {selected}");render_case_audit(selected)
 
