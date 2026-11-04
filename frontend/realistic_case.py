@@ -71,13 +71,6 @@ def css():
     .stApp .main [data-testid="stExpander"] summary{padding:14px 18px!important;min-height:48px!important;font-family:Inter,ui-sans-serif,system-ui,sans-serif!important}
     .stApp .main [data-testid="stExpander"] summary p{font-size:.92rem!important;font-weight:650!important;margin:0!important}
     .stApp .main [data-testid="stExpander"] summary svg{width:18px!important;height:18px!important;display:block!important}
-    .stApp .main .rc-card,.stApp .main .rc-next{background:#fff!important;border:1px solid #e1e5ef!important;box-shadow:0 8px 24px rgba(49,63,104,.07)!important;color:#17213c!important}
-    .stApp .main .rc-label{color:#6352d9!important}
-    .stApp .main .rc-muted{color:#71809a!important}
-    .stApp .main .case-stat{background:#fff!important;border:1px solid #e1e5ef!important;box-shadow:0 8px 24px rgba(49,63,104,.07)!important}
-    .stApp .main .case-stat-label{color:#71809a!important}
-    .stApp .main .case-stat-value{color:#17213c!important}
-    .stApp .main .flow-bar{background:#f8f9fd!important;border-color:#e1e5ef!important}
     div[data-testid="stButton"]>button{min-height:45px;border-radius:10px;font-weight:750}
     </style>""", unsafe_allow_html=True)
 
